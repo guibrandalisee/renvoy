@@ -1,0 +1,275 @@
+{
+  "@@locale": "en",
+  "appTitle": "Renvoy",
+  "navHome": "Home",
+  "navSubscriptions": "Subscriptions",
+  "navCalendar": "Calendar",
+  "navSettings": "Settings",
+  "comingSoonTitle": "Coming soon",
+  "comingSoonSubtitle": "This screen is being built.",
+  "greetingMorning": "Good morning",
+  "greetingAfternoon": "Good afternoon",
+  "greetingEvening": "Good evening",
+  "monthlySpend": "Monthly spend",
+  "toggleMonthly": "Monthly",
+  "toggleYearly": "Yearly",
+  "activeCount": "{count, plural, =0{0 active subscriptions} =1{1 active subscription} other{{count} active subscriptions}}",
+  "@activeCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "upcomingRenewals": "Upcoming renewals",
+  "spendByGroup": "Spend by group",
+  "groupOther": "Other",
+  "emptyTitle": "No subscriptions yet",
+  "emptySubtitle": "Add your first subscription to see your spending at a glance.",
+  "addSubscription": "Add subscription",
+  "trialChip": "TRIAL",
+  "cycleDay": "/day",
+  "cycleWeek": "/week",
+  "cycleMonth": "/month",
+  "cycleYear": "/year",
+  "newSubscription": "New subscription",
+  "editSubscription": "Edit subscription",
+  "save": "Save",
+  "name": "Name",
+  "nameHint": "Netflix, Spotify, gym...",
+  "price": "Price",
+  "currency": "Currency",
+  "billingCycle": "Billing cycle",
+  "weekly": "Weekly",
+  "monthly": "Monthly",
+  "quarterly": "Quarterly",
+  "semiAnnual": "Semi-annual",
+  "yearly": "Yearly",
+  "custom": "Custom",
+  "every": "Every",
+  "days": "days",
+  "weeks": "weeks",
+  "months": "months",
+  "years": "years",
+  "firstBillDate": "First bill date",
+  "freeTrial": "Free trial",
+  "trialEnds": "Trial ends",
+  "group": "Group",
+  "reminders": "Reminders",
+  "reminderDefault": "Default (3 days, same day)",
+  "reminderUseDefaults": "Use defaults",
+  "reminderSameDay": "Same day",
+  "reminderDaysBefore": "{count, plural, =1{1 day} other{{count} days}}",
+  "@reminderDaysBefore": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reminderRuleCount": "{count, plural, =0{No reminders} =1{1 rule} other{{count} rules}}",
+  "@reminderRuleCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reminderNoRules": "No reminders",
+  "notifRenewalTitle": "Upcoming renewal",
+  "notifRenewalBody": "{name} renews {when} — {price}",
+  "@notifRenewalBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "when": {
+        "type": "String"
+      },
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "notifTrialTitle": "Trial ending",
+  "notifTrialBody": "{name} trial ends {when}",
+  "@notifTrialBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "notifInDays": "in {count, plural, =1{1 day} other{{count} days}}",
+  "@notifInDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "none": "None",
+  "paymentMethod": "Payment method",
+  "paymentMethodHint": "Nubank credit card...",
+  "notes": "Notes",
+  "url": "URL",
+  "urlHint": "https://...",
+  "search": "Search",
+  "searchHint": "Search subscriptions",
+  "all": "All",
+  "active": "Active",
+  "paused": "Paused",
+  "canceled": "Canceled",
+  "sortBy": "Sort by",
+  "sortNextRenewal": "Next renewal",
+  "sortPrice": "Price",
+  "sortName": "Name",
+  "noResults": "Nothing found",
+  "noResultsSubtitle": "Try a different search or filter.",
+  "discardChangesTitle": "Discard changes?",
+  "discardChangesMessage": "Your changes will be lost.",
+  "keepEditing": "Keep editing",
+  "discard": "Discard",
+  "noGroup": "No group",
+  "approxPerMonth": "≈ {amount} /month",
+  "@approxPerMonth": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "pausedNotCounted": "Paused — not counted in totals",
+  "trialEndsDate": "Trial ends {date}",
+  "@trialEndsDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "nextRenewal": "Next renewal",
+  "firstBill": "First bill",
+  "manageSubscription": "Manage subscription",
+  "priceHistory": "Price history",
+  "pause": "Pause",
+  "resume": "Resume",
+  "duplicate": "Duplicate",
+  "duplicated": "Duplicated",
+  "cancelSubscription": "Cancel subscription",
+  "cancelSubscriptionMessage": "Keep history, stop counting in totals.",
+  "delete": "Delete",
+  "deleteSubscriptionMessage": "Delete this subscription?",
+  "deleted": "Deleted",
+  "undo": "UNDO",
+  "keep": "Keep",
+  "thisMonth": "This month",
+  "renewalsCount": "{count, plural, =0{0 renewals} =1{1 renewal} other{{count} renewals}}",
+  "@renewalsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "renewalsOn": "Renewals on {date}",
+  "@renewalsOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "groupsTitle": "Groups",
+  "groupsEmpty": "No groups yet",
+  "groupsEmptySubtitle": "Group subscriptions to see spending by category.",
+  "createGroup": "Create group",
+  "editGroup": "Edit group",
+  "icon": "Icon",
+  "color": "Color",
+  "parentGroup": "Parent group",
+  "noneTopLevel": "None (top level)",
+  "groupSummary": "{count, plural, =0{0 subscriptions} =1{1 subscription} other{{count} subscriptions}} · {amount} /mo",
+  "@groupSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteGroupMessage": "Delete this group?",
+  "moveContentsUp": "Move contents up",
+  "ungroupSubscriptions": "Ungroup subscriptions",
+  "deleteEverything": "Delete everything",
+  "deleteEverythingMessage": "Delete this group and everything inside it?",
+  "everyCountUnit": "Every {count} {unit}",
+  "@everyCountUnit": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsGeneral": "General",
+  "settingsCurrency": "Currency",
+  "settingsLanguage": "Language",
+  "settingsSystem": "System",
+  "settingsEnglish": "English",
+  "settingsPortugueseBrazil": "Português (Brasil)",
+  "settingsTheme": "Theme",
+  "settingsLight": "Light",
+  "settingsDark": "Dark",
+  "settingsFirstDay": "First day of week",
+  "settingsMonday": "Monday",
+  "settingsSunday": "Sunday",
+  "settingsReminders": "Reminders",
+  "settingsDefaultReminders": "Default reminders",
+  "settingsData": "Data",
+  "settingsExportBackup": "Export backup",
+  "settingsImportBackup": "Import backup",
+  "settingsExportCsv": "Export CSV",
+  "settingsAbout": "About",
+  "settingsVersion": "Version",
+  "importConfirm": "Import {subscriptions} subscriptions, {groups} groups? This merges with existing data.",
+  "@importConfirm": {
+    "placeholders": {
+      "subscriptions": {
+        "type": "int"
+      },
+      "groups": {
+        "type": "int"
+      }
+    }
+  },
+  "importError": "Could not read this backup file.",
+  "importSuccess": "Backup imported.",
+  "exportError": "Could not export this file.",
+  "relativeToday": "today",
+  "relativeTomorrow": "tomorrow",
+  "relativeYesterday": "yesterday",
+  "relativeInDays": "in {count, plural, =1{1 day} other{{count} days}}",
+  "@relativeInDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeDaysAgo": "{count, plural, =1{1 day ago} other{{count} days ago}}",
+  "@relativeDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
+}

@@ -1,30 +1,32 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
+import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:renvoy/main.dart';
+import 'package:renvoy/app/app.dart';
+import 'package:renvoy/data/db/database.dart';
+import 'package:renvoy/data/db/database_provider.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('RenvoyApp smoke test', (tester) async {
+    final database = AppDatabase.forTesting(NativeDatabase.memory());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          databaseProvider.overrideWithValue(database),
+          bootstrapProvider.overrideWith((ref) async {}),
+        ],
+        child: const RenvoyApp(),
+      ),
+    );
     await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.byType(Scaffold), findsWidgets);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    for (var i = 0; i < 8; i++) {
+      await tester.pump(const Duration(milliseconds: 1));
+    }
   });
 }

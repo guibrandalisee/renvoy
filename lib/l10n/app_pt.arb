@@ -1,0 +1,275 @@
+{
+  "@@locale": "pt",
+  "appTitle": "Renvoy",
+  "navHome": "Início",
+  "navSubscriptions": "Assinaturas",
+  "navCalendar": "Calendário",
+  "navSettings": "Ajustes",
+  "comingSoonTitle": "Em breve",
+  "comingSoonSubtitle": "Esta tela está sendo criada.",
+  "greetingMorning": "Bom dia",
+  "greetingAfternoon": "Boa tarde",
+  "greetingEvening": "Boa noite",
+  "monthlySpend": "Gasto mensal",
+  "toggleMonthly": "Mensal",
+  "toggleYearly": "Anual",
+  "activeCount": "{count, plural, =0{0 assinaturas ativas} =1{1 assinatura ativa} other{{count} assinaturas ativas}}",
+  "@activeCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "upcomingRenewals": "Próximas renovações",
+  "spendByGroup": "Gasto por grupo",
+  "groupOther": "Outros",
+  "emptyTitle": "Nenhuma assinatura ainda",
+  "emptySubtitle": "Adicione sua primeira assinatura para ver seus gastos num relance.",
+  "addSubscription": "Adicionar assinatura",
+  "trialChip": "TRIAL",
+  "cycleDay": "/dia",
+  "cycleWeek": "/semana",
+  "cycleMonth": "/mês",
+  "cycleYear": "/ano",
+  "newSubscription": "Nova assinatura",
+  "editSubscription": "Editar assinatura",
+  "save": "Salvar",
+  "name": "Nome",
+  "nameHint": "Netflix, Spotify, academia...",
+  "price": "Preço",
+  "currency": "Moeda",
+  "billingCycle": "Ciclo de cobrança",
+  "weekly": "Semanal",
+  "monthly": "Mensal",
+  "quarterly": "Trimestral",
+  "semiAnnual": "Semestral",
+  "yearly": "Anual",
+  "custom": "Personalizado",
+  "every": "A cada",
+  "days": "dias",
+  "weeks": "semanas",
+  "months": "meses",
+  "years": "anos",
+  "firstBillDate": "Primeira cobrança",
+  "freeTrial": "Teste grátis",
+  "trialEnds": "Teste termina",
+  "group": "Grupo",
+  "reminders": "Lembretes",
+  "reminderDefault": "Padrão (3 dias, no dia)",
+  "reminderUseDefaults": "Usar padrões",
+  "reminderSameDay": "No dia",
+  "reminderDaysBefore": "{count, plural, =1{1 dia} other{{count} dias}}",
+  "@reminderDaysBefore": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reminderRuleCount": "{count, plural, =0{Sem lembretes} =1{1 regra} other{{count} regras}}",
+  "@reminderRuleCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reminderNoRules": "Sem lembretes",
+  "notifRenewalTitle": "Renovação próxima",
+  "notifRenewalBody": "{name} renova {when} — {price}",
+  "@notifRenewalBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "when": {
+        "type": "String"
+      },
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "notifTrialTitle": "Teste acabando",
+  "notifTrialBody": "O teste de {name} acaba {when}",
+  "@notifTrialBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "notifInDays": "em {count, plural, =1{1 dia} other{{count} dias}}",
+  "@notifInDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "none": "Nenhum",
+  "paymentMethod": "Forma de pagamento",
+  "paymentMethodHint": "Cartão de crédito Nubank...",
+  "notes": "Notas",
+  "url": "URL",
+  "urlHint": "https://...",
+  "search": "Buscar",
+  "searchHint": "Buscar assinaturas",
+  "all": "Todas",
+  "active": "Ativas",
+  "paused": "Pausadas",
+  "canceled": "Canceladas",
+  "sortBy": "Ordenar por",
+  "sortNextRenewal": "Próxima renovação",
+  "sortPrice": "Preço",
+  "sortName": "Nome",
+  "noResults": "Nada encontrado",
+  "noResultsSubtitle": "Tente outra busca ou filtro.",
+  "discardChangesTitle": "Descartar alterações?",
+  "discardChangesMessage": "Suas alterações serão perdidas.",
+  "keepEditing": "Continuar editando",
+  "discard": "Descartar",
+  "noGroup": "Sem grupo",
+  "approxPerMonth": "≈ {amount} /mês",
+  "@approxPerMonth": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "pausedNotCounted": "Pausada — não conta nos totais",
+  "trialEndsDate": "Teste termina em {date}",
+  "@trialEndsDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "nextRenewal": "Próxima renovação",
+  "firstBill": "Primeira cobrança",
+  "manageSubscription": "Gerenciar assinatura",
+  "priceHistory": "Histórico de preços",
+  "pause": "Pausar",
+  "resume": "Retomar",
+  "duplicate": "Duplicar",
+  "duplicated": "Duplicada",
+  "cancelSubscription": "Cancelar assinatura",
+  "cancelSubscriptionMessage": "Manter histórico e parar de contar nos totais.",
+  "delete": "Excluir",
+  "deleteSubscriptionMessage": "Excluir esta assinatura?",
+  "deleted": "Excluída",
+  "undo": "DESFAZER",
+  "keep": "Manter",
+  "thisMonth": "Este mês",
+  "renewalsCount": "{count, plural, =0{0 renovações} =1{1 renovação} other{{count} renovações}}",
+  "@renewalsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "renewalsOn": "Renovações em {date}",
+  "@renewalsOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "groupsTitle": "Grupos",
+  "groupsEmpty": "Nenhum grupo ainda",
+  "groupsEmptySubtitle": "Agrupe assinaturas para ver gastos por categoria.",
+  "createGroup": "Criar grupo",
+  "editGroup": "Editar grupo",
+  "icon": "Ícone",
+  "color": "Cor",
+  "parentGroup": "Grupo pai",
+  "noneTopLevel": "Nenhum (nível superior)",
+  "groupSummary": "{count, plural, =0{0 assinaturas} =1{1 assinatura} other{{count} assinaturas}} · {amount} /mês",
+  "@groupSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteGroupMessage": "Excluir este grupo?",
+  "moveContentsUp": "Mover conteúdo para cima",
+  "ungroupSubscriptions": "Remover assinaturas do grupo",
+  "deleteEverything": "Excluir tudo",
+  "deleteEverythingMessage": "Excluir este grupo e tudo dentro dele?",
+  "everyCountUnit": "A cada {count} {unit}",
+  "@everyCountUnit": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsGeneral": "Geral",
+  "settingsCurrency": "Moeda",
+  "settingsLanguage": "Idioma",
+  "settingsSystem": "Sistema",
+  "settingsEnglish": "English",
+  "settingsPortugueseBrazil": "Português (Brasil)",
+  "settingsTheme": "Tema",
+  "settingsLight": "Claro",
+  "settingsDark": "Escuro",
+  "settingsFirstDay": "Primeiro dia da semana",
+  "settingsMonday": "Segunda-feira",
+  "settingsSunday": "Domingo",
+  "settingsReminders": "Lembretes",
+  "settingsDefaultReminders": "Lembretes padrão",
+  "settingsData": "Dados",
+  "settingsExportBackup": "Exportar backup",
+  "settingsImportBackup": "Importar backup",
+  "settingsExportCsv": "Exportar CSV",
+  "settingsAbout": "Sobre",
+  "settingsVersion": "Versão",
+  "importConfirm": "Importar {subscriptions} assinaturas, {groups} grupos? Isso mescla com os dados existentes.",
+  "@importConfirm": {
+    "placeholders": {
+      "subscriptions": {
+        "type": "int"
+      },
+      "groups": {
+        "type": "int"
+      }
+    }
+  },
+  "importError": "Não foi possível ler este arquivo de backup.",
+  "importSuccess": "Backup importado.",
+  "exportError": "Não foi possível exportar este arquivo.",
+  "relativeToday": "hoje",
+  "relativeTomorrow": "amanhã",
+  "relativeYesterday": "ontem",
+  "relativeInDays": "em {count, plural, =1{1 dia} other{{count} dias}}",
+  "@relativeInDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeDaysAgo": "há {count, plural, =1{1 dia} other{{count} dias}}",
+  "@relativeDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
+}
