@@ -4,6 +4,7 @@ import 'package:renvoy/l10n/app_localizations.dart';
 
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_typography.dart';
+import '../../../core/color_utils.dart';
 import '../../../core/formatters.dart';
 import '../../../data/db/database.dart';
 import '../../../domain/billing/billing_math.dart';
@@ -122,7 +123,8 @@ class SpendByGroupCard extends StatelessWidget {
 
     for (final node in groups) {
       groupLabels[node.group.id] = node.group.name;
-      groupColors[node.group.id] = _colorFromHex(node.group.color);
+      groupColors[node.group.id] =
+          colorFromHex(node.group.color) ?? colors.accent;
     }
 
     for (final subscription in subscriptions) {
@@ -139,7 +141,7 @@ class SpendByGroupCard extends StatelessWidget {
       totals[key] = (totals[key] ?? 0) + monthly;
       if (topLevel != null) {
         groupLabels[key] = topLevel.name;
-        groupColors[key] = _colorFromHex(topLevel.color);
+        groupColors[key] = colorFromHex(topLevel.color) ?? colors.accent;
       }
     }
 
@@ -203,10 +205,6 @@ class _GroupSlice {
   final String label;
   final Color color;
   final double value;
-}
-
-Color _colorFromHex(String hex) {
-  return Color(int.parse('FF${hex.substring(1)}', radix: 16));
 }
 
 const _otherKey = '__other__';

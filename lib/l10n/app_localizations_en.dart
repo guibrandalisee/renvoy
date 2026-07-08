@@ -163,6 +163,71 @@ class AppLocalizationsEn extends AppLocalizations {
   String get group => 'Group';
 
   @override
+  String get reminders => 'Reminders';
+
+  @override
+  String get reminderDefault => 'Default (3 days, same day)';
+
+  @override
+  String get reminderUseDefaults => 'Use defaults';
+
+  @override
+  String get reminderSameDay => 'Same day';
+
+  @override
+  String reminderDaysBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days',
+      one: '1 day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderRuleCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count rules',
+      one: '1 rule',
+      zero: 'No reminders',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reminderNoRules => 'No reminders';
+
+  @override
+  String get notifRenewalTitle => 'Upcoming renewal';
+
+  @override
+  String notifRenewalBody(String name, String when, String price) {
+    return '$name renews $when — $price';
+  }
+
+  @override
+  String get notifTrialTitle => 'Trial ending';
+
+  @override
+  String notifTrialBody(String name, String when) {
+    return '$name trial ends $when';
+  }
+
+  @override
+  String notifInDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days',
+      one: '1 day',
+    );
+    return 'in $_temp0';
+  }
+
+  @override
   String get none => 'None';
 
   @override
@@ -295,18 +360,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String renewalsCount(int count) {
-    final value = intl.Intl.pluralLogic(
+    String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
       other: '$count renewals',
       one: '1 renewal',
       zero: '0 renewals',
     );
-    return value;
+    return '$_temp0';
   }
 
   @override
-  String renewalsOn(String date) => 'Renewals on $date';
+  String renewalsOn(String date) {
+    return 'Renewals on $date';
+  }
 
   @override
   String get groupsTitle => 'Groups';
@@ -338,14 +405,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String groupSummary(int count, String amount) {
-    final value = intl.Intl.pluralLogic(
+    String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
       other: '$count subscriptions',
       one: '1 subscription',
       zero: '0 subscriptions',
     );
-    return '$value · $amount /mo';
+    return '$_temp0 · $amount /mo';
   }
 
   @override
@@ -367,5 +434,110 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String everyCountUnit(int count, String unit) {
     return 'Every $count $unit';
+  }
+
+  @override
+  String get settingsGeneral => 'General';
+
+  @override
+  String get settingsCurrency => 'Currency';
+
+  @override
+  String get settingsLanguage => 'Language';
+
+  @override
+  String get settingsSystem => 'System';
+
+  @override
+  String get settingsEnglish => 'English';
+
+  @override
+  String get settingsPortugueseBrazil => 'Português (Brasil)';
+
+  @override
+  String get settingsTheme => 'Theme';
+
+  @override
+  String get settingsLight => 'Light';
+
+  @override
+  String get settingsDark => 'Dark';
+
+  @override
+  String get settingsFirstDay => 'First day of week';
+
+  @override
+  String get settingsMonday => 'Monday';
+
+  @override
+  String get settingsSunday => 'Sunday';
+
+  @override
+  String get settingsReminders => 'Reminders';
+
+  @override
+  String get settingsDefaultReminders => 'Default reminders';
+
+  @override
+  String get settingsData => 'Data';
+
+  @override
+  String get settingsExportBackup => 'Export backup';
+
+  @override
+  String get settingsImportBackup => 'Import backup';
+
+  @override
+  String get settingsExportCsv => 'Export CSV';
+
+  @override
+  String get settingsAbout => 'About';
+
+  @override
+  String get settingsVersion => 'Version';
+
+  @override
+  String importConfirm(int subscriptions, int groups) {
+    return 'Import $subscriptions subscriptions, $groups groups? This merges with existing data.';
+  }
+
+  @override
+  String get importError => 'Could not read this backup file.';
+
+  @override
+  String get importSuccess => 'Backup imported.';
+
+  @override
+  String get exportError => 'Could not export this file.';
+
+  @override
+  String get relativeToday => 'today';
+
+  @override
+  String get relativeTomorrow => 'tomorrow';
+
+  @override
+  String get relativeYesterday => 'yesterday';
+
+  @override
+  String relativeInDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days',
+      one: '1 day',
+    );
+    return 'in $_temp0';
+  }
+
+  @override
+  String relativeDaysAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days ago',
+      one: '1 day ago',
+    );
+    return '$_temp0';
   }
 }

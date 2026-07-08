@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:renvoy/l10n/app_localizations.dart';
-// ignore: unused_import
-import 'package:renvoy/l10n/app_localizations_fallbacks.dart';
 
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_typography.dart';
+import '../../../core/color_utils.dart';
 import '../../../core/formatters.dart';
 import '../../../core/haptics.dart';
 import '../../../core/widgets/pressable.dart';
@@ -164,9 +163,9 @@ class SubscriptionRow extends StatelessWidget {
                     Text(
                       _caption(subscription, l10n, showMonthlyEquivalent),
                       textAlign: TextAlign.right,
-                      style: textTheme.bodySmall?.copyWith(
-                        color: colors.textMuted,
-                      ),
+                      style: moneyStyle(
+                        textTheme.bodySmall ?? const TextStyle(),
+                      ).copyWith(color: colors.textMuted),
                     ),
                   ],
                 ),
@@ -251,11 +250,4 @@ String dateToText(DateTime value) {
   return '${utc.year.toString().padLeft(4, '0')}-'
       '${utc.month.toString().padLeft(2, '0')}-'
       '${utc.day.toString().padLeft(2, '0')}';
-}
-
-Color? colorFromHex(String? hex) {
-  if (hex == null || hex.length != 7 || !hex.startsWith('#')) {
-    return null;
-  }
-  return Color(int.parse('FF${hex.substring(1)}', radix: 16));
 }

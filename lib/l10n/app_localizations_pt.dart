@@ -24,10 +24,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get navSettings => 'Ajustes';
 
   @override
-  String get comingSoonTitle => 'Coming soon';
+  String get comingSoonTitle => 'Em breve';
 
   @override
-  String get comingSoonSubtitle => 'This screen is being built.';
+  String get comingSoonSubtitle => 'Esta tela está sendo criada.';
 
   @override
   String get greetingMorning => 'Bom dia';
@@ -163,6 +163,71 @@ class AppLocalizationsPt extends AppLocalizations {
   String get group => 'Grupo';
 
   @override
+  String get reminders => 'Lembretes';
+
+  @override
+  String get reminderDefault => 'Padrão (3 dias, no dia)';
+
+  @override
+  String get reminderUseDefaults => 'Usar padrões';
+
+  @override
+  String get reminderSameDay => 'No dia';
+
+  @override
+  String reminderDaysBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count dias',
+      one: '1 dia',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderRuleCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count regras',
+      one: '1 regra',
+      zero: 'Sem lembretes',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reminderNoRules => 'Sem lembretes';
+
+  @override
+  String get notifRenewalTitle => 'Renovação próxima';
+
+  @override
+  String notifRenewalBody(String name, String when, String price) {
+    return '$name renova $when — $price';
+  }
+
+  @override
+  String get notifTrialTitle => 'Teste acabando';
+
+  @override
+  String notifTrialBody(String name, String when) {
+    return 'O teste de $name acaba $when';
+  }
+
+  @override
+  String notifInDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count dias',
+      one: '1 dia',
+    );
+    return 'em $_temp0';
+  }
+
+  @override
   String get none => 'Nenhum';
 
   @override
@@ -295,18 +360,20 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String renewalsCount(int count) {
-    final value = intl.Intl.pluralLogic(
+    String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
       other: '$count renovações',
       one: '1 renovação',
       zero: '0 renovações',
     );
-    return value;
+    return '$_temp0';
   }
 
   @override
-  String renewalsOn(String date) => 'Renovações em $date';
+  String renewalsOn(String date) {
+    return 'Renovações em $date';
+  }
 
   @override
   String get groupsTitle => 'Grupos';
@@ -338,14 +405,14 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String groupSummary(int count, String amount) {
-    final value = intl.Intl.pluralLogic(
+    String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
       other: '$count assinaturas',
       one: '1 assinatura',
       zero: '0 assinaturas',
     );
-    return '$value · $amount /mês';
+    return '$_temp0 · $amount /mês';
   }
 
   @override
@@ -367,5 +434,110 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String everyCountUnit(int count, String unit) {
     return 'A cada $count $unit';
+  }
+
+  @override
+  String get settingsGeneral => 'Geral';
+
+  @override
+  String get settingsCurrency => 'Moeda';
+
+  @override
+  String get settingsLanguage => 'Idioma';
+
+  @override
+  String get settingsSystem => 'Sistema';
+
+  @override
+  String get settingsEnglish => 'English';
+
+  @override
+  String get settingsPortugueseBrazil => 'Português (Brasil)';
+
+  @override
+  String get settingsTheme => 'Tema';
+
+  @override
+  String get settingsLight => 'Claro';
+
+  @override
+  String get settingsDark => 'Escuro';
+
+  @override
+  String get settingsFirstDay => 'Primeiro dia da semana';
+
+  @override
+  String get settingsMonday => 'Segunda-feira';
+
+  @override
+  String get settingsSunday => 'Domingo';
+
+  @override
+  String get settingsReminders => 'Lembretes';
+
+  @override
+  String get settingsDefaultReminders => 'Lembretes padrão';
+
+  @override
+  String get settingsData => 'Dados';
+
+  @override
+  String get settingsExportBackup => 'Exportar backup';
+
+  @override
+  String get settingsImportBackup => 'Importar backup';
+
+  @override
+  String get settingsExportCsv => 'Exportar CSV';
+
+  @override
+  String get settingsAbout => 'Sobre';
+
+  @override
+  String get settingsVersion => 'Versão';
+
+  @override
+  String importConfirm(int subscriptions, int groups) {
+    return 'Importar $subscriptions assinaturas, $groups grupos? Isso mescla com os dados existentes.';
+  }
+
+  @override
+  String get importError => 'Não foi possível ler este arquivo de backup.';
+
+  @override
+  String get importSuccess => 'Backup importado.';
+
+  @override
+  String get exportError => 'Não foi possível exportar este arquivo.';
+
+  @override
+  String get relativeToday => 'hoje';
+
+  @override
+  String get relativeTomorrow => 'amanhã';
+
+  @override
+  String get relativeYesterday => 'ontem';
+
+  @override
+  String relativeInDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count dias',
+      one: '1 dia',
+    );
+    return 'em $_temp0';
+  }
+
+  @override
+  String relativeDaysAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count dias',
+      one: '1 dia',
+    );
+    return 'há $_temp0';
   }
 }

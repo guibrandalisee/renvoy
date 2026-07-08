@@ -24,4 +24,44 @@ void main() {
 
     expect(map[DateTime.utc(2026, 7, 10)], [subscription]);
   });
+
+  test('buildRenewalMap handles an empty month', () {
+    final subscription = _subscription(
+      firstBillDate: '2026-01-10',
+      cycleUnit: CycleUnit.year,
+    );
+
+    final map = buildRenewalMap([subscription], DateTime.utc(2026, 2));
+
+    expect(map, isEmpty);
+  });
+
+  test('buildRenewalMap handles February and monthly 31st anchors', () {
+    final subscription = _subscription(firstBillDate: '2026-01-31');
+
+    final map = buildRenewalMap([subscription], DateTime.utc(2026, 2));
+
+    expect(map.keys, contains(DateTime.utc(2026, 2, 28)));
+    expect(map[DateTime.utc(2026, 2, 28)], [subscription]);
+  });
+}
+
+Subscription _subscription({
+  required String firstBillDate,
+  CycleUnit cycleUnit = CycleUnit.month,
+}) {
+  return Subscription(
+    id: 'sub_1',
+    createdAt: 0,
+    updatedAt: 0,
+    dirty: true,
+    name: 'Netflix',
+    priceMinor: 1299,
+    currency: 'USD',
+    cycleUnit: cycleUnit,
+    cycleCount: 1,
+    firstBillDate: firstBillDate,
+    nextBillDate: firstBillDate,
+    status: SubscriptionStatus.active,
+  );
 }

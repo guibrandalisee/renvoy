@@ -386,6 +386,78 @@ abstract class AppLocalizations {
   /// **'Group'**
   String get group;
 
+  /// No description provided for @reminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders'**
+  String get reminders;
+
+  /// No description provided for @reminderDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Default (3 days, same day)'**
+  String get reminderDefault;
+
+  /// No description provided for @reminderUseDefaults.
+  ///
+  /// In en, this message translates to:
+  /// **'Use defaults'**
+  String get reminderUseDefaults;
+
+  /// No description provided for @reminderSameDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Same day'**
+  String get reminderSameDay;
+
+  /// No description provided for @reminderDaysBefore.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 day} other{{count} days}}'**
+  String reminderDaysBefore(int count);
+
+  /// No description provided for @reminderRuleCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No reminders} =1{1 rule} other{{count} rules}}'**
+  String reminderRuleCount(int count);
+
+  /// No description provided for @reminderNoRules.
+  ///
+  /// In en, this message translates to:
+  /// **'No reminders'**
+  String get reminderNoRules;
+
+  /// No description provided for @notifRenewalTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming renewal'**
+  String get notifRenewalTitle;
+
+  /// No description provided for @notifRenewalBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} renews {when} — {price}'**
+  String notifRenewalBody(String name, String when, String price);
+
+  /// No description provided for @notifTrialTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Trial ending'**
+  String get notifTrialTitle;
+
+  /// No description provided for @notifTrialBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} trial ends {when}'**
+  String notifTrialBody(String name, String when);
+
+  /// No description provided for @notifInDays.
+  ///
+  /// In en, this message translates to:
+  /// **'in {count, plural, =1{1 day} other{{count} days}}'**
+  String notifInDays(int count);
+
   /// No description provided for @none.
   ///
   /// In en, this message translates to:
@@ -428,16 +500,70 @@ abstract class AppLocalizations {
   /// **'Search'**
   String get search;
 
+  /// No description provided for @searchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search subscriptions'**
   String get searchHint;
+
+  /// No description provided for @all.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
   String get all;
+
+  /// No description provided for @active.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
   String get active;
+
+  /// No description provided for @paused.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
   String get paused;
+
+  /// No description provided for @canceled.
+  ///
+  /// In en, this message translates to:
+  /// **'Canceled'**
   String get canceled;
+
+  /// No description provided for @sortBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by'**
   String get sortBy;
+
+  /// No description provided for @sortNextRenewal.
+  ///
+  /// In en, this message translates to:
+  /// **'Next renewal'**
   String get sortNextRenewal;
+
+  /// No description provided for @sortPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Price'**
   String get sortPrice;
+
+  /// No description provided for @sortName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
   String get sortName;
+
+  /// No description provided for @noResults.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing found'**
   String get noResults;
+
+  /// No description provided for @noResultsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Try a different search or filter.'**
   String get noResultsSubtitle;
 
   /// No description provided for @discardChangesTitle.
@@ -578,23 +704,112 @@ abstract class AppLocalizations {
   /// **'Keep'**
   String get keep;
 
+  /// No description provided for @thisMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'This month'**
   String get thisMonth;
+
+  /// No description provided for @renewalsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{0 renewals} =1{1 renewal} other{{count} renewals}}'**
   String renewalsCount(int count);
+
+  /// No description provided for @renewalsOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Renewals on {date}'**
   String renewalsOn(String date);
+
+  /// No description provided for @groupsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Groups'**
   String get groupsTitle;
+
+  /// No description provided for @groupsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No groups yet'**
   String get groupsEmpty;
+
+  /// No description provided for @groupsEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Group subscriptions to see spending by category.'**
   String get groupsEmptySubtitle;
+
+  /// No description provided for @createGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Create group'**
   String get createGroup;
+
+  /// No description provided for @editGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit group'**
   String get editGroup;
+
+  /// No description provided for @icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Icon'**
   String get icon;
+
+  /// No description provided for @color.
+  ///
+  /// In en, this message translates to:
+  /// **'Color'**
   String get color;
+
+  /// No description provided for @parentGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Parent group'**
   String get parentGroup;
+
+  /// No description provided for @noneTopLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'None (top level)'**
   String get noneTopLevel;
+
+  /// No description provided for @groupSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{0 subscriptions} =1{1 subscription} other{{count} subscriptions}} · {amount} /mo'**
   String groupSummary(int count, String amount);
+
+  /// No description provided for @deleteGroupMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this group?'**
   String get deleteGroupMessage;
+
+  /// No description provided for @moveContentsUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Move contents up'**
   String get moveContentsUp;
+
+  /// No description provided for @ungroupSubscriptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Ungroup subscriptions'**
   String get ungroupSubscriptions;
+
+  /// No description provided for @deleteEverything.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete everything'**
   String get deleteEverything;
+
+  /// No description provided for @deleteEverythingMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this group and everything inside it?'**
   String get deleteEverythingMessage;
 
   /// No description provided for @everyCountUnit.
@@ -602,6 +817,180 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Every {count} {unit}'**
   String everyCountUnit(int count, String unit);
+
+  /// No description provided for @settingsGeneral.
+  ///
+  /// In en, this message translates to:
+  /// **'General'**
+  String get settingsGeneral;
+
+  /// No description provided for @settingsCurrency.
+  ///
+  /// In en, this message translates to:
+  /// **'Currency'**
+  String get settingsCurrency;
+
+  /// No description provided for @settingsLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get settingsLanguage;
+
+  /// No description provided for @settingsSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get settingsSystem;
+
+  /// No description provided for @settingsEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get settingsEnglish;
+
+  /// No description provided for @settingsPortugueseBrazil.
+  ///
+  /// In en, this message translates to:
+  /// **'Português (Brasil)'**
+  String get settingsPortugueseBrazil;
+
+  /// No description provided for @settingsTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get settingsTheme;
+
+  /// No description provided for @settingsLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get settingsLight;
+
+  /// No description provided for @settingsDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get settingsDark;
+
+  /// No description provided for @settingsFirstDay.
+  ///
+  /// In en, this message translates to:
+  /// **'First day of week'**
+  String get settingsFirstDay;
+
+  /// No description provided for @settingsMonday.
+  ///
+  /// In en, this message translates to:
+  /// **'Monday'**
+  String get settingsMonday;
+
+  /// No description provided for @settingsSunday.
+  ///
+  /// In en, this message translates to:
+  /// **'Sunday'**
+  String get settingsSunday;
+
+  /// No description provided for @settingsReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders'**
+  String get settingsReminders;
+
+  /// No description provided for @settingsDefaultReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Default reminders'**
+  String get settingsDefaultReminders;
+
+  /// No description provided for @settingsData.
+  ///
+  /// In en, this message translates to:
+  /// **'Data'**
+  String get settingsData;
+
+  /// No description provided for @settingsExportBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Export backup'**
+  String get settingsExportBackup;
+
+  /// No description provided for @settingsImportBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Import backup'**
+  String get settingsImportBackup;
+
+  /// No description provided for @settingsExportCsv.
+  ///
+  /// In en, this message translates to:
+  /// **'Export CSV'**
+  String get settingsExportCsv;
+
+  /// No description provided for @settingsAbout.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get settingsAbout;
+
+  /// No description provided for @settingsVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get settingsVersion;
+
+  /// No description provided for @importConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Import {subscriptions} subscriptions, {groups} groups? This merges with existing data.'**
+  String importConfirm(int subscriptions, int groups);
+
+  /// No description provided for @importError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not read this backup file.'**
+  String get importError;
+
+  /// No description provided for @importSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup imported.'**
+  String get importSuccess;
+
+  /// No description provided for @exportError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not export this file.'**
+  String get exportError;
+
+  /// No description provided for @relativeToday.
+  ///
+  /// In en, this message translates to:
+  /// **'today'**
+  String get relativeToday;
+
+  /// No description provided for @relativeTomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'tomorrow'**
+  String get relativeTomorrow;
+
+  /// No description provided for @relativeYesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'yesterday'**
+  String get relativeYesterday;
+
+  /// No description provided for @relativeInDays.
+  ///
+  /// In en, this message translates to:
+  /// **'in {count, plural, =1{1 day} other{{count} days}}'**
+  String relativeInDays(int count);
+
+  /// No description provided for @relativeDaysAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 day ago} other{{count} days ago}}'**
+  String relativeDaysAgo(int count);
 }
 
 class _AppLocalizationsDelegate

@@ -6,8 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:renvoy/l10n/app_localizations.dart';
-// ignore: unused_import
-import 'package:renvoy/l10n/app_localizations_fallbacks.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../app/theme/app_colors.dart';
@@ -333,11 +331,11 @@ class SettingsScreen extends ConsumerWidget {
                 l10n.importConfirm(preview.subscriptions, preview.groups),
               ),
               actions: [
-                TextButton(
+                FilledButton(
                   onPressed: () => Navigator.of(context).pop(false),
                   child: Text(l10n.keep),
                 ),
-                TextButton(
+                FilledButton(
                   onPressed: () => Navigator.of(context).pop(true),
                   child: Text(l10n.settingsImportBackup),
                 ),

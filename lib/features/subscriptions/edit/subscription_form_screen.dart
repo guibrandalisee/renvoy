@@ -4,12 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:renvoy/l10n/app_localizations.dart';
-// ignore: unused_import
-import 'package:renvoy/l10n/app_localizations_fallbacks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/theme/app_colors.dart';
+import '../../../core/color_utils.dart';
 import '../../../core/formatters.dart';
 import '../../../core/haptics.dart';
 import '../../../core/widgets/app_progress.dart';
@@ -169,16 +168,17 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
             title: Text(l10n.discardChangesTitle),
             content: Text(l10n.discardChangesMessage),
             actions: [
-              TextButton(
+              FilledButton(
                 onPressed: () => Navigator.of(context).pop(false),
                 child: Text(l10n.keepEditing),
               ),
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: Text(
-                  l10n.discard,
-                  style: TextStyle(color: context.colors.danger),
+              FilledButton(
+                style: FilledButton.styleFrom(
+                  backgroundColor: context.colors.danger,
+                  foregroundColor: context.colors.onAccent,
                 ),
+                onPressed: () => Navigator.of(context).pop(true),
+                child: Text(l10n.discard),
               ),
             ],
           ),
@@ -692,9 +692,22 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
               children: [
                 Align(
                   alignment: Alignment.centerRight,
-                  child: TextButton(
+                  child: Pressable(
                     onPressed: () => Navigator.of(context).pop(selected),
-                    child: Text(AppLocalizations.of(context)!.save),
+                    borderRadius: BorderRadius.circular(12),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 18,
+                        vertical: 12,
+                      ),
+                      child: Text(
+                        AppLocalizations.of(context)!.save,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: context.colors.accent,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
                 Expanded(
@@ -1174,7 +1187,7 @@ class _GroupRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final group = node.group;
-    final groupColor = _hexToColor(group.color);
+    final groupColor = colorFromHex(group.color) ?? colors.accent;
     return Pressable(
       onPressed: () => Navigator.of(context).pop(group.id),
       child: Padding(
@@ -1251,7 +1264,7 @@ class _GroupChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final groupColor = _hexToColor(group.color);
+    final groupColor = colorFromHex(group.color) ?? context.colors.accent;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -1359,9 +1372,4 @@ Group? _findGroup(List<GroupNode> nodes, String? id) {
     }
   }
   return null;
-}
-
-Color _hexToColor(String hex) {
-  final clean = hex.replaceFirst('#', '');
-  return Color(int.parse('FF$clean', radix: 16));
 }

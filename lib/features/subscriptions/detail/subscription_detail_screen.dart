@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_typography.dart';
+import '../../../core/color_utils.dart';
 import '../../../core/formatters.dart';
 import '../../../core/haptics.dart';
 import '../../../core/widgets/app_progress.dart';
@@ -96,7 +97,7 @@ class _DetailContent extends ConsumerWidget {
     final textTheme = Theme.of(context).textTheme;
     final l10n = AppLocalizations.of(context)!;
     final group = _findGroup(groups, subscription.groupId);
-    final subColor = _hexToColor(subscription.colorHex ?? '#7C5CFC');
+    final subColor = colorFromHex(subscription.colorHex) ?? colors.accent;
     final monthly = monthlyEquivalentMinor(
       subscription.priceMinor,
       subscription.cycleUnit,
@@ -202,9 +203,9 @@ class _DetailContent extends ConsumerWidget {
                           locale: l10n.localeName,
                         ),
                       ),
-                      style: textTheme.bodySmall?.copyWith(
-                        color: colors.textMuted,
-                      ),
+                      style: moneyStyle(
+                        textTheme.bodySmall ?? const TextStyle(),
+                      ).copyWith(color: colors.textMuted),
                     ),
                   ),
               ],
@@ -379,9 +380,9 @@ class _PriceHistoryCard extends StatelessWidget {
                       currency,
                       locale: l10n.localeName,
                     ),
-                    style: textTheme.bodyMedium?.copyWith(
-                      color: colors.textSecondary,
-                    ),
+                    style: moneyStyle(
+                      textTheme.bodyMedium ?? const TextStyle(),
+                    ).copyWith(color: colors.textSecondary),
                   ),
                   Icon(Icons.arrow_forward, size: 16, color: colors.textMuted),
                   Text(
@@ -390,12 +391,13 @@ class _PriceHistoryCard extends StatelessWidget {
                       currency,
                       locale: l10n.localeName,
                     ),
-                    style: textTheme.bodyMedium?.copyWith(
-                      color: entry.newPriceMinor > entry.oldPriceMinor
-                          ? colors.danger
-                          : colors.success,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: moneyStyle(textTheme.bodyMedium ?? const TextStyle())
+                        .copyWith(
+                          color: entry.newPriceMinor > entry.oldPriceMinor
+                              ? colors.danger
+                              : colors.success,
+                          fontWeight: FontWeight.w600,
+                        ),
                   ),
                 ],
               ),
@@ -684,16 +686,17 @@ Future<bool> _confirm(
           title: Text(title),
           content: Text(message),
           actions: [
-            TextButton(
+            FilledButton(
               onPressed: () => Navigator.of(context).pop(false),
               child: Text(l10n.keep),
             ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: Text(
-                action,
-                style: TextStyle(color: context.colors.danger),
+            FilledButton(
+              style: FilledButton.styleFrom(
+                backgroundColor: context.colors.danger,
+                foregroundColor: context.colors.onAccent,
               ),
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text(action),
             ),
           ],
         ),
@@ -751,9 +754,4 @@ Group? _findGroup(List<GroupNode> nodes, String? id) {
     }
   }
   return null;
-}
-
-Color _hexToColor(String hex) {
-  final clean = hex.replaceFirst('#', '');
-  return Color(int.parse('FF$clean', radix: 16));
 }

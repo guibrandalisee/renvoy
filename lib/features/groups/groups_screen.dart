@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/theme/app_colors.dart';
+import '../../app/theme/app_typography.dart';
+import '../../core/color_utils.dart';
 import '../../core/formatters.dart';
 import '../../core/haptics.dart';
 import '../../core/widgets/app_sheet.dart';
@@ -15,7 +17,6 @@ import '../../data/db/database_provider.dart';
 import '../../domain/billing/billing_math.dart';
 import '../../domain/models/group_node.dart';
 import '../home/home_providers.dart';
-import '../subscriptions/widgets/subscription_row.dart';
 
 const groupColorPalette = [
   '#7C5CFC',
@@ -281,9 +282,10 @@ class _GroupRow extends ConsumerWidget {
                             locale: AppLocalizations.of(context)!.localeName,
                           ),
                         ),
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: colors.textMuted,
-                        ),
+                        style: moneyStyle(
+                          Theme.of(context).textTheme.bodySmall ??
+                              const TextStyle(),
+                        ).copyWith(color: colors.textMuted),
                       ),
                     ],
                   ),
@@ -736,16 +738,17 @@ Future<bool> _confirmDialog(BuildContext context, String message) async {
         builder: (context) => AlertDialog.adaptive(
           content: Text(message),
           actions: [
-            TextButton(
+            FilledButton(
               onPressed: () => Navigator.of(context).pop(false),
               child: Text(l10n.keep),
             ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: Text(
-                l10n.delete,
-                style: TextStyle(color: context.colors.danger),
+            FilledButton(
+              style: FilledButton.styleFrom(
+                backgroundColor: context.colors.danger,
+                foregroundColor: context.colors.onAccent,
               ),
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text(l10n.delete),
             ),
           ],
         ),

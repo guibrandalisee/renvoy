@@ -43,7 +43,11 @@ class GroupsDao extends DatabaseAccessor<AppDatabase> with _$GroupsDaoMixin {
       }
 
       return activeGroups
-          .where((group) => group.parentId == null)
+          .where(
+            (group) =>
+                group.parentId == null ||
+                !activeGroups.any((parent) => parent.id == group.parentId),
+          )
           .map(build)
           .toList();
     });

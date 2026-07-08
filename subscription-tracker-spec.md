@@ -2,6 +2,8 @@
 
 **Version:** 1.0 · **Date:** 2026-07-08 · **Platform:** Flutter (iOS + Android) · **Backend:** PHP API + PostgreSQL
 
+> **Status (2026-07-08):** ✅ Fase 1 (MVP local-first) concluída — milestones M1–M4 implementados e testados (analyze limpo, 53 testes verdes, Flutter 3.41.9 via FVM). Fases 2–4 pendentes.
+
 ---
 
 ## 1. Overview
@@ -18,14 +20,14 @@ A mobile app to track recurring subscriptions (streaming, SaaS, gym, utilities, 
 
 | Phase | Scope | Account required |
 |---|---|---|
-| **1 — MVP (local-only)** | Subscription CRUD, groups/subgroups, reminders, dashboard, local backup/export | No |
+| **1 — MVP (local-only)** ✅ | Subscription CRUD, groups/subgroups, reminders, dashboard, local backup/export | No |
 | **2 — Accounts & Sync** | Google/Apple Sign-In, multi-device sync via PHP API | Optional |
 | **3 — Shared Groups** | Invite users to groups, roles, shared editing, activity feed | Yes (for sharing) |
 | **4 — Premium & Growth** | Freemium gating, insights, multi-currency rates, widgets, extras | — |
 
 ---
 
-## 2. Phase 1 — MVP (Local-first, no account)
+## 2. Phase 1 — MVP (Local-first, no account) ✅ Concluída
 
 ### 2.1 Subscriptions
 
@@ -311,10 +313,10 @@ Each item is independent — tell me which you like:
 
 | # | Milestone | Contents |
 |---|---|---|
-| M1 | App skeleton | Drift schema, navigation, theming, settings |
-| M2 | Subscriptions core | CRUD, cycles, renewal math + unit tests |
-| M3 | Groups + dashboard | Tree UI, aggregation, calendar/list views |
-| M4 | Reminders + backup | Notifications, JSON/CSV export — **MVP ship** |
+| M1 ✅ | App skeleton | Drift schema, navigation, theming, settings |
+| M2 ✅ | Subscriptions core | CRUD, cycles, renewal math + unit tests |
+| M3 ✅ | Groups + dashboard | Tree UI, aggregation, calendar/list views |
+| M4 ✅ | Reminders + backup | Notifications, JSON/CSV export — **MVP ship** |
 | M5 | API + auth | Laravel setup, Google/Apple auth, `/me` |
 | M6 | Sync engine | Push/pull, LWW, login-merge flow (mode picker + conflict resolver, §4.5) |
 | M7 | Shared groups | Invites, roles, scopes, push notifications, activity feed |

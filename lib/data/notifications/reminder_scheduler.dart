@@ -4,8 +4,6 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:renvoy/l10n/app_localizations.dart';
-// ignore: unused_import
-import 'package:renvoy/l10n/app_localizations_fallbacks.dart';
 
 import '../../domain/models/enums.dart';
 import '../db/database_provider.dart';

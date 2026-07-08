@@ -41,9 +41,25 @@ void main() {
 
     expect(container.read(monthlyTotalMinorProvider), 0);
   });
+
+  test('expired trial active subscriptions are counted in totals', () async {
+    final database = AppDatabase.forTesting(NativeDatabase.memory());
+    final container = ProviderContainer(
+      overrides: [databaseProvider.overrideWithValue(database)],
+    );
+    addTearDown(container.dispose);
+    addTearDown(database.close);
+
+    await database.subscriptionsDao.insert(
+      _subscription(trialEndDate: '2026-01-01'),
+    );
+    await container.read(activeSubscriptionsProvider.future);
+
+    expect(container.read(monthlyTotalMinorProvider), 1000);
+  });
 }
 
-SubscriptionsCompanion _subscription() {
+SubscriptionsCompanion _subscription({String? trialEndDate}) {
   return SubscriptionsCompanion.insert(
     id: '',
     createdAt: 0,
@@ -56,5 +72,8 @@ SubscriptionsCompanion _subscription() {
     nextBillDate: '2026-07-08',
     status: SubscriptionStatus.active,
     cycleCount: const Value(1),
+    trialEndDate: trialEndDate == null
+        ? const Value.absent()
+        : Value(trialEndDate),
   );
 }

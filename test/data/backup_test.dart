@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -82,6 +84,34 @@ void main() {
     expect(subscriptions, hasLength(1));
     expect(subscriptions.single.name, 'Imported');
   });
+
+  test('import accepts groups whose parent is missing from backup', () async {
+    final database = AppDatabase.forTesting(NativeDatabase.memory());
+    addTearDown(database.close);
+    await _clear(database);
+    final source = _backupJson(
+      groups: [
+        {
+          'id': 'group-orphan',
+          'createdAt': 0,
+          'updatedAt': 0,
+          'deletedAt': null,
+          'dirty': true,
+          'name': 'Orphan',
+          'icon': 'category_outlined',
+          'color': '#7C5CFC',
+          'parentId': 'missing-group',
+          'position': 0,
+        },
+      ],
+    );
+
+    final preview = await BackupService(database).importJson(source);
+    final tree = await database.groupsDao.watchAllTree().first;
+
+    expect(preview.groups, 1);
+    expect(tree.map((node) => node.group.id), contains('group-orphan'));
+  });
 }
 
 Future<void> _clear(AppDatabase database) async {
@@ -156,4 +186,18 @@ Future<void> _seedBackupRows(
           daysBefore: 3,
         ),
       );
+}
+
+String _backupJson({List<Map<String, Object?>> groups = const []}) {
+  return jsonEncode({
+    'format': BackupService.format,
+    'version': BackupService.currentVersion,
+    'exported_at': '2026-07-08T00:00:00.000Z',
+    'data': {
+      'subscriptions': const [],
+      'groups': groups,
+      'price_history': const [],
+      'reminder_rules': const [],
+    },
+  });
 }

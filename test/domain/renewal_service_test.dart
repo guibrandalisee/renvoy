@@ -85,6 +85,22 @@ void main() {
       expect(current?.nextBillDate, '2026-04-01');
     },
   );
+
+  test('rollForward advances subscriptions left overdue for months', () async {
+    final id = await database.subscriptionsDao.insert(
+      _subscription(
+        name: 'Long overdue',
+        firstBillDate: '2025-01-31',
+        nextBillDate: '2025-02-28',
+      ),
+    );
+
+    final updated = await service.rollForward(DateTime.utc(2026, 7, 8));
+
+    expect(updated, 1);
+    final subscription = await database.subscriptionsDao.watchById(id).first;
+    expect(subscription?.nextBillDate, '2026-07-31');
+  });
 }
 
 SubscriptionsCompanion _subscription({

@@ -58,6 +58,28 @@ void main() {
 
     await database.close();
   });
+
+  test('groups with missing parents are emitted as top-level', () async {
+    final database = AppDatabase.forTesting(NativeDatabase.memory());
+    addTearDown(database.close);
+    await database
+        .into(database.groups)
+        .insert(
+          GroupsCompanion.insert(
+            id: 'orphan',
+            createdAt: 0,
+            updatedAt: 0,
+            name: 'Orphan',
+            icon: 'category_outlined',
+            color: '#7C5CFC',
+            parentId: const Value('missing'),
+          ),
+        );
+
+    final tree = await database.groupsDao.watchAllTree().first;
+
+    expect(tree.map((node) => node.group.id), contains('orphan'));
+  });
 }
 
 Future<String> _insertGroup(

@@ -1,7 +1,5 @@
 import 'package:intl/intl.dart';
 import 'package:renvoy/l10n/app_localizations.dart';
-// ignore: unused_import
-import 'package:renvoy/l10n/app_localizations_fallbacks.dart';
 
 class Money {
   const Money._();
