@@ -13,6 +13,7 @@ import '../../../core/formatters.dart';
 import '../../../core/haptics.dart';
 import '../../../core/widgets/app_progress.dart';
 import '../../../core/widgets/app_sheet.dart';
+import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/currency_picker_sheet.dart';
 import '../../../core/widgets/pressable.dart';
 import '../../../data/db/database.dart';
@@ -162,28 +163,14 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
 
   Future<bool> _confirmDiscard() async {
     final l10n = AppLocalizations.of(context)!;
-    return await showAdaptiveDialog<bool>(
-          context: context,
-          builder: (context) => AlertDialog.adaptive(
-            title: Text(l10n.discardChangesTitle),
-            content: Text(l10n.discardChangesMessage),
-            actions: [
-              FilledButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: Text(l10n.keepEditing),
-              ),
-              FilledButton(
-                style: FilledButton.styleFrom(
-                  backgroundColor: context.colors.danger,
-                  foregroundColor: context.colors.onAccent,
-                ),
-                onPressed: () => Navigator.of(context).pop(true),
-                child: Text(l10n.discard),
-              ),
-            ],
-          ),
-        ) ??
-        false;
+    return showConfirmDialog(
+      context: context,
+      title: l10n.discardChangesTitle,
+      message: l10n.discardChangesMessage,
+      confirmLabel: l10n.discard,
+      cancelLabel: l10n.keepEditing,
+      isDestructive: true,
+    );
   }
 
   Future<void> _save(Subscription? original) async {
@@ -684,43 +671,75 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
       var selected = initial;
       return showCupertinoModalPopup<DateTime>(
         context: context,
-        builder: (context) => Container(
-          height: 300,
-          color: context.colors.surfaceElevated,
-          child: SafeArea(
-            child: Column(
-              children: [
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Pressable(
-                    onPressed: () => Navigator.of(context).pop(selected),
-                    borderRadius: BorderRadius.circular(12),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 18,
-                        vertical: 12,
-                      ),
-                      child: Text(
-                        AppLocalizations.of(context)!.save,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: context.colors.accent,
-                          fontWeight: FontWeight.w700,
+        builder: (context) {
+          final colors = context.colors;
+          final materialL10n = MaterialLocalizations.of(context);
+          return ClipRRect(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+            child: Container(
+              height: 320,
+              color: colors.surfaceElevated,
+              child: SafeArea(
+                top: false,
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Pressable(
+                          onPressed: () => Navigator.of(context).pop(),
+                          borderRadius: BorderRadius.circular(12),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 18,
+                              vertical: 14,
+                            ),
+                            child: Text(
+                              materialL10n.cancelButtonLabel,
+                              style: Theme.of(context).textTheme.bodyMedium
+                                  ?.copyWith(color: colors.textSecondary),
+                            ),
+                          ),
+                        ),
+                        Pressable(
+                          onPressed: () => Navigator.of(context).pop(selected),
+                          borderRadius: BorderRadius.circular(12),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 18,
+                              vertical: 14,
+                            ),
+                            child: Text(
+                              AppLocalizations.of(context)!.save,
+                              style: Theme.of(context).textTheme.bodyMedium
+                                  ?.copyWith(
+                                    color: colors.accent,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Divider(height: 1, color: colors.border),
+                    Expanded(
+                      child: CupertinoTheme(
+                        data: CupertinoThemeData(
+                          brightness: Theme.of(context).brightness,
+                        ),
+                        child: CupertinoDatePicker(
+                          mode: CupertinoDatePickerMode.date,
+                          initialDateTime: initial,
+                          onDateTimeChanged: (value) => selected = value,
                         ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-                Expanded(
-                  child: CupertinoDatePicker(
-                    mode: CupertinoDatePickerMode.date,
-                    initialDateTime: initial,
-                    onDateTimeChanged: (value) => selected = value,
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       );
     }
 

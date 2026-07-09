@@ -10,6 +10,7 @@ import '../../core/color_utils.dart';
 import '../../core/formatters.dart';
 import '../../core/haptics.dart';
 import '../../core/widgets/app_sheet.dart';
+import '../../core/widgets/confirm_dialog.dart';
 import '../../core/widgets/empty_state.dart';
 import '../../core/widgets/pressable.dart';
 import '../../data/db/database.dart';
@@ -657,16 +658,25 @@ Future<bool> _confirmDelete(
         if (parent != null || hasChildren)
           _DeleteOption(
             label: AppLocalizations.of(context)!.moveContentsUp,
-            onPressed: () => Navigator.of(context).pop(_DeleteAction.moveUp),
+            onPressed: () => Navigator.of(
+              context,
+              rootNavigator: true,
+            ).pop(_DeleteAction.moveUp),
           ),
         _DeleteOption(
           label: AppLocalizations.of(context)!.ungroupSubscriptions,
-          onPressed: () => Navigator.of(context).pop(_DeleteAction.ungroup),
+          onPressed: () => Navigator.of(
+            context,
+            rootNavigator: true,
+          ).pop(_DeleteAction.ungroup),
         ),
         _DeleteOption(
           label: AppLocalizations.of(context)!.deleteEverything,
           danger: true,
-          onPressed: () => Navigator.of(context).pop(_DeleteAction.cascade),
+          onPressed: () => Navigator.of(
+            context,
+            rootNavigator: true,
+          ).pop(_DeleteAction.cascade),
         ),
       ],
     ),
@@ -733,27 +743,13 @@ class _DeleteOption extends StatelessWidget {
 
 Future<bool> _confirmDialog(BuildContext context, String message) async {
   final l10n = AppLocalizations.of(context)!;
-  return await showAdaptiveDialog<bool>(
-        context: context,
-        builder: (context) => AlertDialog.adaptive(
-          content: Text(message),
-          actions: [
-            FilledButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: Text(l10n.keep),
-            ),
-            FilledButton(
-              style: FilledButton.styleFrom(
-                backgroundColor: context.colors.danger,
-                foregroundColor: context.colors.onAccent,
-              ),
-              onPressed: () => Navigator.of(context).pop(true),
-              child: Text(l10n.delete),
-            ),
-          ],
-        ),
-      ) ??
-      false;
+  return showConfirmDialog(
+    context: context,
+    message: message,
+    confirmLabel: l10n.delete,
+    cancelLabel: l10n.keep,
+    isDestructive: true,
+  );
 }
 
 enum _DeleteAction { moveUp, ungroup, cascade }

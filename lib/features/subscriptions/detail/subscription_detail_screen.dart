@@ -10,6 +10,7 @@ import '../../../core/color_utils.dart';
 import '../../../core/formatters.dart';
 import '../../../core/haptics.dart';
 import '../../../core/widgets/app_progress.dart';
+import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/pressable.dart';
 import '../../../core/widgets/status_bar_fade.dart';
 import '../../../data/db/database.dart';
@@ -680,28 +681,14 @@ Future<bool> _confirm(
   required String action,
 }) async {
   final l10n = AppLocalizations.of(context)!;
-  return await showAdaptiveDialog<bool>(
-        context: context,
-        builder: (context) => AlertDialog.adaptive(
-          title: Text(title),
-          content: Text(message),
-          actions: [
-            FilledButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: Text(l10n.keep),
-            ),
-            FilledButton(
-              style: FilledButton.styleFrom(
-                backgroundColor: context.colors.danger,
-                foregroundColor: context.colors.onAccent,
-              ),
-              onPressed: () => Navigator.of(context).pop(true),
-              child: Text(action),
-            ),
-          ],
-        ),
-      ) ??
-      false;
+  return showConfirmDialog(
+    context: context,
+    title: title,
+    message: message,
+    confirmLabel: action,
+    cancelLabel: l10n.keep,
+    isDestructive: true,
+  );
 }
 
 String _cycleLabel(BuildContext context, Subscription subscription) {

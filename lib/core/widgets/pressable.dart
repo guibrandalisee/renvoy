@@ -11,6 +11,7 @@ class Pressable extends StatefulWidget {
     this.pressedScale = 0.97,
     this.haptic = HapticType.none,
     this.borderRadius,
+    this.behavior = HitTestBehavior.opaque,
     super.key,
   });
 
@@ -22,6 +23,13 @@ class Pressable extends StatefulWidget {
   final HapticType haptic;
   final BorderRadius? borderRadius;
 
+  /// How the underlying gesture detector behaves during hit testing.
+  ///
+  /// Defaults to [HitTestBehavior.opaque] so the whole area occupied by the
+  /// widget is tappable (not just the painted child), which gives buttons a
+  /// comfortable touch target.
+  final HitTestBehavior behavior;
+
   @override
   State<Pressable> createState() => _PressableState();
 }
@@ -29,9 +37,6 @@ class Pressable extends StatefulWidget {
 class _PressableState extends State<Pressable>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
-  bool _pointerIsDown = false;
-  bool _isInside = false;
-  bool _longPressTriggered = false;
 
   bool get _isEnabled =>
       widget.enabled &&
@@ -69,77 +74,34 @@ class _PressableState extends State<Pressable>
     );
   }
 
-  bool _containsGlobalPosition(Offset globalPosition) {
-    final box = context.findRenderObject() as RenderBox?;
-    if (box == null || !box.hasSize) {
-      return false;
-    }
-
-    final localPosition = box.globalToLocal(globalPosition);
-    return (Offset.zero & box.size).contains(localPosition);
-  }
-
-  void _handlePointerDown(PointerDownEvent event) {
+  void _handleTapDown(TapDownDetails details) {
     if (!_isEnabled) {
       return;
     }
-
-    _pointerIsDown = true;
-    _isInside = true;
-    _longPressTriggered = false;
     _animateDown();
   }
 
-  void _handlePointerMove(PointerMoveEvent event) {
-    if (!_pointerIsDown) {
-      return;
-    }
-
-    final nextIsInside = _containsGlobalPosition(event.position);
-    if (_isInside == nextIsInside) {
-      return;
-    }
-
-    _isInside = nextIsInside;
-    if (_isInside) {
-      _animateDown();
-    } else {
-      _animateUp();
-    }
+  void _handleTapUp(TapUpDetails details) {
+    _animateUp();
   }
 
-  void _handlePointerUp(PointerUpEvent event) {
-    if (!_pointerIsDown) {
-      return;
-    }
-
-    final shouldFire =
-        _isEnabled &&
-        !_longPressTriggered &&
-        _containsGlobalPosition(event.position);
-    _pointerIsDown = false;
-    _isInside = false;
+  void _handleTapCancel() {
     _animateUp();
-
-    if (shouldFire) {
-      Haptics.play(widget.haptic);
-      widget.onPressed?.call();
-    }
   }
 
-  void _handlePointerCancel(PointerCancelEvent event) {
-    _pointerIsDown = false;
-    _isInside = false;
-    _longPressTriggered = false;
-    _animateUp();
+  void _handleTap() {
+    if (!_isEnabled || widget.onPressed == null) {
+      return;
+    }
+    Haptics.play(widget.haptic);
+    widget.onPressed?.call();
   }
 
   void _handleLongPress() {
-    if (!_isEnabled || widget.onLongPress == null || !_isInside) {
+    if (!_isEnabled || widget.onLongPress == null) {
       return;
     }
-
-    _longPressTriggered = true;
+    _animateUp();
     Haptics.play(widget.haptic);
     widget.onLongPress?.call();
   }
@@ -165,16 +127,19 @@ class _PressableState extends State<Pressable>
       child = ClipRRect(borderRadius: widget.borderRadius!, child: child);
     }
 
-    return Listener(
-      onPointerDown: _handlePointerDown,
-      onPointerMove: _handlePointerMove,
-      onPointerUp: _handlePointerUp,
-      onPointerCancel: _handlePointerCancel,
-      child: GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onLongPress: _handleLongPress,
-        child: child,
-      ),
+    // Using GestureDetector (rather than a raw Listener) means the tap joins
+    // the gesture arena, so an ancestor scrollable can win and cancel the tap.
+    // This prevents accidental presses while the user is scrolling.
+    return GestureDetector(
+      behavior: widget.behavior,
+      onTapDown: _isEnabled ? _handleTapDown : null,
+      onTapUp: _isEnabled ? _handleTapUp : null,
+      onTapCancel: _isEnabled ? _handleTapCancel : null,
+      onTap: _isEnabled ? _handleTap : null,
+      onLongPress: (_isEnabled && widget.onLongPress != null)
+          ? _handleLongPress
+          : null,
+      child: child,
     );
   }
 }

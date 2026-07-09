@@ -14,7 +14,13 @@ Future<T?> showAppSheet<T>({
   return showModalBottomSheet<T>(
     context: context,
     isScrollControlled: true,
+    // Render above the app shell so the sheet (and its scrim) sits on top of
+    // the floating action button and the bottom navigation bar.
+    useRootNavigator: true,
     backgroundColor: colors.surfaceElevated,
+    // We draw our own drag handle below; disable the theme's default one so we
+    // don't end up with two handles stacked on top of each other.
+    showDragHandle: false,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
     ),

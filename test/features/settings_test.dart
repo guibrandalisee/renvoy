@@ -16,7 +16,7 @@ void main() {
   ) async {
     PackageInfo.setMockInitialValues(
       appName: 'Renvoy',
-      packageName: 'com.example.renvoy',
+      packageName: 'dev.g22.renvoy',
       version: '1.0.0',
       buildNumber: '1',
       buildSignature: '',

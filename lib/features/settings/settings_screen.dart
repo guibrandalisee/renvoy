@@ -11,6 +11,7 @@ import 'package:share_plus/share_plus.dart';
 import '../../app/theme/app_colors.dart';
 import '../../core/haptics.dart';
 import '../../core/widgets/app_sheet.dart';
+import '../../core/widgets/confirm_dialog.dart';
 import '../../core/widgets/currency_picker_sheet.dart';
 import '../../core/widgets/pressable.dart';
 import '../../core/widgets/status_bar_fade.dart';
@@ -322,27 +323,13 @@ class SettingsScreen extends ConsumerWidget {
       if (!context.mounted) {
         return;
       }
-      final confirmed =
-          await showAdaptiveDialog<bool>(
-            context: context,
-            builder: (context) => AlertDialog.adaptive(
-              title: Text(l10n.settingsImportBackup),
-              content: Text(
-                l10n.importConfirm(preview.subscriptions, preview.groups),
-              ),
-              actions: [
-                FilledButton(
-                  onPressed: () => Navigator.of(context).pop(false),
-                  child: Text(l10n.keep),
-                ),
-                FilledButton(
-                  onPressed: () => Navigator.of(context).pop(true),
-                  child: Text(l10n.settingsImportBackup),
-                ),
-              ],
-            ),
-          ) ??
-          false;
+      final confirmed = await showConfirmDialog(
+        context: context,
+        title: l10n.settingsImportBackup,
+        message: l10n.importConfirm(preview.subscriptions, preview.groups),
+        confirmLabel: l10n.settingsImportBackup,
+        cancelLabel: l10n.keep,
+      );
       if (!confirmed) {
         return;
       }
@@ -497,7 +484,8 @@ Future<T?> _showRadioSheet<T>({
           _RadioRow<T>(
             option: option,
             selected: selected,
-            onPressed: () => Navigator.of(context).pop(option.value),
+            onPressed: () =>
+                Navigator.of(context, rootNavigator: true).pop(option.value),
           ),
       ],
     ),
