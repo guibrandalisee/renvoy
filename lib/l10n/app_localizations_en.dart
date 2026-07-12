@@ -531,6 +531,32 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get catalogPickerTitle => 'Choose a service';
+
+  @override
+  String get catalogSearchHint => 'Search services';
+
+  @override
+  String get catalogCreateCustom => 'Create custom';
+
+  @override
+  String get catalogUnavailableTitle => 'Catalog unavailable';
+
+  @override
+  String get catalogUnavailableSubtitle =>
+      'Check your connection and try again, or create a custom subscription.';
+
+  @override
+  String get catalogTryAgain => 'Try again';
+
+  @override
+  String get catalogEmptyTitle => 'No services found';
+
+  @override
+  String get catalogEmptySubtitle =>
+      'Try a different search or create a custom subscription.';
+
+  @override
   String relativeDaysAgo(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

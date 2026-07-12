@@ -14,6 +14,7 @@ import '../../core/widgets/app_sheet.dart';
 import '../../core/widgets/confirm_dialog.dart';
 import '../../core/widgets/currency_picker_sheet.dart';
 import '../../core/widgets/pressable.dart';
+import '../../core/widgets/primary_button.dart';
 import '../../core/widgets/status_bar_fade.dart';
 import '../../data/backup/backup_service.dart';
 import '../../data/db/database_provider.dart';
@@ -577,13 +578,9 @@ class _ReminderPickerState extends State<_ReminderPicker> {
           ],
         ),
         const SizedBox(height: 20),
-        SizedBox(
-          width: double.infinity,
-          height: 52,
-          child: FilledButton(
-            onPressed: () => Navigator.of(context).pop(_selectedDays),
-            child: Text(l10n.save),
-          ),
+        PrimaryButton(
+          label: l10n.save,
+          onPressed: () => Navigator.of(context).pop(_selectedDays),
         ),
         SizedBox(height: MediaQuery.viewPaddingOf(context).bottom),
       ],

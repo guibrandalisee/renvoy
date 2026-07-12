@@ -55,17 +55,7 @@ class EmptyState extends StatelessWidget {
             ),
             if (cta != null) ...[
               const SizedBox(height: 20),
-              Theme(
-                data: Theme.of(context).copyWith(
-                  filledButtonTheme: FilledButtonThemeData(
-                    style: FilledButton.styleFrom(
-                      minimumSize: const Size(0, 52),
-                      padding: const EdgeInsets.symmetric(horizontal: 18),
-                    ),
-                  ),
-                ),
-                child: IntrinsicWidth(child: cta!),
-              ),
+              IntrinsicWidth(child: cta!),
             ],
           ],
         ),

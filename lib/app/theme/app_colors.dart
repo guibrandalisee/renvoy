@@ -22,43 +22,48 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.dangerSoft,
   });
 
+  // Dark theme — cool charcoal surfaces with a bright emerald-teal accent.
+  // Text colours are tuned to clear WCAG AA (>=4.5:1) on `surface`.
   const AppColors.dark()
-    : background = const Color(0xFF0C0D10),
-      surface = const Color(0xFF15171C),
-      surfaceElevated = const Color(0xFF1C1F26),
-      border = const Color(0xFF262A33),
-      borderStrong = const Color(0xFF343A46),
-      textPrimary = const Color(0xFFF2F3F5),
-      textSecondary = const Color(0xFF9BA1AC),
-      textMuted = const Color(0xFF5E6673),
-      accent = const Color(0xFF7C5CFC),
-      onAccent = const Color(0xFFFFFFFF),
-      accentSoft = const Color(0x247C5CFC),
-      success = const Color(0xFF34D399),
-      warning = const Color(0xFFFBBF24),
-      danger = const Color(0xFFF87171),
-      successSoft = const Color(0x2434D399),
-      warningSoft = const Color(0x24FBBF24),
-      dangerSoft = const Color(0x24F87171);
+    : background = const Color(0xFF0A0F0E),
+      surface = const Color(0xFF141A18),
+      surfaceElevated = const Color(0xFF1C2320),
+      border = const Color(0xFF27302C),
+      borderStrong = const Color(0xFF37423D),
+      textPrimary = const Color(0xFFECF2EF),
+      textSecondary = const Color(0xFF9FAAA5),
+      textMuted = const Color(0xFF7F8B85),
+      // Bright mint reads best with near-black text on top (onAccent).
+      accent = const Color(0xFF23CCAF),
+      onAccent = const Color(0xFF04231D),
+      accentSoft = const Color(0x2623CCAF),
+      success = const Color(0xFF3DD68C),
+      warning = const Color(0xFFF6B93B),
+      danger = const Color(0xFFED5C5C),
+      successSoft = const Color(0x263DD68C),
+      warningSoft = const Color(0x26F6B93B),
+      dangerSoft = const Color(0x26ED5C5C);
 
+  // Light theme — soft off-white surfaces with a deep teal accent that keeps
+  // white text legible (AA) on primary buttons.
   const AppColors.light()
-    : background = const Color(0xFFF6F6F8),
+    : background = const Color(0xFFF3F6F5),
       surface = const Color(0xFFFFFFFF),
       surfaceElevated = const Color(0xFFFFFFFF),
-      border = const Color(0xFFE7E8EC),
-      borderStrong = const Color(0xFFD5D7DE),
-      textPrimary = const Color(0xFF17181C),
-      textSecondary = const Color(0xFF5C6270),
-      textMuted = const Color(0xFF9AA0AB),
-      accent = const Color(0xFF6A4CF5),
+      border = const Color(0xFFE4EAE7),
+      borderStrong = const Color(0xFFD0D9D5),
+      textPrimary = const Color(0xFF14201C),
+      textSecondary = const Color(0xFF55625E),
+      textMuted = const Color(0xFF6C7873),
+      accent = const Color(0xFF0C8175),
       onAccent = const Color(0xFFFFFFFF),
-      accentSoft = const Color(0x1A6A4CF5),
-      success = const Color(0xFF10B981),
-      warning = const Color(0xFFD97706),
-      danger = const Color(0xFFEF4444),
-      successSoft = const Color(0x1A10B981),
-      warningSoft = const Color(0x1AD97706),
-      dangerSoft = const Color(0x1AEF4444);
+      accentSoft = const Color(0x1A0C8175),
+      success = const Color(0xFF0E9E6E),
+      warning = const Color(0xFFC77A12),
+      danger = const Color(0xFFDC4C4C),
+      successSoft = const Color(0x1A0E9E6E),
+      warningSoft = const Color(0x1AC77A12),
+      dangerSoft = const Color(0x1ADC4C4C);
 
   final Color background;
   final Color surface;

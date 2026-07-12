@@ -7,6 +7,7 @@ import '../../../core/color_utils.dart';
 import '../../../core/formatters.dart';
 import '../../../core/haptics.dart';
 import '../../../core/widgets/pressable.dart';
+import '../../../core/widgets/subscription_avatar.dart';
 import '../../../data/db/database.dart';
 import '../../../domain/billing/billing_math.dart';
 import '../../../domain/models/enums.dart';
@@ -38,9 +39,10 @@ class SubscriptionRow extends StatelessWidget {
     final relative = subtitle ?? Dates.relative(nextBillDate, l10n);
     final isSoon =
         relative == l10n.relativeToday || relative == l10n.relativeTomorrow;
-    final trialEnd = subscription.trialEndDate == null
-        ? null
-        : parseDate(subscription.trialEndDate!);
+    final trialEnd =
+        subscription.trialEndDate == null
+            ? null
+            : parseDate(subscription.trialEndDate!);
     final inTrial = isInTrial(trialEnd, DateTime.now().toUtc());
     final isPaused = subscription.status == SubscriptionStatus.paused;
     final isCanceled = subscription.status == SubscriptionStatus.canceled;
@@ -62,21 +64,11 @@ class SubscriptionRow extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: subscriptionColor.withValues(alpha: 0.18),
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    subscription.name.characters.first.toUpperCase(),
-                    style: textTheme.bodyMedium?.copyWith(
-                      color: subscriptionColor,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                SubscriptionAvatar(
+                  name: subscription.name,
+                  iconName: subscription.iconName,
+                  color: subscriptionColor,
+                  size: 40,
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -94,9 +86,10 @@ class SubscriptionRow extends StatelessWidget {
                                 color: colors.textPrimary,
                                 fontSize: 15,
                                 fontWeight: FontWeight.w600,
-                                decoration: isCanceled
-                                    ? TextDecoration.lineThrough
-                                    : TextDecoration.none,
+                                decoration:
+                                    isCanceled
+                                        ? TextDecoration.lineThrough
+                                        : TextDecoration.none,
                               ),
                             ),
                           ),
@@ -146,18 +139,17 @@ class SubscriptionRow extends StatelessWidget {
                         subscription.currency,
                         locale: l10n.localeName,
                       ),
-                      style:
-                          moneyStyle(
-                            textTheme.titleMedium ??
-                                const TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                          ).copyWith(
-                            color: colors.textPrimary,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                          ),
+                      style: moneyStyle(
+                        textTheme.titleMedium ??
+                            const TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                            ),
+                      ).copyWith(
+                        color: colors.textPrimary,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     const SizedBox(height: 2),
                     Text(

@@ -6,6 +6,8 @@ abstract final class SettingsKeys {
   static const defaultReminderDays = 'defaultReminderDays';
   static const notifPermissionAsked = 'notifPermissionAsked';
   static const monthlyEquivalentView = 'monthlyEquivalentView';
+  static const catalogCache = 'catalogCache';
+  static const catalogFetchedAt = 'catalogFetchedAt';
 
   static String subscriptionReminderMode(String subscriptionId) {
     return 'subscriptionReminderMode:$subscriptionId';

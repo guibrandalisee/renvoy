@@ -16,6 +16,7 @@ import '../../../core/widgets/app_sheet.dart';
 import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/currency_picker_sheet.dart';
 import '../../../core/widgets/pressable.dart';
+import '../../../core/widgets/primary_button.dart';
 import '../../../data/db/database.dart';
 import '../../../data/db/database_provider.dart';
 import '../../../data/db/settings_keys.dart';
@@ -33,9 +34,10 @@ final _subscriptionProvider = StreamProvider.family<Subscription?, String>((
 });
 
 class SubscriptionFormScreen extends ConsumerStatefulWidget {
-  const SubscriptionFormScreen({this.subscriptionId, super.key});
+  const SubscriptionFormScreen({this.subscriptionId, this.prefill, super.key});
 
   final String? subscriptionId;
+  final SubscriptionFormPrefill? prefill;
 
   @override
   ConsumerState<SubscriptionFormScreen> createState() =>
@@ -64,6 +66,9 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
   bool _saving = false;
   String? _loadedId;
   String? _remindersLoadedFor;
+  String? _serviceSlug;
+  String? _colorHex;
+  String? _iconName;
 
   bool get _isEdit => widget.subscriptionId != null;
 
@@ -83,6 +88,19 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
     ]) {
       controller.addListener(_markDirty);
     }
+    _applyPrefill();
+  }
+
+  void _applyPrefill() {
+    if (_isEdit || widget.prefill == null) return;
+    final prefill = widget.prefill!;
+    _nameController.text = prefill.name ?? '';
+    _urlController.text = prefill.manageUrl ?? '';
+    _groupId = prefill.groupId;
+    _serviceSlug = prefill.serviceSlug;
+    _colorHex = prefill.colorHex;
+    _iconName = prefill.iconName;
+    _dirty = false;
   }
 
   @override
@@ -193,6 +211,9 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
       manageUrl: _urlController.text,
       useDefaultReminders: _useDefaultReminders,
       reminderDays: _reminderDays.toList()..sort((a, b) => b.compareTo(a)),
+      serviceSlug: _serviceSlug,
+      colorHex: _colorHex,
+      iconName: _iconName,
     );
     await ref
         .read(subscriptionFormControllerProvider)
@@ -549,16 +570,10 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
                   horizontal: 20,
                   vertical: 12,
                 ),
-                child: Opacity(
-                  opacity: _valid ? 1 : 0.5,
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: 52,
-                    child: FilledButton(
-                      onPressed: _valid ? () => _save(subscription) : null,
-                      child: Text(l10n.save),
-                    ),
-                  ),
+                child: PrimaryButton(
+                  label: l10n.save,
+                  isLoading: _saving,
+                  onPressed: _valid ? () => _save(subscription) : null,
                 ),
               ),
             ),
@@ -773,6 +788,24 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
   }
 }
 
+class SubscriptionFormPrefill {
+  const SubscriptionFormPrefill({
+    this.name,
+    this.serviceSlug,
+    this.iconName,
+    this.colorHex,
+    this.manageUrl,
+    this.groupId,
+  });
+
+  final String? name;
+  final String? serviceSlug;
+  final String? iconName;
+  final String? colorHex;
+  final String? manageUrl;
+  final String? groupId;
+}
+
 class _LabeledField extends StatelessWidget {
   const _LabeledField({required this.label, required this.child});
 
@@ -962,8 +995,8 @@ class _FreeTrialSwitch extends StatelessWidget {
               child: Container(
                 width: 22,
                 height: 22,
-                decoration: BoxDecoration(
-                  color: colors.onAccent,
+                decoration: const BoxDecoration(
+                  color: Color(0xFFFFFFFF),
                   shape: BoxShape.circle,
                 ),
               ),
@@ -1048,17 +1081,13 @@ class _ReminderPickerState extends State<_ReminderPicker> {
                 ),
         ),
         const SizedBox(height: 20),
-        SizedBox(
-          width: double.infinity,
-          height: 52,
-          child: FilledButton(
-            onPressed: () => Navigator.of(context).pop(
-              _ReminderSelection(
-                useDefaults: _useDefaults,
-                daysBefore: _selectedDays,
-              ),
+        PrimaryButton(
+          label: l10n.save,
+          onPressed: () => Navigator.of(context).pop(
+            _ReminderSelection(
+              useDefaults: _useDefaults,
+              daysBefore: _selectedDays,
             ),
-            child: Text(l10n.save),
           ),
         ),
         SizedBox(height: MediaQuery.viewPaddingOf(context).bottom),
@@ -1113,8 +1142,8 @@ class _ToggleRow extends StatelessWidget {
               child: Container(
                 width: 22,
                 height: 22,
-                decoration: BoxDecoration(
-                  color: colors.onAccent,
+                decoration: const BoxDecoration(
+                  color: Color(0xFFFFFFFF),
                   shape: BoxShape.circle,
                 ),
               ),

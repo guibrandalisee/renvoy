@@ -42,6 +42,7 @@ class AppTheme {
       extensions: <ThemeExtension<dynamic>>[colors],
       appBarTheme: AppBarTheme(
         backgroundColor: colors.background,
+        surfaceTintColor: Colors.transparent,
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: false,
@@ -49,14 +50,36 @@ class AppTheme {
       ),
       cardTheme: CardThemeData(
         color: colors.surface,
+        surfaceTintColor: Colors.transparent,
         elevation: 0,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
       dividerTheme: DividerThemeData(color: colors.border, thickness: 1),
+      dialogTheme: DialogThemeData(
+        backgroundColor: colors.surfaceElevated,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(28),
+        ),
+        titleTextStyle: textTheme.titleLarge,
+        contentTextStyle: textTheme.bodyMedium?.copyWith(
+          color: colors.textSecondary,
+        ),
+      ),
+      datePickerTheme: DatePickerThemeData(
+        backgroundColor: colors.surfaceElevated,
+        surfaceTintColor: Colors.transparent,
+        headerBackgroundColor: colors.surfaceElevated,
+        headerForegroundColor: colors.textPrimary,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(28),
+        ),
+      ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: isDark ? colors.surface : const Color(0xFFF1F1F4),
+        fillColor: isDark ? colors.surface : const Color(0xFFEEF2F0),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide(color: colors.border),
@@ -77,6 +100,8 @@ class AppTheme {
       ),
       bottomSheetTheme: BottomSheetThemeData(
         backgroundColor: colors.surfaceElevated,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
         ),
@@ -87,13 +112,21 @@ class AppTheme {
         backgroundColor: isDark
             ? colors.surfaceElevated
             : const Color(0xFF17181C),
+        contentTextStyle: textTheme.bodyMedium?.copyWith(
+          color: isDark ? colors.textPrimary : const Color(0xFFF2F3F5),
+        ),
+        actionTextColor: colors.accent,
+        elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       ),
+      // Primary CTAs use the custom [PrimaryButton]; this only styles any
+      // stray Material FilledButton. A finite min-height (never infinite width)
+      // keeps it from stretching oddly inside dialogs or rows.
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
           backgroundColor: colors.accent,
           foregroundColor: colors.onAccent,
-          minimumSize: const Size(double.infinity, 52),
+          minimumSize: const Size(0, 52),
           textStyle: textTheme.labelLarge,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),

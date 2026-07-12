@@ -264,6 +264,14 @@
       }
     }
   },
+  "catalogPickerTitle": "Escolha um serviço",
+  "catalogSearchHint": "Buscar serviços",
+  "catalogCreateCustom": "Criar personalizada",
+  "catalogUnavailableTitle": "Catálogo indisponível",
+  "catalogUnavailableSubtitle": "Verifique sua conexão e tente novamente, ou crie uma assinatura personalizada.",
+  "catalogTryAgain": "Tentar novamente",
+  "catalogEmptyTitle": "Nenhum serviço encontrado",
+  "catalogEmptySubtitle": "Tente outra busca ou crie uma assinatura personalizada.",
   "relativeDaysAgo": "há {count, plural, =1{1 dia} other{{count} dias}}",
   "@relativeDaysAgo": {
     "placeholders": {

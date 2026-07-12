@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../app/theme/app_colors.dart';
 import '../../core/widgets/add_fab.dart';
 import '../../features/shell/widgets/renvoy_nav_bar.dart';
+import '../subscriptions/catalog/catalog_picker_sheet.dart';
 
 class AppShell extends StatefulWidget {
   const AppShell({required this.navigationShell, super.key});
@@ -73,7 +74,7 @@ class _AppShellState extends State<AppShell> {
                 right: 20,
                 bottom: navHeight + 16,
                 child: AddFab(
-                  onPressed: () => context.push('/subscriptions/new'),
+                  onPressed: () => showCatalogPickerAndOpenForm(context),
                 ),
               ),
           ],

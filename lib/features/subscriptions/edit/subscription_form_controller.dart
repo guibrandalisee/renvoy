@@ -51,8 +51,9 @@ class SubscriptionFormController {
               notes: Value(_emptyToNull(draft.notes)),
               manageUrl: Value(_emptyToNull(draft.manageUrl)),
               groupId: Value(draft.groupId),
-              colorHex: Value(_colorForName(draft.name)),
-              iconName: Value(_iconForName(draft.name)),
+              serviceSlug: Value(draft.serviceSlug),
+              colorHex: Value(draft.colorHex ?? _colorForName(draft.name)),
+              iconName: Value(draft.iconName ?? _iconForName(draft.name)),
             ),
           );
       await _saveReminderRules(id, draft);
@@ -145,6 +146,9 @@ class SubscriptionDraft {
     required this.manageUrl,
     required this.useDefaultReminders,
     required this.reminderDays,
+    this.serviceSlug,
+    this.colorHex,
+    this.iconName,
   });
 
   final String name;
@@ -160,6 +164,9 @@ class SubscriptionDraft {
   final String manageUrl;
   final bool useDefaultReminders;
   final List<int> reminderDays;
+  final String? serviceSlug;
+  final String? colorHex;
+  final String? iconName;
 }
 
 String _dateToText(DateTime date) {

@@ -531,6 +531,32 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String get catalogPickerTitle => 'Escolha um serviço';
+
+  @override
+  String get catalogSearchHint => 'Buscar serviços';
+
+  @override
+  String get catalogCreateCustom => 'Criar personalizada';
+
+  @override
+  String get catalogUnavailableTitle => 'Catálogo indisponível';
+
+  @override
+  String get catalogUnavailableSubtitle =>
+      'Verifique sua conexão e tente novamente, ou crie uma assinatura personalizada.';
+
+  @override
+  String get catalogTryAgain => 'Tentar novamente';
+
+  @override
+  String get catalogEmptyTitle => 'Nenhum serviço encontrado';
+
+  @override
+  String get catalogEmptySubtitle =>
+      'Tente outra busca ou crie uma assinatura personalizada.';
+
+  @override
   String relativeDaysAgo(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

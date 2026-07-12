@@ -986,6 +986,54 @@ abstract class AppLocalizations {
   /// **'in {count, plural, =1{1 day} other{{count} days}}'**
   String relativeInDays(int count);
 
+  /// No description provided for @catalogPickerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a service'**
+  String get catalogPickerTitle;
+
+  /// No description provided for @catalogSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search services'**
+  String get catalogSearchHint;
+
+  /// No description provided for @catalogCreateCustom.
+  ///
+  /// In en, this message translates to:
+  /// **'Create custom'**
+  String get catalogCreateCustom;
+
+  /// No description provided for @catalogUnavailableTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Catalog unavailable'**
+  String get catalogUnavailableTitle;
+
+  /// No description provided for @catalogUnavailableSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your connection and try again, or create a custom subscription.'**
+  String get catalogUnavailableSubtitle;
+
+  /// No description provided for @catalogTryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get catalogTryAgain;
+
+  /// No description provided for @catalogEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No services found'**
+  String get catalogEmptyTitle;
+
+  /// No description provided for @catalogEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Try a different search or create a custom subscription.'**
+  String get catalogEmptySubtitle;
+
   /// No description provided for @relativeDaysAgo.
   ///
   /// In en, this message translates to:

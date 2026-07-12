@@ -264,6 +264,14 @@
       }
     }
   },
+  "catalogPickerTitle": "Choose a service",
+  "catalogSearchHint": "Search services",
+  "catalogCreateCustom": "Create custom",
+  "catalogUnavailableTitle": "Catalog unavailable",
+  "catalogUnavailableSubtitle": "Check your connection and try again, or create a custom subscription.",
+  "catalogTryAgain": "Try again",
+  "catalogEmptyTitle": "No services found",
+  "catalogEmptySubtitle": "Try a different search or create a custom subscription.",
   "relativeDaysAgo": "{count, plural, =1{1 day ago} other{{count} days ago}}",
   "@relativeDaysAgo": {
     "placeholders": {

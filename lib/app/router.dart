@@ -53,7 +53,11 @@ final appRouter = GoRouter(
     ),
     GoRoute(
       path: '/subscriptions/new',
-      builder: (context, state) => const SubscriptionFormScreen(),
+      builder: (context, state) => SubscriptionFormScreen(
+        prefill: state.extra is SubscriptionFormPrefill
+            ? state.extra as SubscriptionFormPrefill
+            : null,
+      ),
     ),
     GoRoute(
       path: '/subscriptions/:id/edit',

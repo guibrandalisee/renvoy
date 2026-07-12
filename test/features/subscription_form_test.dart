@@ -35,6 +35,9 @@ void main() {
               manageUrl: '',
               useDefaultReminders: true,
               reminderDays: const [],
+              serviceSlug: 'netflix',
+              colorHex: '#E50914',
+              iconName: 'si:netflix',
             ),
           );
 
@@ -44,6 +47,9 @@ void main() {
       expect(rows, hasLength(1));
       expect(rows.single.name, 'Netflix');
       expect(rows.single.priceMinor, 1299);
+      expect(rows.single.serviceSlug, 'netflix');
+      expect(rows.single.colorHex, '#E50914');
+      expect(rows.single.iconName, 'si:netflix');
       expect(
         _parseDate(
           rows.single.nextBillDate,

@@ -13,6 +13,7 @@ import '../../core/widgets/app_sheet.dart';
 import '../../core/widgets/confirm_dialog.dart';
 import '../../core/widgets/empty_state.dart';
 import '../../core/widgets/pressable.dart';
+import '../../core/widgets/primary_button.dart';
 import '../../data/db/database.dart';
 import '../../data/db/database_provider.dart';
 import '../../domain/billing/billing_math.dart';
@@ -456,11 +457,7 @@ class _GroupFormState extends ConsumerState<_GroupForm> {
             ),
           ],
           const SizedBox(height: 20),
-          SizedBox(
-            width: double.infinity,
-            height: 52,
-            child: FilledButton(onPressed: _save, child: Text(l10n.save)),
-          ),
+          PrimaryButton(label: l10n.save, onPressed: _save),
         ],
       ),
     );
@@ -569,7 +566,7 @@ class _ColorCircle extends StatelessWidget {
           ),
         ),
         child: selected
-            ? Icon(Icons.check, size: 18, color: colors.onAccent)
+            ? const Icon(Icons.check, size: 18, color: Color(0xFFFFFFFF))
             : null,
       ),
     );

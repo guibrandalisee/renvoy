@@ -8,6 +8,7 @@ import '../../core/formatters.dart';
 import '../../core/haptics.dart';
 import '../../core/widgets/app_shimmer.dart';
 import '../../core/widgets/empty_state.dart';
+import '../subscriptions/catalog/catalog_picker_sheet.dart';
 import '../../core/widgets/pressable.dart';
 import '../../core/widgets/status_bar_fade.dart';
 import '../../data/db/database_provider.dart';
@@ -250,7 +251,7 @@ class _HomeEmpty extends StatelessWidget {
               title: l10n.emptyTitle,
               subtitle: l10n.emptySubtitle,
               cta: Pressable(
-                onPressed: () => context.push('/subscriptions/new'),
+                onPressed: () => showCatalogPickerAndOpenForm(context),
                 haptic: HapticType.selection,
                 borderRadius: BorderRadius.circular(14),
                 child: Container(
