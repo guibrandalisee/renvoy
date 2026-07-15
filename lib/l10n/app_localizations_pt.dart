@@ -154,10 +154,27 @@ class AppLocalizationsPt extends AppLocalizations {
   String get firstBillDate => 'Primeira cobrança';
 
   @override
+  String get subscriptionStartDate => 'Início da assinatura';
+
+  @override
   String get freeTrial => 'Teste grátis';
 
   @override
   String get trialEnds => 'Teste termina';
+
+  @override
+  String get trialEndAndFirstCharge => 'Fim do teste · Primeira cobrança';
+
+  @override
+  String trialBillingExplanation(int count, String date) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Teste grátis de $count dias',
+      one: 'Teste grátis de 1 dia',
+    );
+    return '$_temp0. Nenhuma cobrança hoje. O pagamento começa em $date, e as próximas renovações seguem essa data.';
+  }
 
   @override
   String get group => 'Grupo';
@@ -363,16 +380,16 @@ class AppLocalizationsPt extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count renovações',
-      one: '1 renovação',
-      zero: '0 renovações',
+      other: '$count cobranças',
+      one: '1 cobrança',
+      zero: '0 cobranças',
     );
     return '$_temp0';
   }
 
   @override
   String renewalsOn(String date) {
-    return 'Renovações em $date';
+    return 'Cobranças em $date';
   }
 
   @override

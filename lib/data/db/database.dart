@@ -31,13 +31,27 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
     onCreate: (m) async {
       await m.createAll();
       await _seedDefaults();
+    },
+    onUpgrade: (m, from, to) async {
+      if (from < 2) {
+        await m.addColumn(subscriptions, subscriptions.startDate);
+        await customStatement(
+          'UPDATE subscriptions SET start_date = first_bill_date',
+        );
+        await customStatement(
+          'UPDATE subscriptions '
+          'SET first_bill_date = trial_end_date, '
+          'next_bill_date = trial_end_date '
+          'WHERE trial_end_date IS NOT NULL',
+        );
+      }
     },
   );
 

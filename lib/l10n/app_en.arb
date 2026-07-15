@@ -52,8 +52,21 @@
   "months": "months",
   "years": "years",
   "firstBillDate": "First bill date",
+  "subscriptionStartDate": "Subscription starts",
   "freeTrial": "Free trial",
   "trialEnds": "Trial ends",
+  "trialEndAndFirstCharge": "Trial ends · First charge",
+  "trialBillingExplanation": "{count, plural, =1{1-day free trial} other{{count}-day free trial}}. No charge today. Billing starts on {date}, and future renewals follow this date.",
+  "@trialBillingExplanation": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "group": "Group",
   "reminders": "Reminders",
   "reminderDefault": "Default (3 days, same day)",
@@ -167,7 +180,7 @@
   "undo": "UNDO",
   "keep": "Keep",
   "thisMonth": "This month",
-  "renewalsCount": "{count, plural, =0{0 renewals} =1{1 renewal} other{{count} renewals}}",
+  "renewalsCount": "{count, plural, =0{0 charges} =1{1 charge} other{{count} charges}}",
   "@renewalsCount": {
     "placeholders": {
       "count": {
@@ -175,7 +188,7 @@
       }
     }
   },
-  "renewalsOn": "Renewals on {date}",
+  "renewalsOn": "Charges on {date}",
   "@renewalsOn": {
     "placeholders": {
       "date": {

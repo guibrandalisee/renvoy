@@ -734,6 +734,17 @@ class $SubscriptionsTable extends Subscriptions
     requiredDuringInsert: false,
     defaultValue: const Constant(1),
   );
+  static const VerificationMeta _startDateMeta = const VerificationMeta(
+    'startDate',
+  );
+  @override
+  late final GeneratedColumn<String> startDate = GeneratedColumn<String>(
+    'start_date',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _firstBillDateMeta = const VerificationMeta(
     'firstBillDate',
   );
@@ -856,6 +867,7 @@ class $SubscriptionsTable extends Subscriptions
     currency,
     cycleUnit,
     cycleCount,
+    startDate,
     firstBillDate,
     nextBillDate,
     trialEndDate,
@@ -949,6 +961,12 @@ class $SubscriptionsTable extends Subscriptions
       context.handle(
         _cycleCountMeta,
         cycleCount.isAcceptableOrUnknown(data['cycle_count']!, _cycleCountMeta),
+      );
+    }
+    if (data.containsKey('start_date')) {
+      context.handle(
+        _startDateMeta,
+        startDate.isAcceptableOrUnknown(data['start_date']!, _startDateMeta),
       );
     }
     if (data.containsKey('first_bill_date')) {
@@ -1076,6 +1094,10 @@ class $SubscriptionsTable extends Subscriptions
         DriftSqlType.int,
         data['${effectivePrefix}cycle_count'],
       )!,
+      startDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}start_date'],
+      ),
       firstBillDate: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}first_bill_date'],
@@ -1144,6 +1166,7 @@ class Subscription extends DataClass implements Insertable<Subscription> {
   final String currency;
   final CycleUnit cycleUnit;
   final int cycleCount;
+  final String? startDate;
   final String firstBillDate;
   final String nextBillDate;
   final String? trialEndDate;
@@ -1166,6 +1189,7 @@ class Subscription extends DataClass implements Insertable<Subscription> {
     required this.currency,
     required this.cycleUnit,
     required this.cycleCount,
+    this.startDate,
     required this.firstBillDate,
     required this.nextBillDate,
     this.trialEndDate,
@@ -1199,6 +1223,9 @@ class Subscription extends DataClass implements Insertable<Subscription> {
       );
     }
     map['cycle_count'] = Variable<int>(cycleCount);
+    if (!nullToAbsent || startDate != null) {
+      map['start_date'] = Variable<String>(startDate);
+    }
     map['first_bill_date'] = Variable<String>(firstBillDate);
     map['next_bill_date'] = Variable<String>(nextBillDate);
     if (!nullToAbsent || trialEndDate != null) {
@@ -1247,6 +1274,9 @@ class Subscription extends DataClass implements Insertable<Subscription> {
       currency: Value(currency),
       cycleUnit: Value(cycleUnit),
       cycleCount: Value(cycleCount),
+      startDate: startDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(startDate),
       firstBillDate: Value(firstBillDate),
       nextBillDate: Value(nextBillDate),
       trialEndDate: trialEndDate == null && nullToAbsent
@@ -1291,6 +1321,7 @@ class Subscription extends DataClass implements Insertable<Subscription> {
       currency: serializer.fromJson<String>(json['currency']),
       cycleUnit: serializer.fromJson<CycleUnit>(json['cycleUnit']),
       cycleCount: serializer.fromJson<int>(json['cycleCount']),
+      startDate: serializer.fromJson<String?>(json['startDate']),
       firstBillDate: serializer.fromJson<String>(json['firstBillDate']),
       nextBillDate: serializer.fromJson<String>(json['nextBillDate']),
       trialEndDate: serializer.fromJson<String?>(json['trialEndDate']),
@@ -1318,6 +1349,7 @@ class Subscription extends DataClass implements Insertable<Subscription> {
       'currency': serializer.toJson<String>(currency),
       'cycleUnit': serializer.toJson<CycleUnit>(cycleUnit),
       'cycleCount': serializer.toJson<int>(cycleCount),
+      'startDate': serializer.toJson<String?>(startDate),
       'firstBillDate': serializer.toJson<String>(firstBillDate),
       'nextBillDate': serializer.toJson<String>(nextBillDate),
       'trialEndDate': serializer.toJson<String?>(trialEndDate),
@@ -1343,6 +1375,7 @@ class Subscription extends DataClass implements Insertable<Subscription> {
     String? currency,
     CycleUnit? cycleUnit,
     int? cycleCount,
+    Value<String?> startDate = const Value.absent(),
     String? firstBillDate,
     String? nextBillDate,
     Value<String?> trialEndDate = const Value.absent(),
@@ -1365,6 +1398,7 @@ class Subscription extends DataClass implements Insertable<Subscription> {
     currency: currency ?? this.currency,
     cycleUnit: cycleUnit ?? this.cycleUnit,
     cycleCount: cycleCount ?? this.cycleCount,
+    startDate: startDate.present ? startDate.value : this.startDate,
     firstBillDate: firstBillDate ?? this.firstBillDate,
     nextBillDate: nextBillDate ?? this.nextBillDate,
     trialEndDate: trialEndDate.present ? trialEndDate.value : this.trialEndDate,
@@ -1397,6 +1431,7 @@ class Subscription extends DataClass implements Insertable<Subscription> {
       cycleCount: data.cycleCount.present
           ? data.cycleCount.value
           : this.cycleCount,
+      startDate: data.startDate.present ? data.startDate.value : this.startDate,
       firstBillDate: data.firstBillDate.present
           ? data.firstBillDate.value
           : this.firstBillDate,
@@ -1432,6 +1467,7 @@ class Subscription extends DataClass implements Insertable<Subscription> {
           ..write('currency: $currency, ')
           ..write('cycleUnit: $cycleUnit, ')
           ..write('cycleCount: $cycleCount, ')
+          ..write('startDate: $startDate, ')
           ..write('firstBillDate: $firstBillDate, ')
           ..write('nextBillDate: $nextBillDate, ')
           ..write('trialEndDate: $trialEndDate, ')
@@ -1459,6 +1495,7 @@ class Subscription extends DataClass implements Insertable<Subscription> {
     currency,
     cycleUnit,
     cycleCount,
+    startDate,
     firstBillDate,
     nextBillDate,
     trialEndDate,
@@ -1485,6 +1522,7 @@ class Subscription extends DataClass implements Insertable<Subscription> {
           other.currency == this.currency &&
           other.cycleUnit == this.cycleUnit &&
           other.cycleCount == this.cycleCount &&
+          other.startDate == this.startDate &&
           other.firstBillDate == this.firstBillDate &&
           other.nextBillDate == this.nextBillDate &&
           other.trialEndDate == this.trialEndDate &&
@@ -1509,6 +1547,7 @@ class SubscriptionsCompanion extends UpdateCompanion<Subscription> {
   final Value<String> currency;
   final Value<CycleUnit> cycleUnit;
   final Value<int> cycleCount;
+  final Value<String?> startDate;
   final Value<String> firstBillDate;
   final Value<String> nextBillDate;
   final Value<String?> trialEndDate;
@@ -1532,6 +1571,7 @@ class SubscriptionsCompanion extends UpdateCompanion<Subscription> {
     this.currency = const Value.absent(),
     this.cycleUnit = const Value.absent(),
     this.cycleCount = const Value.absent(),
+    this.startDate = const Value.absent(),
     this.firstBillDate = const Value.absent(),
     this.nextBillDate = const Value.absent(),
     this.trialEndDate = const Value.absent(),
@@ -1556,6 +1596,7 @@ class SubscriptionsCompanion extends UpdateCompanion<Subscription> {
     required String currency,
     required CycleUnit cycleUnit,
     this.cycleCount = const Value.absent(),
+    this.startDate = const Value.absent(),
     required String firstBillDate,
     required String nextBillDate,
     this.trialEndDate = const Value.absent(),
@@ -1589,6 +1630,7 @@ class SubscriptionsCompanion extends UpdateCompanion<Subscription> {
     Expression<String>? currency,
     Expression<String>? cycleUnit,
     Expression<int>? cycleCount,
+    Expression<String>? startDate,
     Expression<String>? firstBillDate,
     Expression<String>? nextBillDate,
     Expression<String>? trialEndDate,
@@ -1613,6 +1655,7 @@ class SubscriptionsCompanion extends UpdateCompanion<Subscription> {
       if (currency != null) 'currency': currency,
       if (cycleUnit != null) 'cycle_unit': cycleUnit,
       if (cycleCount != null) 'cycle_count': cycleCount,
+      if (startDate != null) 'start_date': startDate,
       if (firstBillDate != null) 'first_bill_date': firstBillDate,
       if (nextBillDate != null) 'next_bill_date': nextBillDate,
       if (trialEndDate != null) 'trial_end_date': trialEndDate,
@@ -1639,6 +1682,7 @@ class SubscriptionsCompanion extends UpdateCompanion<Subscription> {
     Value<String>? currency,
     Value<CycleUnit>? cycleUnit,
     Value<int>? cycleCount,
+    Value<String?>? startDate,
     Value<String>? firstBillDate,
     Value<String>? nextBillDate,
     Value<String?>? trialEndDate,
@@ -1663,6 +1707,7 @@ class SubscriptionsCompanion extends UpdateCompanion<Subscription> {
       currency: currency ?? this.currency,
       cycleUnit: cycleUnit ?? this.cycleUnit,
       cycleCount: cycleCount ?? this.cycleCount,
+      startDate: startDate ?? this.startDate,
       firstBillDate: firstBillDate ?? this.firstBillDate,
       nextBillDate: nextBillDate ?? this.nextBillDate,
       trialEndDate: trialEndDate ?? this.trialEndDate,
@@ -1714,6 +1759,9 @@ class SubscriptionsCompanion extends UpdateCompanion<Subscription> {
     }
     if (cycleCount.present) {
       map['cycle_count'] = Variable<int>(cycleCount.value);
+    }
+    if (startDate.present) {
+      map['start_date'] = Variable<String>(startDate.value);
     }
     if (firstBillDate.present) {
       map['first_bill_date'] = Variable<String>(firstBillDate.value);
@@ -1767,6 +1815,7 @@ class SubscriptionsCompanion extends UpdateCompanion<Subscription> {
           ..write('currency: $currency, ')
           ..write('cycleUnit: $cycleUnit, ')
           ..write('cycleCount: $cycleCount, ')
+          ..write('startDate: $startDate, ')
           ..write('firstBillDate: $firstBillDate, ')
           ..write('nextBillDate: $nextBillDate, ')
           ..write('trialEndDate: $trialEndDate, ')
@@ -3593,6 +3642,7 @@ typedef $$SubscriptionsTableCreateCompanionBuilder =
       required String currency,
       required CycleUnit cycleUnit,
       Value<int> cycleCount,
+      Value<String?> startDate,
       required String firstBillDate,
       required String nextBillDate,
       Value<String?> trialEndDate,
@@ -3618,6 +3668,7 @@ typedef $$SubscriptionsTableUpdateCompanionBuilder =
       Value<String> currency,
       Value<CycleUnit> cycleUnit,
       Value<int> cycleCount,
+      Value<String?> startDate,
       Value<String> firstBillDate,
       Value<String> nextBillDate,
       Value<String?> trialEndDate,
@@ -3762,6 +3813,11 @@ class $$SubscriptionsTableFilterComposer
 
   ColumnFilters<int> get cycleCount => $composableBuilder(
     column: $table.cycleCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get startDate => $composableBuilder(
+    column: $table.startDate,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -3949,6 +4005,11 @@ class $$SubscriptionsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get startDate => $composableBuilder(
+    column: $table.startDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get firstBillDate => $composableBuilder(
     column: $table.firstBillDate,
     builder: (column) => ColumnOrderings(column),
@@ -4065,6 +4126,9 @@ class $$SubscriptionsTableAnnotationComposer
     column: $table.cycleCount,
     builder: (column) => column,
   );
+
+  GeneratedColumn<String> get startDate =>
+      $composableBuilder(column: $table.startDate, builder: (column) => column);
 
   GeneratedColumn<String> get firstBillDate => $composableBuilder(
     column: $table.firstBillDate,
@@ -4218,6 +4282,7 @@ class $$SubscriptionsTableTableManager
                 Value<String> currency = const Value.absent(),
                 Value<CycleUnit> cycleUnit = const Value.absent(),
                 Value<int> cycleCount = const Value.absent(),
+                Value<String?> startDate = const Value.absent(),
                 Value<String> firstBillDate = const Value.absent(),
                 Value<String> nextBillDate = const Value.absent(),
                 Value<String?> trialEndDate = const Value.absent(),
@@ -4241,6 +4306,7 @@ class $$SubscriptionsTableTableManager
                 currency: currency,
                 cycleUnit: cycleUnit,
                 cycleCount: cycleCount,
+                startDate: startDate,
                 firstBillDate: firstBillDate,
                 nextBillDate: nextBillDate,
                 trialEndDate: trialEndDate,
@@ -4266,6 +4332,7 @@ class $$SubscriptionsTableTableManager
                 required String currency,
                 required CycleUnit cycleUnit,
                 Value<int> cycleCount = const Value.absent(),
+                Value<String?> startDate = const Value.absent(),
                 required String firstBillDate,
                 required String nextBillDate,
                 Value<String?> trialEndDate = const Value.absent(),
@@ -4289,6 +4356,7 @@ class $$SubscriptionsTableTableManager
                 currency: currency,
                 cycleUnit: cycleUnit,
                 cycleCount: cycleCount,
+                startDate: startDate,
                 firstBillDate: firstBillDate,
                 nextBillDate: nextBillDate,
                 trialEndDate: trialEndDate,

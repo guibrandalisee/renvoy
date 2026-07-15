@@ -14,7 +14,7 @@ class BackupService {
   BackupService(this._db);
 
   static const format = 'renvoy.backup';
-  static const currentVersion = 1;
+  static const currentVersion = 2;
 
   final AppDatabase _db;
 
@@ -180,8 +180,15 @@ Map<String, dynamic> _jsonRow(Map<String, dynamic> row) {
 }
 
 Map<String, dynamic> _restoreSubscriptionJson(Map<String, dynamic> row) {
+  final isLegacy = !row.containsKey('startDate');
+  final legacyTrialEnd = row['trialEndDate'];
   return {
     ...row,
+    if (isLegacy) 'startDate': row['firstBillDate'],
+    if (isLegacy && legacyTrialEnd is String) ...{
+      'firstBillDate': legacyTrialEnd,
+      'nextBillDate': legacyTrialEnd,
+    },
     if (row['cycleUnit'] is String)
       'cycleUnit': CycleUnit.values.byName(row['cycleUnit'] as String),
     if (row['status'] is String)
@@ -237,6 +244,9 @@ String buildSubscriptionsCsv(
       'price',
       'currency',
       'cycle',
+      'subscription_start',
+      'first_charge',
+      'trial_end',
       'next_renewal',
       'status',
       'group',
@@ -250,6 +260,9 @@ String buildSubscriptionsCsv(
         (subscription.priceMinor / 100).toStringAsFixed(2),
         subscription.currency,
         _cycle(subscription),
+        subscription.startDate ?? subscription.firstBillDate,
+        subscription.firstBillDate,
+        subscription.trialEndDate ?? '',
         subscription.nextBillDate,
         subscription.status.name,
         groupName(subscription.groupId),

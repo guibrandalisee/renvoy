@@ -101,6 +101,26 @@ void main() {
     final subscription = await database.subscriptionsDao.watchById(id).first;
     expect(subscription?.nextBillDate, '2026-07-31');
   });
+
+  test(
+    'trial conversion keeps future renewals anchored to first charge',
+    () async {
+      final id = await database.subscriptionsDao.insert(
+        _subscription(
+          name: 'Trial anchor',
+          firstBillDate: '2026-07-17',
+          nextBillDate: '2026-07-17',
+          trialEndDate: '2026-07-17',
+        ),
+      );
+
+      await service.rollForward(DateTime.utc(2026, 7, 18));
+
+      final subscription = await database.subscriptionsDao.watchById(id).first;
+      expect(subscription?.trialEndDate, isNull);
+      expect(subscription?.nextBillDate, '2026-08-17');
+    },
+  );
 }
 
 SubscriptionsCompanion _subscription({

@@ -52,8 +52,21 @@
   "months": "meses",
   "years": "anos",
   "firstBillDate": "Primeira cobrança",
+  "subscriptionStartDate": "Início da assinatura",
   "freeTrial": "Teste grátis",
   "trialEnds": "Teste termina",
+  "trialEndAndFirstCharge": "Fim do teste · Primeira cobrança",
+  "trialBillingExplanation": "{count, plural, =1{Teste grátis de 1 dia} other{Teste grátis de {count} dias}}. Nenhuma cobrança hoje. O pagamento começa em {date}, e as próximas renovações seguem essa data.",
+  "@trialBillingExplanation": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "group": "Grupo",
   "reminders": "Lembretes",
   "reminderDefault": "Padrão (3 dias, no dia)",
@@ -167,7 +180,7 @@
   "undo": "DESFAZER",
   "keep": "Manter",
   "thisMonth": "Este mês",
-  "renewalsCount": "{count, plural, =0{0 renovações} =1{1 renovação} other{{count} renovações}}",
+  "renewalsCount": "{count, plural, =0{0 cobranças} =1{1 cobrança} other{{count} cobranças}}",
   "@renewalsCount": {
     "placeholders": {
       "count": {
@@ -175,7 +188,7 @@
       }
     }
   },
-  "renewalsOn": "Renovações em {date}",
+  "renewalsOn": "Cobranças em {date}",
   "@renewalsOn": {
     "placeholders": {
       "date": {

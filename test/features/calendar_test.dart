@@ -44,6 +44,30 @@ void main() {
     expect(map.keys, contains(DateTime.utc(2026, 2, 28)));
     expect(map[DateTime.utc(2026, 2, 28)], [subscription]);
   });
+
+  test('free trial appears on its first charge date, not its start date', () {
+    final subscription = Subscription(
+      id: 'sub_1',
+      createdAt: 0,
+      updatedAt: 0,
+      dirty: true,
+      name: 'Trial service',
+      priceMinor: 2790,
+      currency: 'BRL',
+      cycleUnit: CycleUnit.month,
+      cycleCount: 1,
+      startDate: '2026-07-10',
+      firstBillDate: '2026-07-17',
+      nextBillDate: '2026-07-17',
+      trialEndDate: '2026-07-17',
+      status: SubscriptionStatus.active,
+    );
+
+    final map = buildRenewalMap([subscription], DateTime.utc(2026, 7));
+
+    expect(map[DateTime.utc(2026, 7, 10)], isNull);
+    expect(map[DateTime.utc(2026, 7, 17)], [subscription]);
+  });
 }
 
 Subscription _subscription({

@@ -84,6 +84,53 @@ void main() {
     });
   });
 
+  test('notification body describes the delay on its delivery day', () async {
+    final plugin = _FakeNotificationsPlugin();
+    final service = _service(plugin);
+
+    await service.rescheduleAll(
+      activeSubs: [_subscription(id: 'sub-1', nextBillDate: '2026-02-07')],
+      perSubDays: const {},
+      globalDays: const [3],
+      strings: strings,
+    );
+
+    final schedule = plugin.schedules.single;
+    expect(schedule.scheduledDate, tz.TZDateTime.utc(2026, 2, 4, 9));
+    expect(schedule.body, contains('in 3 days'));
+    expect(schedule.body, isNot(contains('in 6 days')));
+  });
+
+  test('trial ending on next bill date does not duplicate reminder', () async {
+    final plugin = _FakeNotificationsPlugin();
+    final service = _service(plugin);
+
+    await service.rescheduleAll(
+      activeSubs: [
+        _subscription(
+          id: 'sub-1',
+          nextBillDate: '2026-02-07',
+          trialEndDate: '2026-02-07',
+        ),
+      ],
+      perSubDays: const {},
+      globalDays: const [3, 0],
+      strings: strings,
+    );
+
+    expect(plugin.schedules, hasLength(2));
+    expect(plugin.schedules.map((schedule) => schedule.title), {
+      'Trial ending',
+    });
+    expect(
+      plugin.schedules.map((schedule) => schedule.body),
+      containsAll(<String>[
+        'Netflix trial ends in 3 days',
+        'Netflix trial ends today',
+      ]),
+    );
+  });
+
   test('per-subscription rules override global rules', () async {
     final plugin = _FakeNotificationsPlugin();
     final service = _service(plugin);

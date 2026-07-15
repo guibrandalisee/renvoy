@@ -27,7 +27,7 @@ void main() {
               currency: 'USD',
               cycleUnit: CycleUnit.month,
               cycleCount: 1,
-              firstBillDate: dateOnlyUtc(DateTime.now()),
+              startDate: dateOnlyUtc(DateTime.now()),
               trialEndDate: null,
               groupId: null,
               paymentMethod: '',
@@ -58,9 +58,59 @@ void main() {
       );
     },
   );
+
+  test(
+    'free trial anchors the first charge and renewals at trial end',
+    () async {
+      final database = AppDatabase.forTesting(NativeDatabase.memory());
+      final container = ProviderContainer(
+        overrides: [databaseProvider.overrideWithValue(database)],
+      );
+      addTearDown(container.dispose);
+      addTearDown(database.close);
+      final startDate = dateOnlyUtc(DateTime.now());
+      final trialEndDate = startDate.add(const Duration(days: 7));
+
+      await container
+          .read(subscriptionFormControllerProvider)
+          .save(
+            SubscriptionDraft(
+              name: 'Trial service',
+              priceMinor: 2790,
+              currency: 'BRL',
+              cycleUnit: CycleUnit.month,
+              cycleCount: 1,
+              startDate: startDate,
+              trialEndDate: trialEndDate,
+              groupId: null,
+              paymentMethod: '',
+              notes: '',
+              manageUrl: '',
+              useDefaultReminders: true,
+              reminderDays: const [],
+            ),
+          );
+
+      final subscription =
+          (await database.subscriptionsDao.watchAll().first).single;
+      final expectedStart = _formatDate(startDate);
+      final expectedFirstCharge = _formatDate(trialEndDate);
+      expect(subscription.startDate, expectedStart);
+      expect(subscription.firstBillDate, expectedFirstCharge);
+      expect(subscription.nextBillDate, expectedFirstCharge);
+      expect(subscription.trialEndDate, expectedFirstCharge);
+    },
+  );
 }
 
 DateTime _parseDate(String value) {
   final parts = value.split('-').map(int.parse).toList();
   return DateTime.utc(parts[0], parts[1], parts[2]);
+}
+
+String _formatDate(DateTime value) {
+  final year = value.year.toString().padLeft(4, '0');
+  final month = value.month.toString().padLeft(2, '0');
+  final day = value.day.toString().padLeft(2, '0');
+  return '$year-$month-$day';
 }

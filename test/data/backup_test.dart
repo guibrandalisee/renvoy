@@ -112,6 +112,48 @@ void main() {
     expect(preview.groups, 1);
     expect(tree.map((node) => node.group.id), contains('group-orphan'));
   });
+
+  test('import normalizes trial dates from version 1 backups', () async {
+    final database = AppDatabase.forTesting(NativeDatabase.memory());
+    addTearDown(database.close);
+    await _clear(database);
+    final source = _backupJson(
+      version: 1,
+      subscriptions: [
+        {
+          'id': 'legacy-trial',
+          'createdAt': 0,
+          'updatedAt': 0,
+          'deletedAt': null,
+          'dirty': true,
+          'name': 'Legacy trial',
+          'serviceSlug': null,
+          'priceMinor': 2790,
+          'currency': 'BRL',
+          'cycleUnit': 'month',
+          'cycleCount': 1,
+          'firstBillDate': '2026-07-10',
+          'nextBillDate': '2026-07-17',
+          'trialEndDate': '2026-07-17',
+          'status': 'active',
+          'paymentMethod': null,
+          'notes': null,
+          'manageUrl': null,
+          'groupId': null,
+          'colorHex': null,
+          'iconName': null,
+        },
+      ],
+    );
+
+    await BackupService(database).importJson(source);
+
+    final subscription =
+        (await database.subscriptionsDao.watchAll().first).single;
+    expect(subscription.startDate, '2026-07-10');
+    expect(subscription.firstBillDate, '2026-07-17');
+    expect(subscription.nextBillDate, '2026-07-17');
+  });
 }
 
 Future<void> _clear(AppDatabase database) async {
@@ -157,6 +199,7 @@ Future<void> _seedBackupRows(
           priceMinor: 1299,
           currency: 'USD',
           cycleUnit: CycleUnit.month,
+          startDate: const Value('2026-01-01'),
           firstBillDate: '2026-01-01',
           nextBillDate: '2026-08-01',
           status: SubscriptionStatus.active,
@@ -188,13 +231,17 @@ Future<void> _seedBackupRows(
       );
 }
 
-String _backupJson({List<Map<String, Object?>> groups = const []}) {
+String _backupJson({
+  int version = BackupService.currentVersion,
+  List<Map<String, Object?>> subscriptions = const [],
+  List<Map<String, Object?>> groups = const [],
+}) {
   return jsonEncode({
     'format': BackupService.format,
-    'version': BackupService.currentVersion,
+    'version': version,
     'exported_at': '2026-07-08T00:00:00.000Z',
     'data': {
-      'subscriptions': const [],
+      'subscriptions': subscriptions,
       'groups': groups,
       'price_history': const [],
       'reminder_rules': const [],

@@ -15,6 +15,7 @@ void main() {
       currency: 'USD',
       cycleUnit: CycleUnit.month,
       cycleCount: 1,
+      startDate: '2026-01-01',
       firstBillDate: '2026-01-01',
       nextBillDate: '2026-02-01',
       status: SubscriptionStatus.active,
@@ -29,7 +30,12 @@ void main() {
     ], groupName: (id) => id == 'group-1' ? 'Work' : '');
 
     expect(csv, contains('"Plan, ""Pro""\nTeam"'));
-    expect(csv, contains(',12.34,USD,month,2026-02-01,active,Work,'));
+    expect(
+      csv,
+      contains(
+        ',12.34,USD,month,2026-01-01,2026-01-01,,2026-02-01,active,Work,',
+      ),
+    );
     expect(csv, contains('"Line 1\nLine 2"'));
   });
 }

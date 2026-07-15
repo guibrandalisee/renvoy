@@ -154,10 +154,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String get firstBillDate => 'First bill date';
 
   @override
+  String get subscriptionStartDate => 'Subscription starts';
+
+  @override
   String get freeTrial => 'Free trial';
 
   @override
   String get trialEnds => 'Trial ends';
+
+  @override
+  String get trialEndAndFirstCharge => 'Trial ends · First charge';
+
+  @override
+  String trialBillingExplanation(int count, String date) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count-day free trial',
+      one: '1-day free trial',
+    );
+    return '$_temp0. No charge today. Billing starts on $date, and future renewals follow this date.';
+  }
 
   @override
   String get group => 'Group';
@@ -363,16 +380,16 @@ class AppLocalizationsEn extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count renewals',
-      one: '1 renewal',
-      zero: '0 renewals',
+      other: '$count charges',
+      one: '1 charge',
+      zero: '0 charges',
     );
     return '$_temp0';
   }
 
   @override
   String renewalsOn(String date) {
-    return 'Renewals on $date';
+    return 'Charges on $date';
   }
 
   @override

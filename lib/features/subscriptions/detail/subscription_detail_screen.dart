@@ -105,10 +105,9 @@ class _DetailContent extends ConsumerWidget {
       subscription.cycleUnit,
       subscription.cycleCount,
     );
-    final trialDate =
-        subscription.trialEndDate == null
-            ? null
-            : _parseDate(subscription.trialEndDate!);
+    final trialDate = subscription.trialEndDate == null
+        ? null
+        : _parseDate(subscription.trialEndDate!);
     final trialActive =
         trialDate != null && dateOnlyUtc(DateTime.now()).isBefore(trialDate);
 
@@ -125,20 +124,15 @@ class _DetailContent extends ConsumerWidget {
             child: Row(
               children: [
                 Pressable(
-                  onPressed:
-                      () =>
-                          context.canPop()
-                              ? context.pop()
-                              : context.go('/home'),
+                  onPressed: () =>
+                      context.canPop() ? context.pop() : context.go('/home'),
                   borderRadius: BorderRadius.circular(999),
                   child: _CircleButton(icon: Icons.chevron_left),
                 ),
                 const Spacer(),
                 Pressable(
-                  onPressed:
-                      () => context.push(
-                        '/subscriptions/${subscription.id}/edit',
-                      ),
+                  onPressed: () =>
+                      context.push('/subscriptions/${subscription.id}/edit'),
                   borderRadius: BorderRadius.circular(999),
                   child: _CircleButton(icon: Icons.edit_outlined),
                 ),
@@ -214,10 +208,9 @@ class _DetailContent extends ConsumerWidget {
               margin: const EdgeInsets.fromLTRB(20, 16, 20, 0),
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color:
-                    subscription.status == SubscriptionStatus.paused
-                        ? colors.warningSoft
-                        : colors.accentSoft,
+                color: subscription.status == SubscriptionStatus.paused
+                    ? colors.warningSoft
+                    : colors.accentSoft,
                 borderRadius: BorderRadius.circular(14),
               ),
               child: Row(
@@ -227,10 +220,9 @@ class _DetailContent extends ConsumerWidget {
                         ? Icons.pause_circle
                         : Icons.card_giftcard,
                     size: 18,
-                    color:
-                        subscription.status == SubscriptionStatus.paused
-                            ? colors.warning
-                            : colors.accent,
+                    color: subscription.status == SubscriptionStatus.paused
+                        ? colors.warning
+                        : colors.accent,
                   ),
                   const SizedBox(width: 10),
                   Expanded(
@@ -238,13 +230,12 @@ class _DetailContent extends ConsumerWidget {
                       subscription.status == SubscriptionStatus.paused
                           ? l10n.pausedNotCounted
                           : l10n.trialEndsDate(
-                            Dates.short(trialDate!, l10n.localeName),
-                          ),
+                              Dates.short(trialDate!, l10n.localeName),
+                            ),
                       style: textTheme.bodyMedium?.copyWith(
-                        color:
-                            subscription.status == SubscriptionStatus.paused
-                                ? colors.warning
-                                : colors.accent,
+                        color: subscription.status == SubscriptionStatus.paused
+                            ? colors.warning
+                            : colors.accent,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -277,9 +268,17 @@ class _InfoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final nextDate = _parseDate(subscription.nextBillDate);
+    final firstBillDate = _parseDate(subscription.firstBillDate);
+    final startDate = _parseDate(
+      subscription.startDate ?? subscription.firstBillDate,
+    );
+    final trialEndDate = subscription.trialEndDate == null
+        ? null
+        : _parseDate(subscription.trialEndDate!);
+    final trialActive = isInTrial(trialEndDate, DateTime.now());
     final rows = <Widget>[
       _InfoRow(
-        label: l10n.nextRenewal,
+        label: trialActive ? l10n.firstBill : l10n.nextRenewal,
         value:
             '${Dates.short(nextDate, l10n.localeName)}  ${Dates.relative(nextDate, l10n)}',
       ),
@@ -288,9 +287,9 @@ class _InfoCard extends StatelessWidget {
         value: _cycleLabel(context, subscription),
       ),
       _InfoRow(
-        label: l10n.firstBill,
+        label: trialActive ? l10n.subscriptionStartDate : l10n.firstBill,
         value: Dates.short(
-          _parseDate(subscription.firstBillDate),
+          trialActive ? startDate : firstBillDate,
           l10n.localeName,
         ),
       ),
@@ -390,15 +389,13 @@ class _PriceHistoryCard extends StatelessWidget {
                       currency,
                       locale: l10n.localeName,
                     ),
-                    style: moneyStyle(
-                      textTheme.bodyMedium ?? const TextStyle(),
-                    ).copyWith(
-                      color:
-                          entry.newPriceMinor > entry.oldPriceMinor
+                    style: moneyStyle(textTheme.bodyMedium ?? const TextStyle())
+                        .copyWith(
+                          color: entry.newPriceMinor > entry.oldPriceMinor
                               ? colors.danger
                               : colors.success,
-                      fontWeight: FontWeight.w600,
-                    ),
+                          fontWeight: FontWeight.w600,
+                        ),
                   ),
                 ],
               ),
@@ -424,8 +421,9 @@ class _ActionsSection extends ConsumerWidget {
       child: Column(
         children: [
           _ActionRow(
-            icon:
-                paused ? Icons.play_circle_outline : Icons.pause_circle_outline,
+            icon: paused
+                ? Icons.play_circle_outline
+                : Icons.pause_circle_outline,
             label: paused ? l10n.resume : l10n.pause,
             color: colors.textPrimary,
             onPressed: () async {
@@ -547,8 +545,9 @@ class _InfoRow extends StatelessWidget {
     final row = Padding(
       padding: const EdgeInsets.all(16),
       child: Row(
-        crossAxisAlignment:
-            multiline ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+        crossAxisAlignment: multiline
+            ? CrossAxisAlignment.start
+            : CrossAxisAlignment.center,
         children: [
           Expanded(
             child: Text(

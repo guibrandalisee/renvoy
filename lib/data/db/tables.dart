@@ -20,6 +20,7 @@ class Subscriptions extends SyncTable {
   TextColumn get currency => text().withLength(min: 3, max: 3)();
   TextColumn get cycleUnit => text().map(const CycleUnitConverter())();
   IntColumn get cycleCount => integer().withDefault(const Constant(1))();
+  TextColumn get startDate => text().nullable()();
   TextColumn get firstBillDate => text()();
   TextColumn get nextBillDate => text()();
   TextColumn get trialEndDate => text().nullable()();

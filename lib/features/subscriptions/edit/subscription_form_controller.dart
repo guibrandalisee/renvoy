@@ -19,16 +19,16 @@ class SubscriptionFormController {
 
   Future<String> save(SubscriptionDraft draft, {Subscription? original}) async {
     final today = dateOnlyUtc(DateTime.now());
-    var nextBillDate = nextBillOnOrAfter(
-      draft.firstBillDate,
+    final startDate = dateOnlyUtc(draft.startDate);
+    final firstBillDate = draft.trialEndDate == null
+        ? startDate
+        : dateOnlyUtc(draft.trialEndDate!);
+    final nextBillDate = nextBillOnOrAfter(
+      firstBillDate,
       draft.cycleUnit,
       draft.cycleCount,
       today,
     );
-    if (draft.trialEndDate != null &&
-        dateOnlyUtc(draft.trialEndDate!).isAfter(today)) {
-      nextBillDate = dateOnlyUtc(draft.trialEndDate!);
-    }
 
     if (original == null) {
       final id = await _ref
@@ -43,7 +43,8 @@ class SubscriptionFormController {
               currency: draft.currency,
               cycleUnit: draft.cycleUnit,
               cycleCount: Value(draft.cycleCount),
-              firstBillDate: _dateToText(draft.firstBillDate),
+              startDate: Value(_dateToText(startDate)),
+              firstBillDate: _dateToText(firstBillDate),
               nextBillDate: _dateToText(nextBillDate),
               trialEndDate: Value(_nullableDateToText(draft.trialEndDate)),
               status: SubscriptionStatus.active,
@@ -81,7 +82,9 @@ class SubscriptionFormController {
     final billingChanged =
         original.cycleUnit != draft.cycleUnit ||
         original.cycleCount != draft.cycleCount ||
-        original.firstBillDate != _dateToText(draft.firstBillDate) ||
+        (original.startDate ?? original.firstBillDate) !=
+            _dateToText(startDate) ||
+        original.firstBillDate != _dateToText(firstBillDate) ||
         original.trialEndDate != _nullableDateToText(draft.trialEndDate);
 
     await _ref
@@ -94,7 +97,8 @@ class SubscriptionFormController {
             currency: Value(draft.currency),
             cycleUnit: Value(draft.cycleUnit),
             cycleCount: Value(draft.cycleCount),
-            firstBillDate: Value(_dateToText(draft.firstBillDate)),
+            startDate: Value(_dateToText(startDate)),
+            firstBillDate: Value(_dateToText(firstBillDate)),
             nextBillDate: billingChanged
                 ? Value(_dateToText(nextBillDate))
                 : const Value.absent(),
@@ -138,7 +142,7 @@ class SubscriptionDraft {
     required this.currency,
     required this.cycleUnit,
     required this.cycleCount,
-    required this.firstBillDate,
+    required this.startDate,
     required this.trialEndDate,
     required this.groupId,
     required this.paymentMethod,
@@ -156,7 +160,7 @@ class SubscriptionDraft {
   final String currency;
   final CycleUnit cycleUnit;
   final int cycleCount;
-  final DateTime firstBillDate;
+  final DateTime startDate;
   final DateTime? trialEndDate;
   final String? groupId;
   final String paymentMethod;

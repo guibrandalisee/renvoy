@@ -57,7 +57,7 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
   var _priceMinor = 0;
   var _cycle = _CycleChoice.monthly;
   var _customUnit = CycleUnit.month;
-  var _firstBillDate = dateOnlyUtc(DateTime.now());
+  var _startDate = dateOnlyUtc(DateTime.now());
   DateTime? _trialEndDate;
   String? _groupId;
   bool _useDefaultReminders = true;
@@ -72,8 +72,14 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
 
   bool get _isEdit => widget.subscriptionId != null;
 
-  bool get _valid =>
-      _nameController.text.trim().isNotEmpty && _priceMinor > 0 && !_saving;
+  bool get _valid {
+    final trialDateIsValid =
+        _trialEndDate == null || _trialEndDate!.isAfter(_startDate);
+    return _nameController.text.trim().isNotEmpty &&
+        _priceMinor > 0 &&
+        trialDateIsValid &&
+        !_saving;
+  }
 
   @override
   void initState() {
@@ -134,7 +140,9 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
     _cycle = _cycleChoiceFor(subscription.cycleUnit, subscription.cycleCount);
     _customUnit = subscription.cycleUnit;
     _customCountController.text = subscription.cycleCount.toString();
-    _firstBillDate = _parseDate(subscription.firstBillDate);
+    _startDate = _parseDate(
+      subscription.startDate ?? subscription.firstBillDate,
+    );
     _trialEndDate = subscription.trialEndDate == null
         ? null
         : _parseDate(subscription.trialEndDate!);
@@ -203,7 +211,7 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
       currency: _currency,
       cycleUnit: _cycle.unit(_customUnit),
       cycleCount: _cycle.count(customCount),
-      firstBillDate: _firstBillDate,
+      startDate: _startDate,
       trialEndDate: _trialEndDate,
       groupId: _groupId,
       paymentMethod: _paymentController.text,
@@ -432,14 +440,24 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
                       ),
                       _Gap(),
                       _LabeledField(
-                        label: l10n.firstBillDate,
+                        label: _trialEndDate == null
+                            ? l10n.firstBillDate
+                            : l10n.subscriptionStartDate,
                         child: _DateField(
-                          date: _firstBillDate,
+                          date: _startDate,
                           onPressed: () async {
-                            final picked = await _pickDate(_firstBillDate);
+                            final picked = await _pickDate(_startDate);
                             if (picked != null) {
                               setState(() {
-                                _firstBillDate = picked;
+                                final trialDuration = _trialEndDate
+                                    ?.difference(_startDate)
+                                    .inDays;
+                                _startDate = picked;
+                                if (trialDuration != null) {
+                                  _trialEndDate = picked.add(
+                                    Duration(days: trialDuration),
+                                  );
+                                }
                                 _dirty = true;
                               });
                             }
@@ -453,9 +471,7 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
                           Haptics.selection();
                           setState(() {
                             _trialEndDate = value
-                                ? dateOnlyUtc(
-                                    DateTime.now().add(const Duration(days: 7)),
-                                  )
+                                ? _startDate.add(const Duration(days: 7))
                                 : null;
                             _dirty = true;
                           });
@@ -467,22 +483,45 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
                             ? const SizedBox.shrink()
                             : Padding(
                                 padding: const EdgeInsets.only(top: 12),
-                                child: _LabeledField(
-                                  label: l10n.trialEnds,
-                                  child: _DateField(
-                                    date: _trialEndDate!,
-                                    onPressed: () async {
-                                      final picked = await _pickDate(
-                                        _trialEndDate!,
-                                      );
-                                      if (picked != null) {
-                                        setState(() {
-                                          _trialEndDate = picked;
-                                          _dirty = true;
-                                        });
-                                      }
-                                    },
-                                  ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _LabeledField(
+                                      label: l10n.trialEndAndFirstCharge,
+                                      child: _DateField(
+                                        date: _trialEndDate!,
+                                        onPressed: () async {
+                                          final picked = await _pickDate(
+                                            _trialEndDate!,
+                                            firstDate: _startDate.add(
+                                              const Duration(days: 1),
+                                            ),
+                                          );
+                                          if (picked != null) {
+                                            setState(() {
+                                              _trialEndDate = picked;
+                                              _dirty = true;
+                                            });
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      l10n.trialBillingExplanation(
+                                        _trialEndDate!
+                                            .difference(_startDate)
+                                            .inDays,
+                                        Dates.short(
+                                          _trialEndDate!,
+                                          l10n.localeName,
+                                        ),
+                                      ),
+                                      style: textTheme.bodySmall?.copyWith(
+                                        color: colors.textMuted,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                       ),
@@ -676,7 +715,7 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
     });
   }
 
-  Future<DateTime?> _pickDate(DateTime initial) async {
+  Future<DateTime?> _pickDate(DateTime initial, {DateTime? firstDate}) async {
     FocusManager.instance.primaryFocus?.unfocus();
     await Haptics.light();
     if (!mounted) {
@@ -745,6 +784,7 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
                         child: CupertinoDatePicker(
                           mode: CupertinoDatePickerMode.date,
                           initialDateTime: initial,
+                          minimumDate: firstDate,
                           onDateTimeChanged: (value) => selected = value,
                         ),
                       ),
@@ -761,7 +801,7 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
     return showDatePicker(
       context: context,
       initialDate: initial,
-      firstDate: DateTime(2000),
+      firstDate: firstDate ?? DateTime(2000),
       lastDate: DateTime(2100),
     );
   }

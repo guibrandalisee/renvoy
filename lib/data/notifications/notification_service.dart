@@ -63,10 +63,11 @@ class FlutterLocalNotificationsAdapter implements NotificationsPlugin {
   @override
   Future<bool?> requestAndroidNotificationsPermission() {
     return _plugin
-        .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin
-        >()
-        ?.requestNotificationsPermission() ?? Future.value(false);
+            .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin
+            >()
+            ?.requestNotificationsPermission() ??
+        Future.value(false);
   }
 
   @override
@@ -215,8 +216,10 @@ class NotificationService {
       final effectiveDays = perSubDays.containsKey(subscription.id)
           ? perSubDays[subscription.id]!
           : globalDays;
-      for (final daysBefore in effectiveDays) {
-        await _scheduleRenewal(subscription, daysBefore, strings);
+      if (!_trialEndsOnNextBillDate(subscription)) {
+        for (final daysBefore in effectiveDays) {
+          await _scheduleRenewal(subscription, daysBefore, strings);
+        }
       }
       await _scheduleTrial(subscription, 3, strings);
       await _scheduleTrial(subscription, 0, strings);
@@ -245,11 +248,8 @@ class NotificationService {
     if (!_isFuture(scheduled)) {
       return;
     }
-    final when = _when(nextBillDate, strings);
-    final price = Money.format(
-      subscription.priceMinor,
-      subscription.currency,
-    );
+    final when = _whenDelivered(daysBefore, strings);
+    final price = Money.format(subscription.priceMinor, subscription.currency);
     await _schedule(
       id: stableNotificationId('${subscription.id}:$daysBefore'),
       title: strings.renewalTitle,
@@ -278,7 +278,10 @@ class NotificationService {
     await _schedule(
       id: stableNotificationId('${subscription.id}:trial:$daysBefore'),
       title: strings.trialTitle,
-      body: strings.trialBody(subscription.name, _when(trialEndDate, strings)),
+      body: strings.trialBody(
+        subscription.name,
+        _whenDelivered(daysBefore, strings),
+      ),
       scheduled: scheduled,
     );
   }
@@ -331,15 +334,24 @@ class NotificationService {
     );
   }
 
-  String _when(DateTime date, NotificationStrings strings) {
-    final now = _now();
-    final today = DateTime(now.year, now.month, now.day);
-    final target = DateTime(date.year, date.month, date.day);
-    final days = target.difference(today).inDays;
-    if (days <= 0) {
+  String _whenDelivered(int daysBefore, NotificationStrings strings) {
+    if (daysBefore <= 0) {
       return strings.today;
     }
-    return strings.inDays(days);
+    return strings.inDays(daysBefore);
+  }
+
+  bool _trialEndsOnNextBillDate(Subscription subscription) {
+    final trialEndText = subscription.trialEndDate;
+    if (trialEndText == null) {
+      return false;
+    }
+    final trialEndDate = _parseDate(trialEndText);
+    final nextBillDate = _parseDate(subscription.nextBillDate);
+    return trialEndDate != null &&
+        nextBillDate != null &&
+        _isDateFuture(trialEndDate) &&
+        trialEndDate == nextBillDate;
   }
 
   bool _isFuture(tz.TZDateTime scheduled) {

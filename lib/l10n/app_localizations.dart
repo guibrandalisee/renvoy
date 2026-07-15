@@ -368,6 +368,12 @@ abstract class AppLocalizations {
   /// **'First bill date'**
   String get firstBillDate;
 
+  /// No description provided for @subscriptionStartDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscription starts'**
+  String get subscriptionStartDate;
+
   /// No description provided for @freeTrial.
   ///
   /// In en, this message translates to:
@@ -379,6 +385,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Trial ends'**
   String get trialEnds;
+
+  /// No description provided for @trialEndAndFirstCharge.
+  ///
+  /// In en, this message translates to:
+  /// **'Trial ends · First charge'**
+  String get trialEndAndFirstCharge;
+
+  /// No description provided for @trialBillingExplanation.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1-day free trial} other{{count}-day free trial}}. No charge today. Billing starts on {date}, and future renewals follow this date.'**
+  String trialBillingExplanation(int count, String date);
 
   /// No description provided for @group.
   ///
@@ -713,13 +731,13 @@ abstract class AppLocalizations {
   /// No description provided for @renewalsCount.
   ///
   /// In en, this message translates to:
-  /// **'{count, plural, =0{0 renewals} =1{1 renewal} other{{count} renewals}}'**
+  /// **'{count, plural, =0{0 charges} =1{1 charge} other{{count} charges}}'**
   String renewalsCount(int count);
 
   /// No description provided for @renewalsOn.
   ///
   /// In en, this message translates to:
-  /// **'Renewals on {date}'**
+  /// **'Charges on {date}'**
   String renewalsOn(String date);
 
   /// No description provided for @groupsTitle.
