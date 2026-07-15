@@ -6,6 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
 import 'app_localizations_en.dart';
+import 'app_localizations_es.dart';
 import 'app_localizations_pt.dart';
 
 // ignore_for_file: type=lint
@@ -95,6 +96,7 @@ abstract class AppLocalizations {
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
+    Locale('es'),
     Locale('pt'),
   ];
 
@@ -451,6 +453,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Upcoming renewal'**
   String get notifRenewalTitle;
+
+  /// No description provided for @notifChannelName.
+  ///
+  /// In en, this message translates to:
+  /// **'Renewal reminders'**
+  String get notifChannelName;
 
   /// No description provided for @notifRenewalBody.
   ///
@@ -866,6 +874,12 @@ abstract class AppLocalizations {
   /// **'English'**
   String get settingsEnglish;
 
+  /// No description provided for @settingsSpanish.
+  ///
+  /// In en, this message translates to:
+  /// **'Español'**
+  String get settingsSpanish;
+
   /// No description provided for @settingsPortugueseBrazil.
   ///
   /// In en, this message translates to:
@@ -1070,7 +1084,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['en', 'pt'].contains(locale.languageCode);
+      <String>['en', 'es', 'pt'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -1081,6 +1095,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   switch (locale.languageCode) {
     case 'en':
       return AppLocalizationsEn();
+    case 'es':
+      return AppLocalizationsEs();
     case 'pt':
       return AppLocalizationsPt();
   }

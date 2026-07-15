@@ -221,6 +221,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notifRenewalTitle => 'Upcoming renewal';
 
   @override
+  String get notifChannelName => 'Renewal reminders';
+
+  @override
   String notifRenewalBody(String name, String when, String price) {
     return '$name renews $when — $price';
   }
@@ -467,6 +470,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsEnglish => 'English';
+
+  @override
+  String get settingsSpanish => 'Español';
 
   @override
   String get settingsPortugueseBrazil => 'Português (Brasil)';

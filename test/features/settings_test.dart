@@ -43,6 +43,17 @@ void main() {
     expect(find.text('Theme'), findsOneWidget);
     expect(find.text('Export backup'), findsOneWidget);
 
+    await tester.tap(find.text('Language'));
+    await tester.pumpAndSettle();
+    expect(find.text('Español'), findsOneWidget);
+    await tester.tap(find.text('Español'));
+    await tester.pumpAndSettle();
+
+    expect(
+      await database.settingsDao.getValue(SettingsKeys.localeOverride),
+      'es',
+    );
+
     await tester.tap(find.text('Theme'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Dark'));

@@ -57,7 +57,7 @@ class RenvoyApp extends ConsumerWidget {
     final locale = ref.watch(localeProvider).valueOrNull;
 
     return MaterialApp.router(
-      title: 'Renvoy',
+      onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
@@ -81,6 +81,7 @@ ThemeMode _themeModeFromSetting(String? value) {
 Locale? _localeFromSetting(String? value) {
   return switch (value) {
     'en' => const Locale('en'),
+    'es' => const Locale('es'),
     'pt' => const Locale('pt'),
     _ => null,
   };

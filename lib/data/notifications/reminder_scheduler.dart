@@ -33,7 +33,10 @@ class ReminderScheduler {
 
   Future<void> resync({AppLocalizations? l10n}) async {
     try {
-      await _ref.read(notificationServiceProvider).init();
+      final resolvedL10n = l10n ?? await _fallbackL10n();
+      await _ref
+          .read(notificationServiceProvider)
+          .init(channelName: resolvedL10n.notifChannelName);
       final subscriptions = await _ref
           .read(subscriptionsDaoProvider)
           .watchAll(status: SubscriptionStatus.active)
@@ -75,14 +78,34 @@ class ReminderScheduler {
             activeSubs: activeSubs,
             perSubDays: perSubDays,
             globalDays: globalDays,
-            strings: NotificationStringsFactory.fromL10n(
-              l10n ?? _fallbackL10n(),
-            ),
+            strings: NotificationStringsFactory.fromL10n(resolvedL10n),
           );
     } catch (error, stackTrace) {
       debugPrint('Reminder resync failed: $error');
       debugPrint('$stackTrace');
     }
+  }
+
+  Future<AppLocalizations> _fallbackL10n() async {
+    final value = await _ref
+        .read(settingsDaoProvider)
+        .getValue(SettingsKeys.localeOverride);
+    final localeOverride = switch (value) {
+      'en' => const Locale('en'),
+      'es' => const Locale('es'),
+      'pt' => const Locale('pt'),
+      _ => null,
+    };
+    if (localeOverride != null) {
+      return lookupAppLocalizations(localeOverride);
+    }
+    final locale = PlatformDispatcher.instance.locale;
+    if (AppLocalizations.supportedLocales.any(
+      (supported) => supported.languageCode == locale.languageCode,
+    )) {
+      return lookupAppLocalizations(locale);
+    }
+    return lookupAppLocalizations(const Locale('en'));
   }
 }
 
@@ -135,16 +158,6 @@ void fireAndForgetReminderResyncFromRef(Ref ref, {AppLocalizations? l10n}) {
       debugPrint('$stackTrace');
     }),
   );
-}
-
-AppLocalizations _fallbackL10n() {
-  final locale = PlatformDispatcher.instance.locale;
-  if (AppLocalizations.supportedLocales.any(
-    (supported) => supported.languageCode == locale.languageCode,
-  )) {
-    return lookupAppLocalizations(locale);
-  }
-  return lookupAppLocalizations(const Locale('en'));
 }
 
 List<int> _parseDays(String? value) {

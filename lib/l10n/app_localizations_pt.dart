@@ -79,7 +79,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get addSubscription => 'Adicionar assinatura';
 
   @override
-  String get trialChip => 'TRIAL';
+  String get trialChip => 'TESTE';
 
   @override
   String get cycleDay => '/dia';
@@ -219,6 +219,9 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get notifRenewalTitle => 'Renovação próxima';
+
+  @override
+  String get notifChannelName => 'Lembretes de renovação';
 
   @override
   String notifRenewalBody(String name, String when, String price) {
@@ -467,6 +470,9 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get settingsEnglish => 'English';
+
+  @override
+  String get settingsSpanish => 'Español';
 
   @override
   String get settingsPortugueseBrazil => 'Português (Brasil)';

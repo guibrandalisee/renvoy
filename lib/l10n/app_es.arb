@@ -1,0 +1,298 @@
+{
+  "@@locale": "es",
+  "appTitle": "Renvoy",
+  "navHome": "Inicio",
+  "navSubscriptions": "Suscripciones",
+  "navCalendar": "Calendario",
+  "navSettings": "Ajustes",
+  "comingSoonTitle": "Próximamente",
+  "comingSoonSubtitle": "Esta pantalla está en desarrollo.",
+  "greetingMorning": "Buenos días",
+  "greetingAfternoon": "Buenas tardes",
+  "greetingEvening": "Buenas noches",
+  "monthlySpend": "Gasto mensual",
+  "toggleMonthly": "Mensual",
+  "toggleYearly": "Anual",
+  "activeCount": "{count, plural, =0{0 suscripciones activas} =1{1 suscripción activa} other{{count} suscripciones activas}}",
+  "@activeCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "upcomingRenewals": "Próximas renovaciones",
+  "spendByGroup": "Gasto por grupo",
+  "groupOther": "Otros",
+  "emptyTitle": "Aún no hay suscripciones",
+  "emptySubtitle": "Añade tu primera suscripción para ver tus gastos de un vistazo.",
+  "addSubscription": "Añadir suscripción",
+  "trialChip": "PRUEBA",
+  "cycleDay": "/día",
+  "cycleWeek": "/semana",
+  "cycleMonth": "/mes",
+  "cycleYear": "/año",
+  "newSubscription": "Nueva suscripción",
+  "editSubscription": "Editar suscripción",
+  "save": "Guardar",
+  "name": "Nombre",
+  "nameHint": "Netflix, Spotify, gimnasio...",
+  "price": "Precio",
+  "currency": "Moneda",
+  "billingCycle": "Ciclo de facturación",
+  "weekly": "Semanal",
+  "monthly": "Mensual",
+  "quarterly": "Trimestral",
+  "semiAnnual": "Semestral",
+  "yearly": "Anual",
+  "custom": "Personalizado",
+  "every": "Cada",
+  "days": "días",
+  "weeks": "semanas",
+  "months": "meses",
+  "years": "años",
+  "firstBillDate": "Primer cobro",
+  "subscriptionStartDate": "Inicio de la suscripción",
+  "freeTrial": "Prueba gratuita",
+  "trialEnds": "Fin de la prueba",
+  "trialEndAndFirstCharge": "Fin de la prueba · Primer cobro",
+  "trialBillingExplanation": "{count, plural, =1{Prueba gratuita de 1 día} other{Prueba gratuita de {count} días}}. No se cobra nada hoy. La facturación comienza el {date} y las próximas renovaciones siguen esta fecha.",
+  "@trialBillingExplanation": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "group": "Grupo",
+  "reminders": "Recordatorios",
+  "reminderDefault": "Predeterminado (3 días, el mismo día)",
+  "reminderUseDefaults": "Usar valores predeterminados",
+  "reminderSameDay": "El mismo día",
+  "reminderDaysBefore": "{count, plural, =1{1 día} other{{count} días}}",
+  "@reminderDaysBefore": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reminderRuleCount": "{count, plural, =0{Sin recordatorios} =1{1 regla} other{{count} reglas}}",
+  "@reminderRuleCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reminderNoRules": "Sin recordatorios",
+  "notifRenewalTitle": "Próxima renovación",
+  "notifChannelName": "Recordatorios de renovación",
+  "notifRenewalBody": "{name} se renueva {when} — {price}",
+  "@notifRenewalBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "when": {
+        "type": "String"
+      },
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "notifTrialTitle": "La prueba está por terminar",
+  "notifTrialBody": "La prueba de {name} termina {when}",
+  "@notifTrialBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "notifInDays": "dentro de {count, plural, =1{1 día} other{{count} días}}",
+  "@notifInDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "none": "Ninguno",
+  "paymentMethod": "Método de pago",
+  "paymentMethodHint": "Tarjeta de crédito Nubank...",
+  "notes": "Notas",
+  "url": "URL",
+  "urlHint": "https://...",
+  "search": "Buscar",
+  "searchHint": "Buscar suscripciones",
+  "all": "Todas",
+  "active": "Activas",
+  "paused": "Pausadas",
+  "canceled": "Canceladas",
+  "sortBy": "Ordenar por",
+  "sortNextRenewal": "Próxima renovación",
+  "sortPrice": "Precio",
+  "sortName": "Nombre",
+  "noResults": "No se encontró nada",
+  "noResultsSubtitle": "Prueba con otra búsqueda o filtro.",
+  "discardChangesTitle": "¿Descartar los cambios?",
+  "discardChangesMessage": "Tus cambios se perderán.",
+  "keepEditing": "Seguir editando",
+  "discard": "Descartar",
+  "noGroup": "Sin grupo",
+  "approxPerMonth": "≈ {amount} /mes",
+  "@approxPerMonth": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "pausedNotCounted": "Pausada — no se incluye en los totales",
+  "trialEndsDate": "La prueba termina el {date}",
+  "@trialEndsDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "nextRenewal": "Próxima renovación",
+  "firstBill": "Primer cobro",
+  "manageSubscription": "Gestionar suscripción",
+  "priceHistory": "Historial de precios",
+  "pause": "Pausar",
+  "resume": "Reanudar",
+  "duplicate": "Duplicar",
+  "duplicated": "Duplicada",
+  "cancelSubscription": "Cancelar suscripción",
+  "cancelSubscriptionMessage": "Conserva el historial y deja de incluirla en los totales.",
+  "delete": "Eliminar",
+  "deleteSubscriptionMessage": "¿Eliminar esta suscripción?",
+  "deleted": "Eliminada",
+  "undo": "DESHACER",
+  "keep": "Conservar",
+  "thisMonth": "Este mes",
+  "renewalsCount": "{count, plural, =0{0 cobros} =1{1 cobro} other{{count} cobros}}",
+  "@renewalsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "renewalsOn": "Cobros el {date}",
+  "@renewalsOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "groupsTitle": "Grupos",
+  "groupsEmpty": "Aún no hay grupos",
+  "groupsEmptySubtitle": "Agrupa suscripciones para ver los gastos por categoría.",
+  "createGroup": "Crear grupo",
+  "editGroup": "Editar grupo",
+  "icon": "Icono",
+  "color": "Color",
+  "parentGroup": "Grupo superior",
+  "noneTopLevel": "Ninguno (nivel superior)",
+  "groupSummary": "{count, plural, =0{0 suscripciones} =1{1 suscripción} other{{count} suscripciones}} · {amount} /mes",
+  "@groupSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteGroupMessage": "¿Eliminar este grupo?",
+  "moveContentsUp": "Mover el contenido al nivel superior",
+  "ungroupSubscriptions": "Desagrupar suscripciones",
+  "deleteEverything": "Eliminar todo",
+  "deleteEverythingMessage": "¿Eliminar este grupo y todo su contenido?",
+  "everyCountUnit": "Cada {count} {unit}",
+  "@everyCountUnit": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsGeneral": "General",
+  "settingsCurrency": "Moneda",
+  "settingsLanguage": "Idioma",
+  "settingsSystem": "Sistema",
+  "settingsEnglish": "English",
+  "settingsSpanish": "Español",
+  "settingsPortugueseBrazil": "Português (Brasil)",
+  "settingsTheme": "Tema",
+  "settingsLight": "Claro",
+  "settingsDark": "Oscuro",
+  "settingsFirstDay": "Primer día de la semana",
+  "settingsMonday": "Lunes",
+  "settingsSunday": "Domingo",
+  "settingsReminders": "Recordatorios",
+  "settingsDefaultReminders": "Recordatorios predeterminados",
+  "settingsData": "Datos",
+  "settingsExportBackup": "Exportar copia de seguridad",
+  "settingsImportBackup": "Importar copia de seguridad",
+  "settingsExportCsv": "Exportar CSV",
+  "settingsAbout": "Acerca de",
+  "settingsVersion": "Versión",
+  "importConfirm": "¿Importar {subscriptions} suscripciones y {groups} grupos? Se combinarán con los datos existentes.",
+  "@importConfirm": {
+    "placeholders": {
+      "subscriptions": {
+        "type": "int"
+      },
+      "groups": {
+        "type": "int"
+      }
+    }
+  },
+  "importError": "No se pudo leer este archivo de copia de seguridad.",
+  "importSuccess": "Copia de seguridad importada.",
+  "exportError": "No se pudo exportar este archivo.",
+  "relativeToday": "hoy",
+  "relativeTomorrow": "mañana",
+  "relativeYesterday": "ayer",
+  "relativeInDays": "dentro de {count, plural, =1{1 día} other{{count} días}}",
+  "@relativeInDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "catalogPickerTitle": "Elige un servicio",
+  "catalogSearchHint": "Buscar servicios",
+  "catalogCreateCustom": "Crear personalizado",
+  "catalogUnavailableTitle": "Catálogo no disponible",
+  "catalogUnavailableSubtitle": "Comprueba tu conexión e inténtalo de nuevo, o crea una suscripción personalizada.",
+  "catalogTryAgain": "Intentar de nuevo",
+  "catalogEmptyTitle": "No se encontraron servicios",
+  "catalogEmptySubtitle": "Prueba con otra búsqueda o crea una suscripción personalizada.",
+  "relativeDaysAgo": "hace {count, plural, =1{1 día} other{{count} días}}",
+  "@relativeDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
+}

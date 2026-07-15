@@ -90,6 +90,7 @@
   },
   "reminderNoRules": "No reminders",
   "notifRenewalTitle": "Upcoming renewal",
+  "notifChannelName": "Renewal reminders",
   "notifRenewalBody": "{name} renews {when} — {price}",
   "@notifRenewalBody": {
     "placeholders": {
@@ -237,6 +238,7 @@
   "settingsLanguage": "Language",
   "settingsSystem": "System",
   "settingsEnglish": "English",
+  "settingsSpanish": "Español",
   "settingsPortugueseBrazil": "Português (Brasil)",
   "settingsTheme": "Theme",
   "settingsLight": "Light",

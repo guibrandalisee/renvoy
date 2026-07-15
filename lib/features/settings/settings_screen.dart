@@ -207,6 +207,7 @@ class SettingsScreen extends ConsumerWidget {
       options: [
         _Option('system', l10n.settingsSystem),
         _Option('en', l10n.settingsEnglish),
+        _Option('es', l10n.settingsSpanish),
         _Option('pt', l10n.settingsPortugueseBrazil),
       ],
     );
@@ -214,6 +215,7 @@ class SettingsScreen extends ConsumerWidget {
       await ref
           .read(settingsDaoProvider)
           .setValue(SettingsKeys.localeOverride, picked);
+      await ref.read(reminderSchedulerProvider).resync();
     }
   }
 
@@ -627,6 +629,7 @@ class _ChoiceChip extends StatelessWidget {
 String _languageLabel(AppLocalizations l10n, String value) {
   return switch (value) {
     'en' => l10n.settingsEnglish,
+    'es' => l10n.settingsSpanish,
     'pt' => l10n.settingsPortugueseBrazil,
     _ => l10n.settingsSystem,
   };

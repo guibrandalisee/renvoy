@@ -27,7 +27,7 @@
   "emptyTitle": "Nenhuma assinatura ainda",
   "emptySubtitle": "Adicione sua primeira assinatura para ver seus gastos num relance.",
   "addSubscription": "Adicionar assinatura",
-  "trialChip": "TRIAL",
+  "trialChip": "TESTE",
   "cycleDay": "/dia",
   "cycleWeek": "/semana",
   "cycleMonth": "/mês",
@@ -90,6 +90,7 @@
   },
   "reminderNoRules": "Sem lembretes",
   "notifRenewalTitle": "Renovação próxima",
+  "notifChannelName": "Lembretes de renovação",
   "notifRenewalBody": "{name} renova {when} — {price}",
   "@notifRenewalBody": {
     "placeholders": {
@@ -237,6 +238,7 @@
   "settingsLanguage": "Idioma",
   "settingsSystem": "Sistema",
   "settingsEnglish": "English",
+  "settingsSpanish": "Español",
   "settingsPortugueseBrazil": "Português (Brasil)",
   "settingsTheme": "Tema",
   "settingsLight": "Claro",

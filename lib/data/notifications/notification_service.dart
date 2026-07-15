@@ -142,16 +142,25 @@ class NotificationService {
        _getLocalTimezone = getLocalTimezone ?? FlutterTimezone.getLocalTimezone;
 
   static const channelId = 'renewals';
-  static const channelName = 'Renewal reminders';
+  static const defaultChannelName = 'Renewal reminders';
 
   final NotificationsPlugin _plugin;
   final DateTime Function() _now;
   final Future<TimezoneInfo> Function() _getLocalTimezone;
   tz.Location _location;
+  String _channelName = defaultChannelName;
   bool _initialized = false;
 
-  Future<void> init() async {
+  Future<void> init({String channelName = defaultChannelName}) async {
+    _channelName = channelName;
     if (_initialized) {
+      await _plugin.createAndroidNotificationChannel(
+        AndroidNotificationChannel(
+          channelId,
+          _channelName,
+          importance: Importance.high,
+        ),
+      );
       return;
     }
     try {
@@ -180,9 +189,9 @@ class NotificationService {
         ),
       );
       await _plugin.createAndroidNotificationChannel(
-        const AndroidNotificationChannel(
+        AndroidNotificationChannel(
           channelId,
-          channelName,
+          _channelName,
           importance: Importance.high,
         ),
       );
@@ -292,10 +301,10 @@ class NotificationService {
     required String body,
     required tz.TZDateTime scheduled,
   }) async {
-    const details = NotificationDetails(
+    final details = NotificationDetails(
       android: AndroidNotificationDetails(
         channelId,
-        channelName,
+        _channelName,
         importance: Importance.high,
         priority: Priority.high,
       ),
