@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer' as developer;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -44,23 +45,71 @@ class CatalogRepository {
   final CatalogCacheStore _cacheStore;
   final DateTime Function() _now;
 
+  static const _logName = 'CatalogRepository';
+
   Future<List<CatalogService>> getServices() async {
+    developer.log('Loading catalog from cache', name: _logName);
     final cached = await _readCache();
     final now = _now();
     if (cached != null && isCatalogCacheFresh(cached.fetchedAt, now)) {
+      developer.log(
+        'Using fresh catalog cache: services=${cached.services.length}, '
+        'fetchedAt=${cached.fetchedAt.toIso8601String()}',
+        name: _logName,
+      );
       return cached.services;
     }
 
+    developer.log(
+      cached == null
+          ? 'No usable catalog cache found; requesting catalog'
+          : 'Catalog cache is stale; requesting refresh: '
+                'services=${cached.services.length}, '
+                'fetchedAt=${cached.fetchedAt.toIso8601String()}',
+      name: _logName,
+    );
+
     try {
       final response = await _api.fetchServices();
+      developer.log(
+        'Catalog refresh succeeded: services=${response.services.length}; '
+        'saving response to cache',
+        name: _logName,
+      );
       await _cacheStore.write(SettingsKeys.catalogCache, response.rawJson);
       await _cacheStore.write(
         SettingsKeys.catalogFetchedAt,
         now.toIso8601String(),
       );
+      developer.log('Catalog cache updated successfully', name: _logName);
       return response.services;
-    } on CatalogApiException {
-      if (cached != null) return cached.services;
+    } on CatalogApiException catch (error, stackTrace) {
+      if (cached != null) {
+        developer.log(
+          'Catalog refresh failed; falling back to stale cache: $error',
+          name: _logName,
+          error: error,
+          stackTrace: stackTrace,
+          level: 900,
+        );
+        return cached.services;
+      }
+      developer.log(
+        'Catalog refresh failed and no cache is available: $error',
+        name: _logName,
+        error: error,
+        stackTrace: stackTrace,
+        level: 1000,
+      );
+      rethrow;
+    } on Object catch (error, stackTrace) {
+      developer.log(
+        'Catalog refresh failed outside the API: ${error.runtimeType}: $error',
+        name: _logName,
+        error: error,
+        stackTrace: stackTrace,
+        level: 1000,
+      );
       rethrow;
     }
   }
@@ -68,19 +117,45 @@ class CatalogRepository {
   Future<_CachedCatalog?> _readCache() async {
     final rawJson = await _cacheStore.read(SettingsKeys.catalogCache);
     final timestamp = await _cacheStore.read(SettingsKeys.catalogFetchedAt);
-    if (rawJson == null || timestamp == null) return null;
+    if (rawJson == null || timestamp == null) {
+      developer.log(
+        'Catalog cache miss: rawJson=${rawJson != null}, '
+        'timestamp=${timestamp != null}',
+        name: _logName,
+      );
+      return null;
+    }
     try {
       final fetchedAt = DateTime.parse(timestamp).toUtc();
       final decoded = jsonDecode(rawJson);
-      if (decoded is! Map || decoded['data'] is! List) return null;
+      if (decoded is! Map || decoded['data'] is! List) {
+        developer.log(
+          'Catalog cache ignored because its JSON shape is invalid',
+          name: _logName,
+          level: 900,
+        );
+        return null;
+      }
       final services = (decoded['data'] as List)
           .whereType<Map>()
           .map(
             (item) => CatalogService.fromJson(Map<String, dynamic>.from(item)),
           )
           .toList(growable: false);
+      developer.log(
+        'Catalog cache read successfully: services=${services.length}, '
+        'fetchedAt=${fetchedAt.toIso8601String()}',
+        name: _logName,
+      );
       return _CachedCatalog(fetchedAt: fetchedAt, services: services);
-    } on FormatException {
+    } on FormatException catch (error, stackTrace) {
+      developer.log(
+        'Catalog cache ignored because it is not valid JSON/date: $error',
+        name: _logName,
+        error: error,
+        stackTrace: stackTrace,
+        level: 900,
+      );
       return null;
     }
   }

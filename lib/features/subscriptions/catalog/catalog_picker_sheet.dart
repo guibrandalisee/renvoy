@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -44,11 +46,27 @@ class _CatalogPicker extends ConsumerStatefulWidget {
 class _CatalogPickerState extends ConsumerState<_CatalogPicker> {
   var _query = '';
 
+  static const _logName = 'CatalogPicker';
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final colors = context.colors;
     final services = ref.watch(catalogServicesProvider);
+    ref.listen<AsyncValue<List<CatalogService>>>(
+      catalogServicesProvider,
+      (_, next) {
+        if (!next.hasError) return;
+        developer.log(
+          'Catalog unavailable in picker: '
+          '${next.error.runtimeType}: ${next.error}',
+          name: _logName,
+          error: next.error,
+          stackTrace: next.stackTrace,
+          level: 1000,
+        );
+      },
+    );
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
       child: Column(
@@ -71,9 +89,7 @@ class _CatalogPickerState extends ConsumerState<_CatalogPicker> {
           Expanded(
             child: services.when(
               loading: _CatalogLoading.new,
-              error: (_, _) => _CatalogError(
-                onRetry: () => ref.invalidate(catalogServicesProvider),
-              ),
+              error: (_, _) => _CatalogError(onRetry: _retryCatalog),
               data: (items) {
                 final query = normalizeForSearch(_query);
                 final filtered = items.where((service) {
@@ -94,6 +110,11 @@ class _CatalogPickerState extends ConsumerState<_CatalogPicker> {
         ],
       ),
     );
+  }
+
+  void _retryCatalog() {
+    developer.log('Retrying catalog request from picker', name: _logName);
+    ref.invalidate(catalogServicesProvider);
   }
 
   void _openCustom() {
