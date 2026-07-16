@@ -17,14 +17,16 @@ class SubscriptionRow extends StatelessWidget {
     required this.subscription,
     required this.onTap,
     this.subtitle,
+    this.groupPath,
     this.showMonthlyEquivalent = false,
-    this.margin = const EdgeInsets.fromLTRB(20, 0, 20, 8),
+    this.margin = const EdgeInsets.symmetric(horizontal: 20),
     super.key,
   });
 
   final Subscription subscription;
   final VoidCallback onTap;
   final String? subtitle;
+  final String? groupPath;
   final bool showMonthlyEquivalent;
   final EdgeInsetsGeometry margin;
 
@@ -39,129 +41,170 @@ class SubscriptionRow extends StatelessWidget {
     final relative = subtitle ?? Dates.relative(nextBillDate, l10n);
     final isSoon =
         relative == l10n.relativeToday || relative == l10n.relativeTomorrow;
-    final trialEnd =
-        subscription.trialEndDate == null
-            ? null
-            : parseDate(subscription.trialEndDate!);
+    final trialEnd = subscription.trialEndDate == null
+        ? null
+        : parseDate(subscription.trialEndDate!);
     final inTrial = isInTrial(trialEnd, DateTime.now().toUtc());
     final isPaused = subscription.status == SubscriptionStatus.paused;
     final isCanceled = subscription.status == SubscriptionStatus.canceled;
     final isDimmed = isPaused || isCanceled;
+    final amount = Money.format(
+      subscription.priceMinor,
+      subscription.currency,
+      locale: l10n.localeName,
+    );
+    final caption = _caption(subscription, l10n, showMonthlyEquivalent);
+    final normalizedGroupPath = groupPath?.trim();
+    final hasGroupPath = normalizedGroupPath?.isNotEmpty ?? false;
 
-    return Opacity(
-      opacity: isDimmed ? 0.55 : 1,
-      child: Padding(
-        padding: margin,
-        child: Pressable(
-          onPressed: onTap,
-          haptic: HapticType.light,
-          borderRadius: BorderRadius.circular(20),
-          child: Container(
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              color: colors.surface,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Row(
-              children: [
-                SubscriptionAvatar(
-                  name: subscription.name,
-                  iconName: subscription.iconName,
-                  color: subscriptionColor,
-                  size: 40,
+    return Semantics(
+      button: true,
+      label: [
+        subscription.name,
+        relative,
+        if (hasGroupPath) normalizedGroupPath!,
+        amount,
+        caption,
+      ].join(', '),
+      child: ExcludeSemantics(
+        child: Opacity(
+          opacity: isDimmed ? 0.62 : 1,
+          child: Padding(
+            padding: margin,
+            child: Pressable(
+              onPressed: onTap,
+              haptic: HapticType.light,
+              borderRadius: BorderRadius.circular(14),
+              child: Container(
+                constraints: const BoxConstraints(minHeight: 72),
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                decoration: BoxDecoration(
+                  border: Border(bottom: BorderSide(color: colors.border)),
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
+                child: Row(
+                  children: [
+                    SubscriptionAvatar(
+                      name: subscription.name,
+                      iconName: subscription.iconName,
+                      color: subscriptionColor,
+                      size: 42,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Flexible(
-                            child: Text(
-                              subscription.name,
-                              overflow: TextOverflow.ellipsis,
-                              style: textTheme.titleMedium?.copyWith(
-                                color: colors.textPrimary,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                                decoration:
-                                    isCanceled
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  subscription.name,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: textTheme.titleMedium?.copyWith(
+                                    color: colors.textPrimary,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600,
+                                    decoration: isCanceled
                                         ? TextDecoration.lineThrough
                                         : TextDecoration.none,
+                                  ),
+                                ),
                               ),
+                              if (inTrial) ...[
+                                const SizedBox(width: 8),
+                                _StatusChip(
+                                  label: l10n.trialChip,
+                                  background: colors.warningSoft,
+                                  foreground: colors.warning,
+                                ),
+                              ],
+                              if (isPaused) ...[
+                                const SizedBox(width: 8),
+                                _StatusChip(
+                                  label: l10n.paused,
+                                  background: colors.warningSoft,
+                                  foreground: colors.warning,
+                                ),
+                              ],
+                              if (isCanceled) ...[
+                                const SizedBox(width: 8),
+                                _StatusChip(
+                                  label: l10n.canceled,
+                                  background: colors.dangerSoft,
+                                  foreground: colors.danger,
+                                ),
+                              ],
+                            ],
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            relative,
+                            style: textTheme.bodySmall?.copyWith(
+                              color: isSoon
+                                  ? colors.warning
+                                  : colors.textSecondary,
                             ),
                           ),
-                          if (inTrial) ...[
-                            const SizedBox(width: 8),
-                            _StatusChip(
-                              label: l10n.trialChip,
-                              background: colors.warningSoft,
-                              foreground: colors.warning,
-                            ),
-                          ],
-                          if (isPaused) ...[
-                            const SizedBox(width: 8),
-                            _StatusChip(
-                              label: l10n.paused,
-                              background: colors.warningSoft,
-                              foreground: colors.warning,
-                            ),
-                          ],
-                          if (isCanceled) ...[
-                            const SizedBox(width: 8),
-                            _StatusChip(
-                              label: l10n.canceled,
-                              background: colors.dangerSoft,
-                              foreground: colors.danger,
+                          if (hasGroupPath) ...[
+                            const SizedBox(height: 3),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.folder_outlined,
+                                  size: 12,
+                                  color: colors.textMuted,
+                                ),
+                                const SizedBox(width: 5),
+                                Expanded(
+                                  child: Text(
+                                    normalizedGroupPath!,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: textTheme.bodySmall?.copyWith(
+                                      color: colors.textMuted,
+                                      fontSize: 11,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ],
                       ),
-                      const SizedBox(height: 2),
-                      Text(
-                        relative,
-                        style: textTheme.bodySmall?.copyWith(
-                          color: isSoon ? colors.warning : colors.textSecondary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      Money.format(
-                        subscription.priceMinor,
-                        subscription.currency,
-                        locale: l10n.localeName,
-                      ),
-                      style: moneyStyle(
-                        textTheme.titleMedium ??
-                            const TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                            ),
-                      ).copyWith(
-                        color: colors.textPrimary,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                      ),
                     ),
-                    const SizedBox(height: 2),
-                    Text(
-                      _caption(subscription, l10n, showMonthlyEquivalent),
-                      textAlign: TextAlign.right,
-                      style: moneyStyle(
-                        textTheme.bodySmall ?? const TextStyle(),
-                      ).copyWith(color: colors.textMuted),
+                    const SizedBox(width: 12),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          amount,
+                          style:
+                              moneyStyle(
+                                textTheme.titleMedium ??
+                                    const TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                              ).copyWith(
+                                color: colors.textPrimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                              ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          caption,
+                          textAlign: TextAlign.right,
+                          style: moneyStyle(
+                            textTheme.bodySmall ?? const TextStyle(),
+                          ).copyWith(color: colors.textMuted),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
+              ),
             ),
           ),
         ),

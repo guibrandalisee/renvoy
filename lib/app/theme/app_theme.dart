@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'app_colors.dart';
+import 'app_metrics.dart';
 import 'app_typography.dart';
 
 class AppTheme {
@@ -11,6 +13,27 @@ class AppTheme {
 
   static ThemeData dark() =>
       _build(brightness: Brightness.dark, colors: const AppColors.dark());
+
+  static CupertinoThemeData cupertino({
+    required Brightness brightness,
+    required AppColors colors,
+  }) {
+    final textTheme = AppTypography.textTheme(colors.textPrimary);
+    return CupertinoThemeData(
+      brightness: brightness,
+      primaryColor: colors.accent,
+      primaryContrastingColor: colors.onAccent,
+      scaffoldBackgroundColor: colors.background,
+      barBackgroundColor: colors.surface,
+      textTheme: CupertinoTextThemeData(
+        textStyle: textTheme.bodyLarge,
+        actionTextStyle: textTheme.bodyLarge?.copyWith(color: colors.accent),
+        navTitleTextStyle: textTheme.titleLarge,
+        navLargeTitleTextStyle: textTheme.headlineMedium,
+        pickerTextStyle: textTheme.bodyLarge,
+      ),
+    );
+  }
 
   static ThemeData _build({
     required Brightness brightness,
@@ -39,7 +62,7 @@ class AppTheme {
       splashFactory: NoSplash.splashFactory,
       highlightColor: Colors.transparent,
       hoverColor: Colors.transparent,
-      extensions: <ThemeExtension<dynamic>>[colors],
+      extensions: <ThemeExtension<dynamic>>[colors, const AppMetrics()],
       appBarTheme: AppBarTheme(
         backgroundColor: colors.background,
         surfaceTintColor: Colors.transparent,
@@ -53,16 +76,14 @@ class AppTheme {
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         margin: EdgeInsets.zero,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
       ),
       dividerTheme: DividerThemeData(color: colors.border, thickness: 1),
       dialogTheme: DialogThemeData(
         backgroundColor: colors.surfaceElevated,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(28),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
         titleTextStyle: textTheme.titleLarge,
         contentTextStyle: textTheme.bodyMedium?.copyWith(
           color: colors.textSecondary,
@@ -73,13 +94,11 @@ class AppTheme {
         surfaceTintColor: Colors.transparent,
         headerBackgroundColor: colors.surfaceElevated,
         headerForegroundColor: colors.textPrimary,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(28),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: isDark ? colors.surface : const Color(0xFFEEF2F0),
+        fillColor: isDark ? colors.surface : colors.surfaceElevated,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide(color: colors.border),

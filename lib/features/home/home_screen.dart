@@ -4,15 +4,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/theme/app_colors.dart';
+import '../../app/theme/app_metrics.dart';
 import '../../core/formatters.dart';
-import '../../core/haptics.dart';
 import '../../core/widgets/app_shimmer.dart';
 import '../../core/widgets/empty_state.dart';
 import '../subscriptions/catalog/catalog_picker_sheet.dart';
-import '../../core/widgets/pressable.dart';
+import '../../core/widgets/primary_button.dart';
 import '../../core/widgets/status_bar_fade.dart';
 import '../../data/db/database_provider.dart';
 import '../../data/db/settings_keys.dart';
+import '../../domain/models/group_node.dart';
 import 'home_providers.dart';
 import 'widgets/hero_spend_card.dart';
 import 'widgets/spend_by_group_card.dart';
@@ -66,20 +67,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         children: [
           subscriptionsAsync.when(
             loading: () => _HomeLoading(controller: _scrollController),
-            error: (_, _) => _HomeEmpty(
+            error: (_, _) => _HomeError(
               controller: _scrollController,
-              topPadding: MediaQuery.viewPaddingOf(context).top + 24,
+              onRetry: () => ref.invalidate(activeSubscriptionsProvider),
             ),
             data: (subscriptions) {
               if (subscriptions.isEmpty) {
-                return _HomeEmpty(
-                  controller: _scrollController,
-                  topPadding: MediaQuery.viewPaddingOf(context).top + 24,
-                );
+                return _HomeEmpty(controller: _scrollController);
               }
 
               final upcoming = upcomingAsync.valueOrNull ?? const [];
               final groups = groupsAsync.valueOrNull ?? const [];
+              final groupPaths = buildGroupPathIndex(groups);
 
               return CustomScrollView(
                 controller: _scrollController,
@@ -102,20 +101,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ),
                   ),
                   SliverToBoxAdapter(
-                    child: _SectionHeader(title: l10n.upcomingRenewals),
-                  ),
-                  SliverList.builder(
-                    itemCount: upcoming.length > 5 ? 5 : upcoming.length,
-                    itemBuilder: (context, index) {
-                      final subscription = upcoming[index];
-                      return SubscriptionRow(
-                        subscription: subscription,
-                        onTap: () =>
-                            context.push('/subscriptions/${subscription.id}'),
-                      );
-                    },
-                  ),
-                  SliverToBoxAdapter(
                     child: _SectionHeader(title: l10n.spendByGroup),
                   ),
                   SliverToBoxAdapter(
@@ -126,7 +111,29 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       currencyCode: defaultCurrency.valueOrNull ?? 'USD',
                     ),
                   ),
-                  const SliverToBoxAdapter(child: SizedBox(height: 120)),
+                  SliverToBoxAdapter(
+                    child: _SectionHeader(title: l10n.upcomingRenewals),
+                  ),
+                  SliverList.builder(
+                    itemCount: upcoming.length > 5 ? 5 : upcoming.length,
+                    itemBuilder: (context, index) {
+                      final subscription = upcoming[index];
+                      return SubscriptionRow(
+                        subscription: subscription,
+                        groupPath: groupPaths[subscription.groupId]?.label(),
+                        onTap: () =>
+                            context.push('/subscriptions/${subscription.id}'),
+                      );
+                    },
+                  ),
+                  SliverToBoxAdapter(
+                    child: SizedBox(
+                      height: shellBottomContentPadding(
+                        context,
+                        clearFloatingAction: true,
+                      ),
+                    ),
+                  ),
                 ],
               );
             },
@@ -153,24 +160,51 @@ class _Header extends StatelessWidget {
       < 18 => l10n.greetingAfternoon,
       _ => l10n.greetingEvening,
     };
+    final metrics = context.metrics;
 
     return Padding(
       padding: EdgeInsets.fromLTRB(
-        20,
-        MediaQuery.viewPaddingOf(context).top + 24,
-        20,
+        metrics.screenGutter,
+        MediaQuery.viewPaddingOf(context).top + 22,
+        metrics.screenGutter,
         0,
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Text(
-            greeting,
-            style: textTheme.bodyMedium?.copyWith(color: colors.textSecondary),
+          Expanded(
+            child: Text(
+              greeting,
+              maxLines: 2,
+              style: textTheme.headlineMedium?.copyWith(
+                color: colors.textPrimary,
+              ),
+            ),
           ),
-          const Spacer(),
-          Text(
-            Dates.monthYear(now, l10n.localeName),
-            style: textTheme.bodyMedium?.copyWith(color: colors.textMuted),
+          const SizedBox(width: 16),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 3),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 3,
+                  height: 16,
+                  decoration: BoxDecoration(
+                    color: colors.brandWarm,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  Dates.monthYear(now, l10n.localeName),
+                  style: textTheme.bodySmall?.copyWith(
+                    color: colors.textSecondary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -185,8 +219,14 @@ class _SectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final metrics = context.metrics;
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 24, 20, 12),
+      padding: EdgeInsets.fromLTRB(
+        metrics.screenGutter,
+        metrics.spaceSection,
+        metrics.screenGutter,
+        metrics.spaceContent,
+      ),
       child: Text(
         title,
         style: Theme.of(
@@ -221,21 +261,26 @@ class _HomeLoading extends StatelessWidget {
               child: ShimmerBox(width: double.infinity, height: 68, radius: 20),
             ),
           ),
-        const SliverToBoxAdapter(child: SizedBox(height: 120)),
+        SliverToBoxAdapter(
+          child: SizedBox(
+            height: shellBottomContentPadding(
+              context,
+              clearFloatingAction: true,
+            ),
+          ),
+        ),
       ],
     );
   }
 }
 
 class _HomeEmpty extends StatelessWidget {
-  const _HomeEmpty({required this.controller, required this.topPadding});
+  const _HomeEmpty({required this.controller});
 
   final ScrollController controller;
-  final double topPadding;
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.colors;
     final l10n = AppLocalizations.of(context)!;
 
     return CustomScrollView(
@@ -244,32 +289,47 @@ class _HomeEmpty extends StatelessWidget {
         SliverToBoxAdapter(child: _Header(now: DateTime.now())),
         SliverFillRemaining(
           hasScrollBody: false,
-          child: Padding(
-            padding: EdgeInsets.only(top: topPadding),
-            child: EmptyState(
-              icon: Icons.subscriptions_outlined,
-              title: l10n.emptyTitle,
-              subtitle: l10n.emptySubtitle,
-              cta: Pressable(
-                onPressed: () => showCatalogPickerAndOpenForm(context),
-                haptic: HapticType.selection,
-                borderRadius: BorderRadius.circular(14),
-                child: Container(
-                  height: 52,
-                  padding: const EdgeInsets.symmetric(horizontal: 18),
-                  decoration: BoxDecoration(
-                    color: colors.accent,
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    l10n.addSubscription,
-                    style: Theme.of(
-                      context,
-                    ).textTheme.labelLarge?.copyWith(color: colors.onAccent),
-                  ),
-                ),
-              ),
+          child: EmptyState(
+            icon: Icons.subscriptions_outlined,
+            title: l10n.emptyTitle,
+            subtitle: l10n.emptySubtitle,
+            cta: PrimaryButton(
+              label: l10n.addSubscription,
+              expand: false,
+              icon: Icons.add_rounded,
+              onPressed: () => showCatalogPickerAndOpenForm(context),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _HomeError extends StatelessWidget {
+  const _HomeError({required this.controller, required this.onRetry});
+
+  final ScrollController controller;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return CustomScrollView(
+      controller: controller,
+      slivers: [
+        SliverToBoxAdapter(child: _Header(now: DateTime.now())),
+        SliverFillRemaining(
+          hasScrollBody: false,
+          child: EmptyState(
+            icon: Icons.sync_problem_rounded,
+            title: l10n.homeLoadError,
+            subtitle: l10n.homeLoadErrorSubtitle,
+            cta: PrimaryButton(
+              label: l10n.tryAgain,
+              expand: false,
+              icon: Icons.refresh_rounded,
+              onPressed: onRetry,
             ),
           ),
         ),

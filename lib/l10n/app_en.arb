@@ -24,6 +24,7 @@
   "upcomingRenewals": "Upcoming renewals",
   "spendByGroup": "Spend by group",
   "groupOther": "Other",
+  "noSubgroup": "No subgroup",
   "emptyTitle": "No subscriptions yet",
   "emptySubtitle": "Add your first subscription to see your spending at a glance.",
   "addSubscription": "Add subscription",
@@ -282,11 +283,22 @@
   "catalogPickerTitle": "Choose a service",
   "catalogSearchHint": "Search services",
   "catalogCreateCustom": "Create custom",
+  "catalogCreateCustomNamed": "Create custom: {name}",
+  "@catalogCreateCustomNamed": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
   "catalogUnavailableTitle": "Catalog unavailable",
   "catalogUnavailableSubtitle": "Check your connection and try again, or create a custom subscription.",
   "catalogTryAgain": "Try again",
   "catalogEmptyTitle": "No services found",
   "catalogEmptySubtitle": "Try a different search or create a custom subscription.",
+  "homeLoadError": "Your overview could not be loaded",
+  "homeLoadErrorSubtitle": "Your data is still safe on this device. Try loading it again.",
+  "tryAgain": "Try again",
+  "previousMonth": "Previous month",
+  "nextMonth": "Next month",
   "relativeDaysAgo": "{count, plural, =1{1 day ago} other{{count} days ago}}",
   "@relativeDaysAgo": {
     "placeholders": {

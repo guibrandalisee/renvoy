@@ -14,6 +14,11 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.accent,
     required this.onAccent,
     required this.accentSoft,
+    required this.brandWarm,
+    required this.brandWarmSoft,
+    required this.heroSurface,
+    required this.onHero,
+    required this.onHeroMuted,
     required this.success,
     required this.warning,
     required this.danger,
@@ -22,21 +27,24 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.dangerSoft,
   });
 
-  // Dark theme — cool charcoal surfaces with a bright emerald-teal accent.
-  // Text colours are tuned to clear WCAG AA (>=4.5:1) on `surface`.
+  // Dark theme — the app icon's ink, mineral teal, and restrained copper.
   const AppColors.dark()
-    : background = const Color(0xFF0A0F0E),
-      surface = const Color(0xFF141A18),
-      surfaceElevated = const Color(0xFF1C2320),
-      border = const Color(0xFF27302C),
-      borderStrong = const Color(0xFF37423D),
-      textPrimary = const Color(0xFFECF2EF),
-      textSecondary = const Color(0xFF9FAAA5),
-      textMuted = const Color(0xFF7F8B85),
-      // Bright mint reads best with near-black text on top (onAccent).
-      accent = const Color(0xFF23CCAF),
-      onAccent = const Color(0xFF04231D),
-      accentSoft = const Color(0x2623CCAF),
+    : background = const Color(0xFF0E1312),
+      surface = const Color(0xFF171D1B),
+      surfaceElevated = const Color(0xFF202824),
+      border = const Color(0xFF29332F),
+      borderStrong = const Color(0xFF3B4842),
+      textPrimary = const Color(0xFFF0F4F2),
+      textSecondary = const Color(0xFFADB8B3),
+      textMuted = const Color(0xFF87938D),
+      accent = const Color(0xFF64CFB9),
+      onAccent = const Color(0xFF08241F),
+      accentSoft = const Color(0x2E64CFB9),
+      brandWarm = const Color(0xFFF0A06B),
+      brandWarmSoft = const Color(0x2EF0A06B),
+      heroSurface = const Color(0xFF1A2521),
+      onHero = const Color(0xFFF4F8F6),
+      onHeroMuted = const Color(0xFFAAB8B2),
       success = const Color(0xFF3DD68C),
       warning = const Color(0xFFF6B93B),
       danger = const Color(0xFFED5C5C),
@@ -44,20 +52,24 @@ class AppColors extends ThemeExtension<AppColors> {
       warningSoft = const Color(0x26F6B93B),
       dangerSoft = const Color(0x26ED5C5C);
 
-  // Light theme — soft off-white surfaces with a deep teal accent that keeps
-  // white text legible (AA) on primary buttons.
+  // Light theme — warm paper surfaces balance the financial precision.
   const AppColors.light()
-    : background = const Color(0xFFF3F6F5),
-      surface = const Color(0xFFFFFFFF),
-      surfaceElevated = const Color(0xFFFFFFFF),
-      border = const Color(0xFFE4EAE7),
-      borderStrong = const Color(0xFFD0D9D5),
-      textPrimary = const Color(0xFF14201C),
-      textSecondary = const Color(0xFF55625E),
-      textMuted = const Color(0xFF6C7873),
-      accent = const Color(0xFF0C8175),
+    : background = const Color(0xFFF6F3EE),
+      surface = const Color(0xFFFFFCF8),
+      surfaceElevated = const Color(0xFFEDE9E2),
+      border = const Color(0xFFE2DDD4),
+      borderStrong = const Color(0xFFCEC8BE),
+      textPrimary = const Color(0xFF17201D),
+      textSecondary = const Color(0xFF56625D),
+      textMuted = const Color(0xFF66706B),
+      accent = const Color(0xFF0B786D),
       onAccent = const Color(0xFFFFFFFF),
-      accentSoft = const Color(0x1A0C8175),
+      accentSoft = const Color(0x1F0B786D),
+      brandWarm = const Color(0xFFD67843),
+      brandWarmSoft = const Color(0x24D67843),
+      heroSurface = const Color(0xFF17231F),
+      onHero = const Color(0xFFF8FAF8),
+      onHeroMuted = const Color(0xFFB4C0BB),
       success = const Color(0xFF0E9E6E),
       warning = const Color(0xFFC77A12),
       danger = const Color(0xFFDC4C4C),
@@ -76,6 +88,11 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color accent;
   final Color onAccent;
   final Color accentSoft;
+  final Color brandWarm;
+  final Color brandWarmSoft;
+  final Color heroSurface;
+  final Color onHero;
+  final Color onHeroMuted;
   final Color success;
   final Color warning;
   final Color danger;
@@ -96,6 +113,11 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? accent,
     Color? onAccent,
     Color? accentSoft,
+    Color? brandWarm,
+    Color? brandWarmSoft,
+    Color? heroSurface,
+    Color? onHero,
+    Color? onHeroMuted,
     Color? success,
     Color? warning,
     Color? danger,
@@ -115,6 +137,11 @@ class AppColors extends ThemeExtension<AppColors> {
       accent: accent ?? this.accent,
       onAccent: onAccent ?? this.onAccent,
       accentSoft: accentSoft ?? this.accentSoft,
+      brandWarm: brandWarm ?? this.brandWarm,
+      brandWarmSoft: brandWarmSoft ?? this.brandWarmSoft,
+      heroSurface: heroSurface ?? this.heroSurface,
+      onHero: onHero ?? this.onHero,
+      onHeroMuted: onHeroMuted ?? this.onHeroMuted,
       success: success ?? this.success,
       warning: warning ?? this.warning,
       danger: danger ?? this.danger,
@@ -142,6 +169,11 @@ class AppColors extends ThemeExtension<AppColors> {
       accent: Color.lerp(accent, other.accent, t)!,
       onAccent: Color.lerp(onAccent, other.onAccent, t)!,
       accentSoft: Color.lerp(accentSoft, other.accentSoft, t)!,
+      brandWarm: Color.lerp(brandWarm, other.brandWarm, t)!,
+      brandWarmSoft: Color.lerp(brandWarmSoft, other.brandWarmSoft, t)!,
+      heroSurface: Color.lerp(heroSurface, other.heroSurface, t)!,
+      onHero: Color.lerp(onHero, other.onHero, t)!,
+      onHeroMuted: Color.lerp(onHeroMuted, other.onHeroMuted, t)!,
       success: Color.lerp(success, other.success, t)!,
       warning: Color.lerp(warning, other.warning, t)!,
       danger: Color.lerp(danger, other.danger, t)!,

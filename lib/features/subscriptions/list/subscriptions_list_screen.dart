@@ -4,14 +4,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/theme/app_colors.dart';
+import '../../../app/theme/app_metrics.dart';
 import '../../../core/haptics.dart';
 import '../../../core/widgets/app_sheet.dart';
 import '../../../core/widgets/empty_state.dart';
 import '../catalog/catalog_picker_sheet.dart';
 import '../../../core/widgets/pressable.dart';
+import '../../../core/widgets/primary_button.dart';
 import '../../../core/widgets/status_bar_fade.dart';
 import '../../../data/db/database.dart';
 import '../../../domain/models/enums.dart';
+import '../../../domain/models/group_node.dart';
+import '../../home/home_providers.dart';
 import '../../shell/app_shell.dart';
 import '../widgets/subscription_row.dart';
 import 'subscriptions_list_providers.dart';
@@ -59,6 +63,8 @@ class _SubscriptionsListScreenState
     final filtered = ref.watch(filteredSubscriptionsProvider);
     final search = ref.watch(subscriptionSearchProvider);
     final status = ref.watch(subscriptionStatusFilterProvider);
+    final groups = ref.watch(groupsTreeProvider).valueOrNull ?? const [];
+    final groupPaths = buildGroupPathIndex(groups);
 
     return Scaffold(
       backgroundColor: colors.background,
@@ -94,24 +100,11 @@ class _SubscriptionsListScreenState
                     icon: Icons.subscriptions_outlined,
                     title: l10n.emptyTitle,
                     subtitle: l10n.emptySubtitle,
-                    cta: Pressable(
+                    cta: PrimaryButton(
+                      label: l10n.addSubscription,
+                      expand: false,
+                      icon: Icons.add_rounded,
                       onPressed: () => showCatalogPickerAndOpenForm(context),
-                      haptic: HapticType.selection,
-                      borderRadius: BorderRadius.circular(14),
-                      child: Container(
-                        height: 52,
-                        padding: const EdgeInsets.symmetric(horizontal: 18),
-                        decoration: BoxDecoration(
-                          color: colors.accent,
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                        alignment: Alignment.center,
-                        child: Text(
-                          l10n.addSubscription,
-                          style: Theme.of(context).textTheme.labelLarge
-                              ?.copyWith(color: colors.onAccent),
-                        ),
-                      ),
                     ),
                   ),
                 )
@@ -126,10 +119,23 @@ class _SubscriptionsListScreenState
                     ),
                   )
                 else
-                  _SubscriptionSliverList(subscriptions: filtered)
+                  _SubscriptionSliverList(
+                    subscriptions: filtered,
+                    groupPaths: groupPaths,
+                  )
               else
-                _SubscriptionSliverList(subscriptions: filtered),
-              const SliverToBoxAdapter(child: SizedBox(height: 120)),
+                _SubscriptionSliverList(
+                  subscriptions: filtered,
+                  groupPaths: groupPaths,
+                ),
+              SliverToBoxAdapter(
+                child: SizedBox(
+                  height: shellBottomContentPadding(
+                    context,
+                    clearFloatingAction: true,
+                  ),
+                ),
+              ),
             ],
           ),
           const StatusBarFade(),
@@ -148,11 +154,12 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final l10n = AppLocalizations.of(context)!;
+    final metrics = context.metrics;
     return Padding(
       padding: EdgeInsets.fromLTRB(
-        20,
-        MediaQuery.viewPaddingOf(context).top + 24,
-        20,
+        metrics.screenGutter,
+        MediaQuery.viewPaddingOf(context).top + 22,
+        metrics.screenGutter,
         0,
       ),
       child: Row(
@@ -169,11 +176,11 @@ class _Header extends StatelessWidget {
             haptic: HapticType.light,
             borderRadius: BorderRadius.circular(999),
             child: Container(
-              width: 40,
-              height: 40,
+              width: 44,
+              height: 44,
               decoration: BoxDecoration(
                 color: colors.surfaceElevated,
-                shape: BoxShape.circle,
+                borderRadius: BorderRadius.circular(14),
               ),
               child: Icon(
                 Icons.folder_outlined,
@@ -208,8 +215,14 @@ class _SearchFieldState extends State<_SearchField> {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final l10n = AppLocalizations.of(context)!;
+    final metrics = context.metrics;
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+      padding: EdgeInsets.fromLTRB(
+        metrics.screenGutter,
+        metrics.spaceGroup,
+        metrics.screenGutter,
+        0,
+      ),
       child: TextField(
         controller: widget.controller,
         onChanged: (value) {
@@ -283,7 +296,6 @@ class _FilterRow extends ConsumerWidget {
               label: _statusLabel(status, l10n),
               selected: selectedStatus == status,
               onPressed: () {
-                Haptics.selection();
                 ref.read(subscriptionStatusFilterProvider.notifier).state =
                     status;
               },
@@ -321,36 +333,46 @@ class _Chip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    return Pressable(
-      onPressed: onPressed,
-      haptic: HapticType.selection,
-      borderRadius: BorderRadius.circular(999),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-        decoration: BoxDecoration(
-          color: selected ? colors.accentSoft : colors.surface,
-          borderRadius: BorderRadius.circular(999),
-          border: Border.all(color: selected ? colors.accent : colors.border),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (icon != null) ...[
-              Icon(
-                icon,
-                size: 14,
-                color: selected ? colors.accent : colors.textSecondary,
+    return Semantics(
+      button: true,
+      selected: selected,
+      label: label,
+      excludeSemantics: true,
+      child: Pressable(
+        onPressed: onPressed,
+        haptic: HapticType.selection,
+        borderRadius: BorderRadius.circular(999),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+          decoration: BoxDecoration(
+            color: selected ? colors.accentSoft : colors.surface,
+            borderRadius: BorderRadius.circular(999),
+            border: Border.all(color: selected ? colors.accent : colors.border),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (selected) ...[
+                Icon(Icons.check_rounded, size: 14, color: colors.accent),
+                const SizedBox(width: 4),
+              ],
+              if (icon != null) ...[
+                Icon(
+                  icon,
+                  size: 14,
+                  color: selected ? colors.accent : colors.textSecondary,
+                ),
+                const SizedBox(width: 4),
+              ],
+              Text(
+                label,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: selected ? colors.accent : colors.textSecondary,
+                  fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
+                ),
               ),
-              const SizedBox(width: 4),
             ],
-            Text(
-              label,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: selected ? colors.accent : colors.textSecondary,
-                fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -372,9 +394,13 @@ class _Dot extends StatelessWidget {
 }
 
 class _SubscriptionSliverList extends StatelessWidget {
-  const _SubscriptionSliverList({required this.subscriptions});
+  const _SubscriptionSliverList({
+    required this.subscriptions,
+    required this.groupPaths,
+  });
 
   final List<Subscription> subscriptions;
+  final Map<String, GroupPath> groupPaths;
 
   @override
   Widget build(BuildContext context) {
@@ -384,6 +410,7 @@ class _SubscriptionSliverList extends StatelessWidget {
         final subscription = subscriptions[index];
         return SubscriptionRow(
           subscription: subscription,
+          groupPath: groupPaths[subscription.groupId]?.label(),
           showMonthlyEquivalent: true,
           onTap: () => context.push('/subscriptions/${subscription.id}'),
         );

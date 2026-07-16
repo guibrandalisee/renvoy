@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../app/theme/app_colors.dart';
+import '../../app/theme/app_metrics.dart';
 import '../../app/theme/app_typography.dart';
 import '../../core/color_utils.dart';
 import '../../core/formatters.dart';
@@ -13,6 +14,7 @@ import '../../core/widgets/pressable.dart';
 import '../../core/widgets/status_bar_fade.dart';
 import '../../data/db/database.dart';
 import '../../domain/billing/billing_math.dart';
+import '../../domain/models/group_node.dart';
 import '../home/home_providers.dart';
 import '../shell/app_shell.dart';
 import '../subscriptions/widgets/subscription_row.dart';
@@ -70,6 +72,8 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     final firstDay = ref.watch(firstDayOfWeekProvider).valueOrNull ?? 1;
     final defaultCurrency =
         ref.watch(defaultCurrencyProvider).valueOrNull ?? 'USD';
+    final groups = ref.watch(groupsTreeProvider).valueOrNull ?? const [];
+    final groupPaths = buildGroupPathIndex(groups);
 
     return Scaffold(
       backgroundColor: colors.background,
@@ -91,7 +95,9 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                     _changeMonth(velocity < 0 ? 1 : -1);
                   },
                   child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 200),
+                    duration: MediaQuery.disableAnimationsOf(context)
+                        ? Duration.zero
+                        : const Duration(milliseconds: 200),
                     transitionBuilder: (child, animation) {
                       final offset = Tween<Offset>(
                         begin: Offset(0.08 * _direction, 0),
@@ -113,7 +119,9 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
               ),
               SliverToBoxAdapter(
                 child: AnimatedSize(
-                  duration: const Duration(milliseconds: 200),
+                  duration: MediaQuery.disableAnimationsOf(context)
+                      ? Duration.zero
+                      : const Duration(milliseconds: 200),
                   child:
                       selectedDay != null &&
                           selectedRenewals != null &&
@@ -121,6 +129,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                       ? _SelectedRenewals(
                           date: selectedDay,
                           subscriptions: selectedRenewals,
+                          groupPaths: groupPaths,
                         )
                       : _MonthlySummary(
                           renewalMap: renewalMap,
@@ -149,14 +158,16 @@ class _Header extends StatelessWidget {
     final colors = context.colors;
     final l10n = AppLocalizations.of(context)!;
     final monthLabel = Dates.monthYear(month, l10n.localeName);
+    final metrics = context.metrics;
     return Padding(
       padding: EdgeInsets.fromLTRB(
-        20,
-        MediaQuery.viewPaddingOf(context).top + 24,
-        20,
+        metrics.screenGutter,
+        MediaQuery.viewPaddingOf(context).top + 22,
+        metrics.screenGutter,
         0,
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             l10n.navCalendar,
@@ -164,25 +175,30 @@ class _Header extends StatelessWidget {
               context,
             ).textTheme.headlineMedium?.copyWith(color: colors.textPrimary),
           ),
-          const Spacer(),
-          _MonthButton(
-            icon: Icons.chevron_left,
-            onPressed: () => onChangeMonth(-1),
-          ),
-          SizedBox(
-            width: 128,
-            child: Text(
-              monthLabel,
-              textAlign: TextAlign.center,
-              style: moneyStyle(
-                Theme.of(context).textTheme.titleMedium ??
-                    const TextStyle(fontWeight: FontWeight.w600),
-              ).copyWith(color: colors.textPrimary),
-            ),
-          ),
-          _MonthButton(
-            icon: Icons.chevron_right,
-            onPressed: () => onChangeMonth(1),
+          const SizedBox(height: 18),
+          Row(
+            children: [
+              _MonthButton(
+                icon: Icons.chevron_left_rounded,
+                label: l10n.previousMonth,
+                onPressed: () => onChangeMonth(-1),
+              ),
+              Expanded(
+                child: Text(
+                  monthLabel,
+                  textAlign: TextAlign.center,
+                  style: moneyStyle(
+                    Theme.of(context).textTheme.titleLarge ??
+                        const TextStyle(fontWeight: FontWeight.w600),
+                  ).copyWith(color: colors.textPrimary),
+                ),
+              ),
+              _MonthButton(
+                icon: Icons.chevron_right_rounded,
+                label: l10n.nextMonth,
+                onPressed: () => onChangeMonth(1),
+              ),
+            ],
           ),
         ],
       ),
@@ -191,26 +207,39 @@ class _Header extends StatelessWidget {
 }
 
 class _MonthButton extends StatelessWidget {
-  const _MonthButton({required this.icon, required this.onPressed});
+  const _MonthButton({
+    required this.icon,
+    required this.label,
+    required this.onPressed,
+  });
 
   final IconData icon;
+  final String label;
   final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    return Pressable(
-      onPressed: onPressed,
-      haptic: HapticType.light,
-      borderRadius: BorderRadius.circular(999),
-      child: Container(
-        width: 36,
-        height: 36,
-        decoration: BoxDecoration(
-          color: colors.surfaceElevated,
-          shape: BoxShape.circle,
+    return Semantics(
+      button: true,
+      label: label,
+      excludeSemantics: true,
+      child: Tooltip(
+        message: label,
+        child: Pressable(
+          onPressed: onPressed,
+          haptic: HapticType.light,
+          borderRadius: BorderRadius.circular(14),
+          child: Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: colors.surfaceElevated,
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: Icon(icon, size: 22, color: colors.textPrimary),
+          ),
         ),
-        child: Icon(icon, size: 20, color: colors.textPrimary),
       ),
     );
   }
@@ -319,53 +348,63 @@ class _DayCell extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final today = _sameDay(day, DateTime.now());
+    final l10n = AppLocalizations.of(context)!;
     final dayColor = today
         ? colors.accent
         : currentMonth
         ? colors.textPrimary
         : colors.textMuted;
-    return Pressable(
-      onPressed: onPressed,
-      haptic: renewals.isEmpty ? HapticType.light : HapticType.selection,
-      borderRadius: BorderRadius.circular(999),
-      child: Center(
-        child: Container(
-          width: 44,
-          height: 44,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: selected
-                ? Border.all(color: colors.accent, width: 1.5)
-                : null,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: 32,
-                height: 32,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: today
-                      ? colors.accentSoft
-                      : colors.surface.withValues(alpha: 0),
-                  shape: BoxShape.circle,
-                ),
-                child: Text(
-                  '${day.day}',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: dayColor,
-                    fontWeight: today ? FontWeight.w700 : FontWeight.w400,
+    return Semantics(
+      button: true,
+      selected: selected,
+      label:
+          '${Dates.short(day, l10n.localeName)}, '
+          '${l10n.renewalsCount(renewals.length)}',
+      child: ExcludeSemantics(
+        child: Pressable(
+          onPressed: onPressed,
+          haptic: renewals.isEmpty ? HapticType.light : HapticType.selection,
+          borderRadius: BorderRadius.circular(999),
+          child: Center(
+            child: Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: selected
+                    ? Border.all(color: colors.accent, width: 1.5)
+                    : null,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 32,
+                    height: 32,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: today
+                          ? colors.accentSoft
+                          : colors.surface.withValues(alpha: 0),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Text(
+                      '${day.day}',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: dayColor,
+                        fontWeight: today ? FontWeight.w700 : FontWeight.w400,
+                      ),
+                    ),
                   ),
-                ),
+                  SizedBox(
+                    height: 8,
+                    child: renewals.isEmpty
+                        ? const SizedBox.shrink()
+                        : _Markers(renewals: renewals),
+                  ),
+                ],
               ),
-              SizedBox(
-                height: 8,
-                child: renewals.isEmpty
-                    ? const SizedBox.shrink()
-                    : _Markers(renewals: renewals),
-              ),
-            ],
+            ),
           ),
         ),
       ),
@@ -409,10 +448,15 @@ class _Markers extends StatelessWidget {
 }
 
 class _SelectedRenewals extends StatelessWidget {
-  const _SelectedRenewals({required this.date, required this.subscriptions});
+  const _SelectedRenewals({
+    required this.date,
+    required this.subscriptions,
+    required this.groupPaths,
+  });
 
   final DateTime date;
   final List<Subscription> subscriptions;
+  final Map<String, GroupPath> groupPaths;
 
   @override
   Widget build(BuildContext context) {
@@ -435,6 +479,7 @@ class _SelectedRenewals extends StatelessWidget {
             SubscriptionRow(
               subscription: subscription,
               subtitle: Dates.short(date, l10n.localeName),
+              groupPath: groupPaths[subscription.groupId]?.label(),
               onTap: () => context.push('/subscriptions/${subscription.id}'),
             ),
         ],

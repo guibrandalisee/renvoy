@@ -3,6 +3,7 @@ import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:renvoy/data/db/database.dart';
 import 'package:renvoy/domain/models/enums.dart';
+import 'package:renvoy/domain/models/group_node.dart';
 
 void main() {
   test('groups dao emits tree and delete move up updates children', () async {
@@ -23,6 +24,7 @@ void main() {
     final tree = await database.groupsDao.watchAllTree().first;
     final parent = tree.firstWhere((node) => node.group.id == parentId);
     expect(parent.children.map((node) => node.group.id), contains(childId));
+    expect(findGroupPath(tree, childId)?.label(), 'Parent › Child');
 
     await database.groupsDao.deleteGroupMoveChildrenUp(childId);
 

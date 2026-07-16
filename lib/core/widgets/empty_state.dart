@@ -27,16 +27,17 @@ class EmptyState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            ExcludeSemantics(child: Icon(icon, color: colors.accent, size: 34)),
+            const SizedBox(height: 12),
             Container(
-              width: 64,
-              height: 64,
+              width: 24,
+              height: 3,
               decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: colors.accentSoft,
+                color: colors.brandWarm,
+                borderRadius: BorderRadius.circular(2),
               ),
-              child: Icon(icon, color: colors.accent, size: 28),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 18),
             Text(
               title,
               style: textTheme.titleMedium?.copyWith(color: colors.textPrimary),

@@ -69,6 +69,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get groupOther => 'Other';
 
   @override
+  String get noSubgroup => 'No subgroup';
+
+  @override
   String get emptyTitle => 'No subscriptions yet';
 
   @override
@@ -563,6 +566,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get catalogCreateCustom => 'Create custom';
 
   @override
+  String catalogCreateCustomNamed(String name) {
+    return 'Create custom: $name';
+  }
+
+  @override
   String get catalogUnavailableTitle => 'Catalog unavailable';
 
   @override
@@ -578,6 +586,22 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get catalogEmptySubtitle =>
       'Try a different search or create a custom subscription.';
+
+  @override
+  String get homeLoadError => 'Your overview could not be loaded';
+
+  @override
+  String get homeLoadErrorSubtitle =>
+      'Your data is still safe on this device. Try loading it again.';
+
+  @override
+  String get tryAgain => 'Try again';
+
+  @override
+  String get previousMonth => 'Previous month';
+
+  @override
+  String get nextMonth => 'Next month';
 
   @override
   String relativeDaysAgo(int count) {

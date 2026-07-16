@@ -69,6 +69,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get groupOther => 'Outros';
 
   @override
+  String get noSubgroup => 'Sem subgrupo';
+
+  @override
   String get emptyTitle => 'Nenhuma assinatura ainda';
 
   @override
@@ -563,6 +566,11 @@ class AppLocalizationsPt extends AppLocalizations {
   String get catalogCreateCustom => 'Criar personalizada';
 
   @override
+  String catalogCreateCustomNamed(String name) {
+    return 'Criar personalizada: $name';
+  }
+
+  @override
   String get catalogUnavailableTitle => 'Catálogo indisponível';
 
   @override
@@ -578,6 +586,22 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get catalogEmptySubtitle =>
       'Tente outra busca ou crie uma assinatura personalizada.';
+
+  @override
+  String get homeLoadError => 'Não foi possível carregar seu resumo';
+
+  @override
+  String get homeLoadErrorSubtitle =>
+      'Seus dados continuam seguros neste dispositivo. Tente carregar novamente.';
+
+  @override
+  String get tryAgain => 'Tentar novamente';
+
+  @override
+  String get previousMonth => 'Mês anterior';
+
+  @override
+  String get nextMonth => 'Próximo mês';
 
   @override
   String relativeDaysAgo(int count) {

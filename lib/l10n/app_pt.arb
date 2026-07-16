@@ -24,6 +24,7 @@
   "upcomingRenewals": "Próximas renovações",
   "spendByGroup": "Gasto por grupo",
   "groupOther": "Outros",
+  "noSubgroup": "Sem subgrupo",
   "emptyTitle": "Nenhuma assinatura ainda",
   "emptySubtitle": "Adicione sua primeira assinatura para ver seus gastos num relance.",
   "addSubscription": "Adicionar assinatura",
@@ -282,11 +283,22 @@
   "catalogPickerTitle": "Escolha um serviço",
   "catalogSearchHint": "Buscar serviços",
   "catalogCreateCustom": "Criar personalizada",
+  "catalogCreateCustomNamed": "Criar personalizada: {name}",
+  "@catalogCreateCustomNamed": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
   "catalogUnavailableTitle": "Catálogo indisponível",
   "catalogUnavailableSubtitle": "Verifique sua conexão e tente novamente, ou crie uma assinatura personalizada.",
   "catalogTryAgain": "Tentar novamente",
   "catalogEmptyTitle": "Nenhum serviço encontrado",
   "catalogEmptySubtitle": "Tente outra busca ou crie uma assinatura personalizada.",
+  "homeLoadError": "Não foi possível carregar seu resumo",
+  "homeLoadErrorSubtitle": "Seus dados continuam seguros neste dispositivo. Tente carregar novamente.",
+  "tryAgain": "Tentar novamente",
+  "previousMonth": "Mês anterior",
+  "nextMonth": "Próximo mês",
   "relativeDaysAgo": "há {count, plural, =1{1 dia} other{{count} dias}}",
   "@relativeDaysAgo": {
     "placeholders": {

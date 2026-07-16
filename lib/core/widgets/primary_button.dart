@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
 import '../../app/theme/app_colors.dart';
+import '../../app/theme/app_metrics.dart';
 import '../haptics.dart';
 import 'pressable.dart';
 
 /// The app's canonical primary action button.
 ///
-/// Built on [Pressable] so it shares the same spring-scale press physics and
-/// haptics as the rest of the UI (instead of falling back to Material's
-/// `FilledButton`). Passing a `null` [onPressed] renders a dimmed, disabled
+/// Built on [Pressable] so it shares product feedback and haptics without
+/// coupling the component to Material button anatomy. A null [onPressed]
+/// renders a dimmed, disabled
 /// state; [isLoading] swaps the label for a neutral spinner.
 class PrimaryButton extends StatelessWidget {
   const PrimaryButton({
@@ -38,6 +39,7 @@ class PrimaryButton extends StatelessWidget {
     final enabled = onPressed != null && !isLoading;
     final background = destructive ? colors.danger : colors.accent;
     final foreground = destructive ? const Color(0xFFFFFFFF) : colors.onAccent;
+    final radius = context.metrics.radiusControl;
 
     final Widget content = isLoading
         ? SizedBox.square(
@@ -68,24 +70,29 @@ class PrimaryButton extends StatelessWidget {
             ],
           );
 
-    return Opacity(
-      opacity: enabled ? 1 : 0.5,
-      child: Pressable(
-        onPressed: enabled ? onPressed : null,
-        haptic: destructive ? HapticType.warning : HapticType.selection,
-        borderRadius: BorderRadius.circular(14),
-        child: Container(
-          height: 52,
-          width: expand ? double.infinity : null,
-          padding: expand
-              ? null
-              : const EdgeInsets.symmetric(horizontal: 22),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: background,
-            borderRadius: BorderRadius.circular(14),
+    return Semantics(
+      button: true,
+      enabled: enabled,
+      label: label,
+      excludeSemantics: true,
+      child: Opacity(
+        opacity: enabled ? 1 : 0.5,
+        child: Pressable(
+          onPressed: enabled ? onPressed : null,
+          haptic: destructive ? HapticType.warning : HapticType.selection,
+          pressedScale: 0.98,
+          borderRadius: BorderRadius.circular(radius),
+          child: Container(
+            height: 52,
+            width: expand ? double.infinity : null,
+            padding: expand ? null : const EdgeInsets.symmetric(horizontal: 22),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: background,
+              borderRadius: BorderRadius.circular(radius),
+            ),
+            child: content,
           ),
-          child: content,
         ),
       ),
     );

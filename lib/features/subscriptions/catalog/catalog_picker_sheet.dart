@@ -53,26 +53,72 @@ class _CatalogPickerState extends ConsumerState<_CatalogPicker> {
     final l10n = AppLocalizations.of(context)!;
     final colors = context.colors;
     final services = ref.watch(catalogServicesProvider);
-    ref.listen<AsyncValue<List<CatalogService>>>(
-      catalogServicesProvider,
-      (_, next) {
-        if (!next.hasError) return;
-        developer.log(
-          'Catalog unavailable in picker: '
-          '${next.error.runtimeType}: ${next.error}',
-          name: _logName,
-          error: next.error,
-          stackTrace: next.stackTrace,
-          level: 1000,
-        );
+    ref.listen<AsyncValue<List<CatalogService>>>(catalogServicesProvider, (
+      _,
+      next,
+    ) {
+      if (!next.hasError) return;
+      developer.log(
+        'Catalog unavailable in picker: '
+        '${next.error.runtimeType}: ${next.error}',
+        name: _logName,
+        error: next.error,
+        stackTrace: next.stackTrace,
+        level: 1000,
+      );
+    });
+    final resultItems = services.when<List<Widget>>(
+      loading: () => List.generate(
+        7,
+        (_) => const Padding(
+          padding: EdgeInsets.symmetric(vertical: 10),
+          child: Row(
+            children: [
+              ShimmerBox(width: 40, height: 40, radius: 999),
+              SizedBox(width: 12),
+              Expanded(
+                child: ShimmerBox(
+                  width: double.infinity,
+                  height: 18,
+                  radius: 8,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      error: (_, _) => [_CatalogError(onRetry: _retryCatalog)],
+      data: (items) {
+        final query = normalizeForSearch(_query);
+        final filtered = items.where((service) {
+          return normalizeForSearch(service.name).contains(query) ||
+              normalizeForSearch(service.slug).contains(query);
+        }).toList();
+        if (filtered.isEmpty) return const [_CatalogEmpty()];
+        return filtered
+            .map(
+              (service) => _CatalogServiceRow(
+                service: service,
+                onPressed: () => _openService(service),
+              ),
+            )
+            .toList();
       },
     );
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-      child: Column(
+
+    return SizedBox(
+      height: MediaQuery.sizeOf(context).height * 0.55,
+      child: ListView(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
         children: [
           TextField(
             onChanged: (value) => setState(() => _query = value),
+            onSubmitted: (_) {
+              if (_query.trim().isNotEmpty) _openCustom();
+            },
+            textCapitalization: TextCapitalization.words,
+            textInputAction: TextInputAction.done,
             decoration: InputDecoration(
               hintText: l10n.catalogSearchHint,
               filled: true,
@@ -84,29 +130,14 @@ class _CatalogPickerState extends ConsumerState<_CatalogPicker> {
             ),
           ),
           const SizedBox(height: 12),
-          _CustomServiceRow(onPressed: _openCustom),
-          const SizedBox(height: 4),
-          Expanded(
-            child: services.when(
-              loading: _CatalogLoading.new,
-              error: (_, _) => _CatalogError(onRetry: _retryCatalog),
-              data: (items) {
-                final query = normalizeForSearch(_query);
-                final filtered = items.where((service) {
-                  return normalizeForSearch(service.name).contains(query) ||
-                      normalizeForSearch(service.slug).contains(query);
-                }).toList();
-                if (filtered.isEmpty) return const _CatalogEmpty();
-                return ListView.builder(
-                  itemCount: filtered.length,
-                  itemBuilder: (context, index) => _CatalogServiceRow(
-                    service: filtered[index],
-                    onPressed: () => _openService(filtered[index]),
-                  ),
-                );
-              },
-            ),
+          _CustomServiceRow(
+            label: _query.trim().isEmpty
+                ? l10n.catalogCreateCustom
+                : l10n.catalogCreateCustomNamed(_query.trim()),
+            onPressed: _openCustom,
           ),
+          const SizedBox(height: 4),
+          ...resultItems,
         ],
       ),
     );
@@ -118,7 +149,12 @@ class _CatalogPickerState extends ConsumerState<_CatalogPicker> {
   }
 
   void _openCustom() {
-    Navigator.of(context).pop(const _CatalogPickerResult());
+    final name = _query.trim();
+    Navigator.of(context).pop(
+      _CatalogPickerResult(
+        prefill: name.isEmpty ? null : SubscriptionFormPrefill(name: name),
+      ),
+    );
   }
 
   Future<void> _openService(CatalogService service) async {
@@ -143,7 +179,8 @@ class _CatalogPickerState extends ConsumerState<_CatalogPicker> {
 }
 
 class _CustomServiceRow extends StatelessWidget {
-  const _CustomServiceRow({required this.onPressed});
+  const _CustomServiceRow({required this.label, required this.onPressed});
+  final String label;
   final VoidCallback onPressed;
 
   @override
@@ -168,7 +205,9 @@ class _CustomServiceRow extends StatelessWidget {
             ),
             const SizedBox(width: 12),
             Text(
-              AppLocalizations.of(context)!.catalogCreateCustom,
+              label,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
               style: Theme.of(
                 context,
               ).textTheme.bodyLarge?.copyWith(color: colors.textPrimary),
@@ -219,26 +258,6 @@ class _CatalogServiceRow extends StatelessWidget {
       ),
     );
   }
-}
-
-class _CatalogLoading extends StatelessWidget {
-  const _CatalogLoading();
-  @override
-  Widget build(BuildContext context) => ListView.builder(
-    itemCount: 7,
-    itemBuilder: (context, index) => const Padding(
-      padding: EdgeInsets.symmetric(vertical: 10),
-      child: Row(
-        children: [
-          ShimmerBox(width: 40, height: 40, radius: 999),
-          SizedBox(width: 12),
-          Expanded(
-            child: ShimmerBox(width: double.infinity, height: 18, radius: 8),
-          ),
-        ],
-      ),
-    ),
-  );
 }
 
 class _CatalogError extends StatelessWidget {

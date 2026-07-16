@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -10,6 +11,7 @@ import '../data/db/settings_keys.dart';
 import '../data/notifications/reminder_scheduler.dart';
 import '../domain/billing/renewal_service.dart';
 import 'router.dart';
+import 'theme/app_colors.dart';
 import 'theme/app_theme.dart';
 
 final themeModeProvider = StreamProvider<ThemeMode>((ref) {
@@ -63,6 +65,13 @@ class RenvoyApp extends ConsumerWidget {
       darkTheme: AppTheme.dark(),
       themeMode: themeMode,
       locale: locale,
+      builder: (context, child) => CupertinoTheme(
+        data: AppTheme.cupertino(
+          brightness: Theme.of(context).brightness,
+          colors: context.colors,
+        ),
+        child: child ?? const SizedBox.shrink(),
+      ),
       routerConfig: appRouter,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,

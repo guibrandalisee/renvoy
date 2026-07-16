@@ -312,7 +312,9 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
                         label: l10n.name,
                         child: TextFormField(
                           controller: _nameController,
-                          autofocus: !_isEdit,
+                          autofocus:
+                              !_isEdit && _nameController.text.trim().isEmpty,
+                          textCapitalization: TextCapitalization.words,
                           textInputAction: TextInputAction.next,
                           decoration: _inputDecoration(l10n.nameHint),
                         ),
@@ -326,6 +328,9 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
                               label: l10n.price,
                               child: TextFormField(
                                 controller: _priceController,
+                                autofocus:
+                                    !_isEdit &&
+                                    _nameController.text.trim().isNotEmpty,
                                 keyboardType:
                                     const TextInputType.numberWithOptions(
                                       decimal: true,

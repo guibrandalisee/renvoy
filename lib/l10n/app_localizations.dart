@@ -202,6 +202,12 @@ abstract class AppLocalizations {
   /// **'Other'**
   String get groupOther;
 
+  /// No description provided for @noSubgroup.
+  ///
+  /// In en, this message translates to:
+  /// **'No subgroup'**
+  String get noSubgroup;
+
   /// No description provided for @emptyTitle.
   ///
   /// In en, this message translates to:
@@ -1036,6 +1042,12 @@ abstract class AppLocalizations {
   /// **'Create custom'**
   String get catalogCreateCustom;
 
+  /// No description provided for @catalogCreateCustomNamed.
+  ///
+  /// In en, this message translates to:
+  /// **'Create custom: {name}'**
+  String catalogCreateCustomNamed(String name);
+
   /// No description provided for @catalogUnavailableTitle.
   ///
   /// In en, this message translates to:
@@ -1065,6 +1077,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Try a different search or create a custom subscription.'**
   String get catalogEmptySubtitle;
+
+  /// No description provided for @homeLoadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Your overview could not be loaded'**
+  String get homeLoadError;
+
+  /// No description provided for @homeLoadErrorSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data is still safe on this device. Try loading it again.'**
+  String get homeLoadErrorSubtitle;
+
+  /// No description provided for @tryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get tryAgain;
+
+  /// No description provided for @previousMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous month'**
+  String get previousMonth;
+
+  /// No description provided for @nextMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Next month'**
+  String get nextMonth;
 
   /// No description provided for @relativeDaysAgo.
   ///

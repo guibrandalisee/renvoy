@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -9,6 +10,8 @@ import 'package:renvoy/l10n/app_localizations.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../app/theme/app_colors.dart';
+import '../../app/theme/app_metrics.dart';
+import '../../app/theme/app_platform.dart';
 import '../../core/haptics.dart';
 import '../../core/widgets/app_sheet.dart';
 import '../../core/widgets/confirm_dialog.dart';
@@ -41,6 +44,7 @@ class SettingsScreen extends ConsumerWidget {
     final colors = context.colors;
     final l10n = AppLocalizations.of(context)!;
     final packageInfo = ref.watch(_packageInfoProvider).valueOrNull;
+    final metrics = context.metrics;
 
     return Scaffold(
       backgroundColor: colors.background,
@@ -51,9 +55,9 @@ class SettingsScreen extends ConsumerWidget {
               SliverToBoxAdapter(
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(
-                    20,
-                    MediaQuery.viewPaddingOf(context).top + 24,
-                    20,
+                    metrics.screenGutter,
+                    MediaQuery.viewPaddingOf(context).top + 22,
+                    metrics.screenGutter,
                     0,
                   ),
                   child: Text(
@@ -379,12 +383,18 @@ class _Section extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final metrics = context.metrics;
     return SliverToBoxAdapter(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 24, 20, 8),
+            padding: EdgeInsets.fromLTRB(
+              metrics.screenGutter,
+              metrics.spaceSection,
+              metrics.screenGutter,
+              metrics.spaceRelated,
+            ),
             child: Text(
               label,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -394,10 +404,10 @@ class _Section extends StatelessWidget {
             ),
           ),
           Container(
-            margin: const EdgeInsets.symmetric(horizontal: 20),
+            margin: EdgeInsets.symmetric(horizontal: metrics.screenGutter),
             decoration: BoxDecoration(
               color: colors.surface,
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(metrics.radiusContainer),
             ),
             child: Column(
               children: [
@@ -447,7 +457,13 @@ class _SettingRow extends StatelessWidget {
             ),
           if (onPressed != null) ...[
             const SizedBox(width: 8),
-            Icon(Icons.chevron_right, size: 16, color: colors.textMuted),
+            Icon(
+              isCupertinoPlatform(context)
+                  ? CupertinoIcons.chevron_forward
+                  : Icons.chevron_right_rounded,
+              size: 16,
+              color: colors.textMuted,
+            ),
           ],
         ],
       ),
@@ -456,10 +472,15 @@ class _SettingRow extends StatelessWidget {
     if (onPressed == null) {
       return content;
     }
-    return Pressable(
-      onPressed: onPressed,
-      haptic: HapticType.light,
-      child: content,
+    return Semantics(
+      button: true,
+      label: value.isEmpty ? label : '$label, $value',
+      excludeSemantics: true,
+      child: Pressable(
+        onPressed: onPressed,
+        haptic: HapticType.light,
+        child: content,
+      ),
     );
   }
 }

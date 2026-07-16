@@ -8,7 +8,7 @@ class Pressable extends StatefulWidget {
     this.onPressed,
     this.onLongPress,
     this.enabled = true,
-    this.pressedScale = 0.97,
+    this.pressedScale = 1,
     this.haptic = HapticType.none,
     this.borderRadius,
     this.behavior = HitTestBehavior.opaque,
@@ -59,18 +59,26 @@ class _PressableState extends State<Pressable>
   }
 
   void _animateDown() {
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _controller.value = 1;
+      return;
+    }
     _controller.animateTo(
       1,
-      duration: const Duration(milliseconds: 120),
+      duration: const Duration(milliseconds: 90),
       curve: Curves.easeOutCubic,
     );
   }
 
   void _animateUp() {
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _controller.value = 0;
+      return;
+    }
     _controller.animateBack(
       0,
-      duration: const Duration(milliseconds: 260),
-      curve: Curves.elasticOut,
+      duration: const Duration(milliseconds: 160),
+      curve: Curves.easeOutCubic,
     );
   }
 
@@ -114,7 +122,7 @@ class _PressableState extends State<Pressable>
       builder: (context, child) {
         final value = _controller.value;
         final scale = 1 - ((1 - widget.pressedScale) * value);
-        final opacity = 1 - (0.08 * value);
+        final opacity = 1 - (0.12 * value);
 
         return Opacity(
           opacity: opacity,
