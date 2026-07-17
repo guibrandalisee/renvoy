@@ -138,10 +138,6 @@ class AppDatabase extends _$AppDatabase {
       ]);
 
       batch.insertAll(settings, [
-        SettingsCompanion.insert(
-          key: SettingsKeys.defaultCurrency,
-          value: 'USD',
-        ),
         SettingsCompanion.insert(key: SettingsKeys.themeMode, value: 'system'),
         SettingsCompanion.insert(key: SettingsKeys.firstDayOfWeek, value: '1'),
         SettingsCompanion.insert(

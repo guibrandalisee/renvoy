@@ -1,5 +1,30 @@
+import 'dart:ui';
+
 import 'package:intl/intl.dart';
 import 'package:renvoy/l10n/app_localizations.dart';
+
+class CurrencyDefaults {
+  const CurrencyDefaults._();
+
+  static String fromLocales(
+    Iterable<Locale> locales, {
+    String fallback = 'USD',
+  }) {
+    for (final locale in locales) {
+      try {
+        final currency = NumberFormat.simpleCurrency(
+          locale: locale.toString(),
+        ).currencyName?.toUpperCase();
+        if (currency != null && RegExp(r'^[A-Z]{3}$').hasMatch(currency)) {
+          return currency;
+        }
+      } on ArgumentError {
+        // Try the next preferred locale when intl does not know this one.
+      }
+    }
+    return fallback;
+  }
+}
 
 class Money {
   const Money._();

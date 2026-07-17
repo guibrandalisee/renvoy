@@ -20,6 +20,7 @@ void main() {
 
     expect(service.slug, 'netflix');
     expect(service.iconSlug, 'netflix');
+    expect(service.iconName, 'si:netflix');
     expect(service.manageUrl, isNull);
     expect(service.group.name.pt, 'Streaming');
   });
@@ -38,7 +39,8 @@ void main() {
     expect(service.slug, isEmpty);
     expect(service.name, isEmpty);
     expect(service.domain, isEmpty);
-    expect(service.iconSlug, isNull);
+    expect(service.iconSlug, isEmpty);
+    expect(service.iconName, isEmpty);
     expect(service.color, isNull);
     expect(service.group.name.en, isEmpty);
   });

@@ -166,9 +166,7 @@ class _CatalogPickerState extends ConsumerState<_CatalogPicker> {
         prefill: SubscriptionFormPrefill(
           name: service.name,
           serviceSlug: service.slug,
-          iconName: service.iconSlug == null
-              ? 'fav:${service.domain}'
-              : 'si:${service.iconSlug}',
+          iconName: service.iconName,
           colorHex: service.color,
           manageUrl: service.manageUrl,
           groupId: matchCatalogServiceGroupId(service, groups),
@@ -228,9 +226,6 @@ class _CatalogServiceRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final color = colorFromHex(service.color) ?? colors.accent;
-    final iconName = service.iconSlug == null
-        ? 'fav:${service.domain}'
-        : 'si:${service.iconSlug}';
     return Pressable(
       onPressed: onPressed,
       borderRadius: BorderRadius.circular(14),
@@ -240,7 +235,7 @@ class _CatalogServiceRow extends StatelessWidget {
           children: [
             SubscriptionAvatar(
               name: service.name,
-              iconName: iconName,
+              iconName: service.iconName,
               color: color,
               size: 40,
             ),

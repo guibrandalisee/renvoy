@@ -3,9 +3,9 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:renvoy/l10n/app_localizations.dart';
 
+import '../core/formatters.dart';
 import '../data/db/database_provider.dart';
 import '../data/db/settings_keys.dart';
 import '../data/notifications/reminder_scheduler.dart';
@@ -35,9 +35,9 @@ final bootstrapProvider = FutureProvider<void>((ref) async {
       SettingsKeys.defaultCurrency,
     );
     if (currentCurrency == null) {
-      final locale = PlatformDispatcher.instance.locale.toString();
-      final currency =
-          NumberFormat.simpleCurrency(locale: locale).currencyName ?? 'USD';
+      final currency = CurrencyDefaults.fromLocales(
+        PlatformDispatcher.instance.locales,
+      );
       await settingsDao.setValue(SettingsKeys.defaultCurrency, currency);
     }
     await ref.watch(renewalServiceProvider).rollForward(DateTime.now().toUtc());

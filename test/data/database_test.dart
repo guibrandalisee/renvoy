@@ -31,7 +31,7 @@ void main() {
     expect(globalRules.map((rule) => rule.daysBefore), [0, 3]);
     expect(
       await database.settingsDao.getValue(SettingsKeys.defaultCurrency),
-      'USD',
+      null,
     );
   });
 

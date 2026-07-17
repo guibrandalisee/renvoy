@@ -1,5 +1,8 @@
+import 'dart:ui';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/formatters.dart';
 import '../../data/db/database.dart';
 import '../../data/db/database_provider.dart';
 import '../../data/db/settings_keys.dart';
@@ -37,7 +40,11 @@ final defaultCurrencyProvider = StreamProvider<String>((ref) {
   return ref
       .watch(settingsDaoProvider)
       .watchValue(SettingsKeys.defaultCurrency)
-      .map((value) => value ?? 'USD');
+      .map(
+        (value) =>
+            value ??
+            CurrencyDefaults.fromLocales(PlatformDispatcher.instance.locales),
+      );
 });
 
 class ConvertedMonthlySpending {
