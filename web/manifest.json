@@ -1,6 +1,6 @@
 {
-    "name": "renvoy",
-    "short_name": "renvoy",
+    "name": "Renvoy",
+    "short_name": "Renvoy",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#101417",

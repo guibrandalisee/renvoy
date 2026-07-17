@@ -8,11 +8,6 @@ import '../db/settings_keys.dart';
 import 'catalog_api.dart';
 import 'catalog_models.dart';
 
-const catalogCacheTtl = Duration(days: 7);
-
-bool isCatalogCacheFresh(DateTime fetchedAt, DateTime now) =>
-    now.difference(fetchedAt) < catalogCacheTtl;
-
 abstract interface class CatalogCacheStore {
   Future<String?> read(String key);
   Future<void> write(String key, String value);
@@ -51,19 +46,10 @@ class CatalogRepository {
     developer.log('Loading catalog from cache', name: _logName);
     final cached = await _readCache();
     final now = _now();
-    if (cached != null && isCatalogCacheFresh(cached.fetchedAt, now)) {
-      developer.log(
-        'Using fresh catalog cache: services=${cached.services.length}, '
-        'fetchedAt=${cached.fetchedAt.toIso8601String()}',
-        name: _logName,
-      );
-      return cached.services;
-    }
-
     developer.log(
       cached == null
           ? 'No usable catalog cache found; requesting catalog'
-          : 'Catalog cache is stale; requesting refresh: '
+          : 'Catalog cache available as fallback; requesting refresh: '
                 'services=${cached.services.length}, '
                 'fetchedAt=${cached.fetchedAt.toIso8601String()}',
       name: _logName,
@@ -71,6 +57,11 @@ class CatalogRepository {
 
     try {
       final response = await _api.fetchServices();
+      if (response.services.isEmpty) {
+        throw const CatalogApiException(
+          'Catalog response contains no services.',
+        );
+      }
       developer.log(
         'Catalog refresh succeeded: services=${response.services.length}; '
         'saving response to cache',
@@ -84,7 +75,7 @@ class CatalogRepository {
       developer.log('Catalog cache updated successfully', name: _logName);
       return response.services;
     } on CatalogApiException catch (error, stackTrace) {
-      if (cached != null) {
+      if (cached != null && cached.services.isNotEmpty) {
         developer.log(
           'Catalog refresh failed; falling back to stale cache: $error',
           name: _logName,
@@ -181,6 +172,7 @@ final catalogRepositoryProvider = Provider<CatalogRepository>((ref) {
   );
 });
 
-final catalogServicesProvider = FutureProvider<List<CatalogService>>((ref) {
-  return ref.watch(catalogRepositoryProvider).getServices();
-});
+final catalogServicesProvider =
+    FutureProvider.autoDispose<List<CatalogService>>((ref) {
+      return ref.watch(catalogRepositoryProvider).getServices();
+    });

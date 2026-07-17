@@ -69,6 +69,7 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
   String? _serviceSlug;
   String? _colorHex;
   String? _iconName;
+  bool _didApplyDefaultCurrency = false;
 
   bool get _isEdit => widget.subscriptionId != null;
 
@@ -237,10 +238,10 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
     final subscriptionAsync = widget.subscriptionId == null
         ? const AsyncValue<Subscription?>.data(null)
         : ref.watch(_subscriptionProvider(widget.subscriptionId!));
-    final defaultCurrency =
-        ref.watch(defaultCurrencyProvider).valueOrNull ?? 'USD';
-    if (!_isEdit && _loadedId == null && _currency == 'USD') {
-      _currency = defaultCurrency;
+    final defaultCurrency = ref.watch(defaultCurrencyProvider);
+    if (!_isEdit && !_didApplyDefaultCurrency && defaultCurrency.hasValue) {
+      _currency = defaultCurrency.value ?? 'USD';
+      _didApplyDefaultCurrency = true;
     }
 
     return subscriptionAsync.when(

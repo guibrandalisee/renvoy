@@ -72,6 +72,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     final firstDay = ref.watch(firstDayOfWeekProvider).valueOrNull ?? 1;
     final defaultCurrency =
         ref.watch(defaultCurrencyProvider).valueOrNull ?? 'USD';
+    final exchangeRates = ref.watch(exchangeRatesProvider).valueOrNull;
     final groups = ref.watch(groupsTreeProvider).valueOrNull ?? const [];
     final groupPaths = buildGroupPathIndex(groups);
 
@@ -133,7 +134,21 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                         )
                       : _MonthlySummary(
                           renewalMap: renewalMap,
-                          currencyCode: defaultCurrency,
+                          currencyCode:
+                              exchangeRates?.baseCurrency ?? defaultCurrency,
+                          amountsBySubscriptionId: exchangeRates == null
+                              ? null
+                              : {
+                                  for (final subscription
+                                      in renewalMap.values.expand(
+                                        (items) => items,
+                                      ))
+                                    subscription.id: exchangeRates
+                                        .convertToBase(
+                                          subscription.priceMinor.toDouble(),
+                                          subscription.currency,
+                                        ),
+                                },
                         ),
                 ),
               ),
@@ -489,20 +504,34 @@ class _SelectedRenewals extends StatelessWidget {
 }
 
 class _MonthlySummary extends StatelessWidget {
-  const _MonthlySummary({required this.renewalMap, required this.currencyCode});
+  const _MonthlySummary({
+    required this.renewalMap,
+    required this.currencyCode,
+    required this.amountsBySubscriptionId,
+  });
 
   final Map<DateTime, List<Subscription>> renewalMap;
   final String currencyCode;
+  final Map<String, double>? amountsBySubscriptionId;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final colors = context.colors;
     final renewals = renewalMap.values.expand((items) => items).toList();
-    final total = renewals.fold<int>(
-      0,
-      (sum, subscription) => sum + subscription.priceMinor,
-    );
+    final hasAllConvertedAmounts =
+        amountsBySubscriptionId != null &&
+        renewals.every(
+          (subscription) =>
+              amountsBySubscriptionId!.containsKey(subscription.id),
+        );
+    final total = hasAllConvertedAmounts
+        ? renewals.fold<double>(
+            0,
+            (sum, subscription) =>
+                sum + amountsBySubscriptionId![subscription.id]!,
+          )
+        : null;
     return Container(
       margin: const EdgeInsets.fromLTRB(20, 16, 20, 0),
       padding: const EdgeInsets.all(16),
@@ -522,7 +551,13 @@ class _MonthlySummary extends StatelessWidget {
               ),
               const Spacer(),
               Text(
-                Money.format(total, currencyCode, locale: l10n.localeName),
+                total == null
+                    ? '—'
+                    : Money.format(
+                        total.round(),
+                        currencyCode,
+                        locale: l10n.localeName,
+                      ),
                 textAlign: TextAlign.right,
                 style:
                     moneyStyle(

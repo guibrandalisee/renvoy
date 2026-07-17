@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:renvoy/l10n/app_localizations.dart';
@@ -166,6 +167,11 @@ class SettingsScreen extends ConsumerWidget {
               _Section(
                 label: l10n.settingsAbout,
                 children: [
+                  _SettingRow(
+                    label: l10n.settingsPrivacy,
+                    value: '',
+                    onPressed: () => context.push('/privacy'),
+                  ),
                   _SettingRow(
                     label: l10n.settingsVersion,
                     value: packageInfo == null

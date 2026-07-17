@@ -118,7 +118,7 @@ class NotificationStringsFactory {
       renewalBody: l10n.notifRenewalBody,
       trialTitle: l10n.notifTrialTitle,
       trialBody: l10n.notifTrialBody,
-      today: l10n.reminderSameDay,
+      today: l10n.relativeToday,
       inDays: l10n.notifInDays,
     );
   }

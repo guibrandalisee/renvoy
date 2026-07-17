@@ -33,13 +33,23 @@ void main() {
     final id = await database.subscriptionsDao.insert(_subscription());
     await container.read(activeSubscriptionsProvider.future);
 
-    expect(container.read(monthlyTotalMinorProvider), 1000);
+    expect(
+      (await container.read(
+        convertedMonthlySpendingProvider.future,
+      )).totalMinor,
+      1000,
+    );
 
     await database.subscriptionsDao.setStatus(id, SubscriptionStatus.paused);
     container.invalidate(activeSubscriptionsProvider);
     await container.read(activeSubscriptionsProvider.future);
 
-    expect(container.read(monthlyTotalMinorProvider), 0);
+    expect(
+      (await container.read(
+        convertedMonthlySpendingProvider.future,
+      )).totalMinor,
+      0,
+    );
   });
 
   test('expired trial active subscriptions are counted in totals', () async {
@@ -55,7 +65,12 @@ void main() {
     );
     await container.read(activeSubscriptionsProvider.future);
 
-    expect(container.read(monthlyTotalMinorProvider), 1000);
+    expect(
+      (await container.read(
+        convertedMonthlySpendingProvider.future,
+      )).totalMinor,
+      1000,
+    );
   });
 }
 

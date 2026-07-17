@@ -34,7 +34,7 @@ final bootstrapProvider = FutureProvider<void>((ref) async {
     final currentCurrency = await settingsDao.getValue(
       SettingsKeys.defaultCurrency,
     );
-    if (currentCurrency == null || currentCurrency == 'USD') {
+    if (currentCurrency == null) {
       final locale = PlatformDispatcher.instance.locale.toString();
       final currency =
           NumberFormat.simpleCurrency(locale: locale).currencyName ?? 'USD';

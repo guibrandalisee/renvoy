@@ -60,6 +60,23 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String exchangeRatesAsOf(String date) {
+    return 'Rates as of $date';
+  }
+
+  @override
+  String exchangeRatesStale(String date) {
+    return 'Offline rates from $date';
+  }
+
+  @override
+  String get exchangeRatesError =>
+      'Exchange rates are unavailable. Your subscriptions are safe; totals will return when you reconnect.';
+
+  @override
+  String get retry => 'Try again';
+
+  @override
   String get upcomingRenewals => 'Upcoming renewals';
 
   @override
@@ -518,6 +535,56 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsAbout => 'About';
+
+  @override
+  String get settingsPrivacy => 'Privacy';
+
+  @override
+  String get privacyTitle => 'Privacy Policy';
+
+  @override
+  String get privacyIntro =>
+      'Renvoy is designed as a private, local-first subscription tracker. It does not require an account and does not sell personal data.';
+
+  @override
+  String get privacyLocalTitle => 'Data stored on your device';
+
+  @override
+  String get privacyLocalBody =>
+      'Subscription names, prices, dates, groups, notes, payment labels, and settings stay in the app\'s local database, protected by your device\'s security and backup settings. Renvoy does not upload this information for currency conversion.';
+
+  @override
+  String get privacyNetworkTitle => 'Network services';
+
+  @override
+  String get privacyNetworkBody =>
+      'Renvoy requests a public service catalog from renvoy.g22.dev and daily reference exchange rates from Frankfurter. Currency requests contain currency codes only, never subscription names or prices. These services and their infrastructure may process basic network metadata such as your IP address.';
+
+  @override
+  String get privacyNotificationsTitle => 'Notifications';
+
+  @override
+  String get privacyNotificationsBody =>
+      'Renewal reminders are created and scheduled on your device. Notification permission is optional and can be changed in system settings.';
+
+  @override
+  String get privacyBackupTitle => 'Backups and exports';
+
+  @override
+  String get privacyBackupBody =>
+      'Backups and CSV files leave the app only when you explicitly export and share them. You control the destination and are responsible for copies stored outside Renvoy.';
+
+  @override
+  String get privacyDeletionTitle => 'Control and deletion';
+
+  @override
+  String get privacyDeletionBody =>
+      'You can delete subscriptions and groups in the app. Uninstalling Renvoy removes its local database; exported files must be deleted separately from wherever you saved them.';
+
+  @override
+  String privacyUpdated(String date) {
+    return 'Last updated: $date';
+  }
 
   @override
   String get settingsVersion => 'Version';

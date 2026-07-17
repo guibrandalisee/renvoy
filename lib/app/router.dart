@@ -4,6 +4,7 @@ import '../features/home/home_screen.dart';
 import '../features/calendar/calendar_screen.dart';
 import '../features/groups/groups_screen.dart';
 import '../features/settings/settings_screen.dart';
+import '../features/settings/privacy_screen.dart';
 import '../features/shell/app_shell.dart';
 import '../features/subscriptions/detail/subscription_detail_screen.dart';
 import '../features/subscriptions/edit/subscription_form_screen.dart';
@@ -70,5 +71,9 @@ final appRouter = GoRouter(
           SubscriptionDetailScreen(subscriptionId: state.pathParameters['id']!),
     ),
     GoRoute(path: '/groups', builder: (context, state) => const GroupsScreen()),
+    GoRoute(
+      path: '/privacy',
+      builder: (context, state) => const PrivacyScreen(),
+    ),
   ],
 );

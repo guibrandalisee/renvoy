@@ -62,14 +62,10 @@ class SubscriptionDetailScreen extends ConsumerWidget {
                       .watch(_priceHistoryProvider(subscription.id))
                       .valueOrNull ??
                   const <PriceHistoryData>[];
-              final currency =
-                  ref.watch(defaultCurrencyProvider).valueOrNull ??
-                  subscription.currency;
               return _DetailContent(
                 subscription: subscription,
                 groups: groups,
                 history: history,
-                displayCurrency: currency,
               );
             },
           ),
@@ -85,13 +81,11 @@ class _DetailContent extends ConsumerWidget {
     required this.subscription,
     required this.groups,
     required this.history,
-    required this.displayCurrency,
   });
 
   final Subscription subscription;
   final List<GroupNode> groups;
   final List<PriceHistoryData> history;
-  final String displayCurrency;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -105,6 +99,14 @@ class _DetailContent extends ConsumerWidget {
       subscription.cycleUnit,
       subscription.cycleCount,
     );
+    final exchangeRates = ref.watch(exchangeRatesProvider).valueOrNull;
+    final canConvert = exchangeRates?.covers([subscription.currency]) ?? false;
+    final convertedMonthly = canConvert
+        ? exchangeRates!.convertToBase(monthly, subscription.currency)
+        : monthly;
+    final monthlyCurrency = canConvert
+        ? exchangeRates!.baseCurrency
+        : subscription.currency;
     final trialDate = subscription.trialEndDate == null
         ? null
         : _parseDate(subscription.trialEndDate!);
@@ -188,8 +190,8 @@ class _DetailContent extends ConsumerWidget {
                     child: Text(
                       l10n.approxPerMonth(
                         Money.format(
-                          monthly.round(),
-                          displayCurrency,
+                          convertedMonthly.round(),
+                          monthlyCurrency,
                           locale: l10n.localeName,
                         ),
                       ),

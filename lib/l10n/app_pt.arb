@@ -21,6 +21,24 @@
       }
     }
   },
+  "exchangeRatesAsOf": "Cotações de {date}",
+  "@exchangeRatesAsOf": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "exchangeRatesStale": "Cotações offline de {date}",
+  "@exchangeRatesStale": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "exchangeRatesError": "As cotações estão indisponíveis. Suas assinaturas estão seguras; os totais voltarão ao reconectar.",
+  "retry": "Tentar novamente",
   "upcomingRenewals": "Próximas renovações",
   "spendByGroup": "Gasto por grupo",
   "groupOther": "Outros",
@@ -254,6 +272,21 @@
   "settingsImportBackup": "Importar backup",
   "settingsExportCsv": "Exportar CSV",
   "settingsAbout": "Sobre",
+  "settingsPrivacy": "Privacidade",
+  "privacyTitle": "Política de Privacidade",
+  "privacyIntro": "O Renvoy foi projetado como um gerenciador de assinaturas privado e local. Ele não exige conta e não vende dados pessoais.",
+  "privacyLocalTitle": "Dados armazenados no aparelho",
+  "privacyLocalBody": "Nomes de assinaturas, preços, datas, grupos, notas, formas de pagamento e ajustes permanecem no banco local do app, protegido pela segurança e pelos backups do seu aparelho. O Renvoy não envia essas informações para converter moedas.",
+  "privacyNetworkTitle": "Serviços de rede",
+  "privacyNetworkBody": "O Renvoy consulta o catálogo público em renvoy.g22.dev e as cotações diárias de referência da Frankfurter. As consultas cambiais contêm somente códigos de moeda, nunca nomes ou preços de assinaturas. Esses serviços e sua infraestrutura podem processar metadados básicos de rede, como seu endereço IP.",
+  "privacyNotificationsTitle": "Notificações",
+  "privacyNotificationsBody": "Os lembretes de renovação são criados e agendados no aparelho. A permissão de notificações é opcional e pode ser alterada nos ajustes do sistema.",
+  "privacyBackupTitle": "Backups e exportações",
+  "privacyBackupBody": "Backups e arquivos CSV só saem do app quando você decide exportá-los e compartilhá-los. Você controla o destino e é responsável pelas cópias salvas fora do Renvoy.",
+  "privacyDeletionTitle": "Controle e exclusão",
+  "privacyDeletionBody": "Você pode excluir assinaturas e grupos no app. Desinstalar o Renvoy remove o banco local; arquivos exportados precisam ser apagados separadamente de onde foram salvos.",
+  "privacyUpdated": "Última atualização: {date}",
+  "@privacyUpdated": {"placeholders": {"date": {"type": "String"}}},
   "settingsVersion": "Versão",
   "importConfirm": "Importar {subscriptions} assinaturas, {groups} grupos? Isso mescla com os dados existentes.",
   "@importConfirm": {

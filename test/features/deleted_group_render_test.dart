@@ -34,7 +34,9 @@ void main() {
         currency: 'USD',
         cycleUnit: CycleUnit.month,
         firstBillDate: '2026-07-01',
-        nextBillDate: '2026-07-15',
+        nextBillDate: _date(
+          DateTime.now().toUtc().add(const Duration(days: 5)),
+        ),
         status: SubscriptionStatus.active,
         groupId: Value(groupId),
       ),
@@ -66,4 +68,11 @@ void main() {
       await tester.pump(const Duration(milliseconds: 1));
     }
   });
+}
+
+String _date(DateTime value) {
+  final year = value.year.toString().padLeft(4, '0');
+  final month = value.month.toString().padLeft(2, '0');
+  final day = value.day.toString().padLeft(2, '0');
+  return '$year-$month-$day';
 }

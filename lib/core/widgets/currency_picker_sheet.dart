@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:renvoy/l10n/app_localizations.dart';
@@ -13,9 +11,12 @@ Future<String?> showCurrencyPickerSheet({
   required String selected,
 }) {
   final localeCurrency =
-      NumberFormat.simpleCurrency(locale: Platform.localeName).currencyName ??
+      NumberFormat.simpleCurrency(
+        locale: Localizations.localeOf(context).toString(),
+      ).currencyName ??
       'USD';
   final currencies = <String>{
+    selected.toUpperCase(),
     localeCurrency,
     'USD',
     'EUR',
@@ -24,6 +25,29 @@ Future<String?> showCurrencyPickerSheet({
     'JPY',
     'CAD',
     'AUD',
+    'CHF',
+    'CNY',
+    'CZK',
+    'DKK',
+    'HKD',
+    'HUF',
+    'IDR',
+    'ILS',
+    'INR',
+    'ISK',
+    'KRW',
+    'MXN',
+    'MYR',
+    'NOK',
+    'NZD',
+    'PHP',
+    'PLN',
+    'RON',
+    'SEK',
+    'SGD',
+    'THB',
+    'TRY',
+    'ZAR',
   }.toList();
 
   return showAppSheet<String>(
@@ -95,22 +119,28 @@ class _SheetRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    return Pressable(
-      onPressed: onPressed,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 14),
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                label,
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyLarge?.copyWith(color: colors.textPrimary),
+    return Semantics(
+      button: true,
+      selected: selected,
+      label: label,
+      excludeSemantics: true,
+      child: Pressable(
+        onPressed: onPressed,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 52),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  label,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyLarge?.copyWith(color: colors.textPrimary),
+                ),
               ),
-            ),
-            if (selected) Icon(Icons.check, size: 18, color: colors.accent),
-          ],
+              if (selected) Icon(Icons.check, size: 18, color: colors.accent),
+            ],
+          ),
         ),
       ),
     );

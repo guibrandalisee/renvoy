@@ -21,6 +21,24 @@
       }
     }
   },
+  "exchangeRatesAsOf": "Tipos de cambio del {date}",
+  "@exchangeRatesAsOf": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "exchangeRatesStale": "Tipos sin conexión del {date}",
+  "@exchangeRatesStale": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "exchangeRatesError": "Los tipos de cambio no están disponibles. Tus suscripciones están seguras; los totales volverán al reconectarte.",
+  "retry": "Reintentar",
   "upcomingRenewals": "Próximas renovaciones",
   "spendByGroup": "Gasto por grupo",
   "groupOther": "Otros",
@@ -254,6 +272,21 @@
   "settingsImportBackup": "Importar copia de seguridad",
   "settingsExportCsv": "Exportar CSV",
   "settingsAbout": "Acerca de",
+  "settingsPrivacy": "Privacidad",
+  "privacyTitle": "Política de privacidad",
+  "privacyIntro": "Renvoy está diseñado como un gestor de suscripciones privado y local. No requiere una cuenta ni vende datos personales.",
+  "privacyLocalTitle": "Datos guardados en tu dispositivo",
+  "privacyLocalBody": "Los nombres, precios, fechas, grupos, notas, métodos de pago y ajustes permanecen en la base de datos local, protegida por la seguridad y las copias de tu dispositivo. Renvoy no envía esta información para convertir monedas.",
+  "privacyNetworkTitle": "Servicios de red",
+  "privacyNetworkBody": "Renvoy consulta el catálogo público en renvoy.g22.dev y los tipos de referencia diarios de Frankfurter. Las consultas de cambio solo contienen códigos de moneda, nunca nombres ni precios de suscripciones. Estos servicios y su infraestructura pueden procesar metadatos básicos de red, como tu dirección IP.",
+  "privacyNotificationsTitle": "Notificaciones",
+  "privacyNotificationsBody": "Los recordatorios de renovación se crean y programan en tu dispositivo. El permiso de notificaciones es opcional y se puede cambiar en los ajustes del sistema.",
+  "privacyBackupTitle": "Copias y exportaciones",
+  "privacyBackupBody": "Las copias y archivos CSV solo salen de la app cuando decides exportarlos y compartirlos. Tú controlas el destino y eres responsable de las copias guardadas fuera de Renvoy.",
+  "privacyDeletionTitle": "Control y eliminación",
+  "privacyDeletionBody": "Puedes eliminar suscripciones y grupos en la app. Al desinstalar Renvoy se elimina su base de datos local; los archivos exportados deben borrarse por separado donde los hayas guardado.",
+  "privacyUpdated": "Última actualización: {date}",
+  "@privacyUpdated": {"placeholders": {"date": {"type": "String"}}},
   "settingsVersion": "Versión",
   "importConfirm": "¿Importar {subscriptions} suscripciones y {groups} grupos? Se combinarán con los datos existentes.",
   "@importConfirm": {

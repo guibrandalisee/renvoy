@@ -82,6 +82,16 @@ class HttpCatalogApi implements CatalogApi {
             (item) => CatalogService.fromJson(Map<String, dynamic>.from(item)),
           )
           .toList(growable: false);
+      if (services.isEmpty) {
+        developer.log(
+          'Catalog response contains no services',
+          name: _logName,
+          level: 900,
+        );
+        throw const CatalogApiException(
+          'Catalog response contains no services.',
+        );
+      }
       developer.log(
         'Catalog response parsed successfully: services=${services.length}',
         name: _logName,

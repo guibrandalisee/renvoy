@@ -184,6 +184,30 @@ abstract class AppLocalizations {
   /// **'{count, plural, =0{0 active subscriptions} =1{1 active subscription} other{{count} active subscriptions}}'**
   String activeCount(int count);
 
+  /// No description provided for @exchangeRatesAsOf.
+  ///
+  /// In en, this message translates to:
+  /// **'Rates as of {date}'**
+  String exchangeRatesAsOf(String date);
+
+  /// No description provided for @exchangeRatesStale.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline rates from {date}'**
+  String exchangeRatesStale(String date);
+
+  /// No description provided for @exchangeRatesError.
+  ///
+  /// In en, this message translates to:
+  /// **'Exchange rates are unavailable. Your subscriptions are safe; totals will return when you reconnect.'**
+  String get exchangeRatesError;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get retry;
+
   /// No description provided for @upcomingRenewals.
   ///
   /// In en, this message translates to:
@@ -969,6 +993,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'About'**
   String get settingsAbout;
+
+  /// No description provided for @settingsPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy'**
+  String get settingsPrivacy;
+
+  /// No description provided for @privacyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacyTitle;
+
+  /// No description provided for @privacyIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Renvoy is designed as a private, local-first subscription tracker. It does not require an account and does not sell personal data.'**
+  String get privacyIntro;
+
+  /// No description provided for @privacyLocalTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Data stored on your device'**
+  String get privacyLocalTitle;
+
+  /// No description provided for @privacyLocalBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscription names, prices, dates, groups, notes, payment labels, and settings stay in the app\'s local database, protected by your device\'s security and backup settings. Renvoy does not upload this information for currency conversion.'**
+  String get privacyLocalBody;
+
+  /// No description provided for @privacyNetworkTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Network services'**
+  String get privacyNetworkTitle;
+
+  /// No description provided for @privacyNetworkBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Renvoy requests a public service catalog from renvoy.g22.dev and daily reference exchange rates from Frankfurter. Currency requests contain currency codes only, never subscription names or prices. These services and their infrastructure may process basic network metadata such as your IP address.'**
+  String get privacyNetworkBody;
+
+  /// No description provided for @privacyNotificationsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get privacyNotificationsTitle;
+
+  /// No description provided for @privacyNotificationsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Renewal reminders are created and scheduled on your device. Notification permission is optional and can be changed in system settings.'**
+  String get privacyNotificationsBody;
+
+  /// No description provided for @privacyBackupTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Backups and exports'**
+  String get privacyBackupTitle;
+
+  /// No description provided for @privacyBackupBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Backups and CSV files leave the app only when you explicitly export and share them. You control the destination and are responsible for copies stored outside Renvoy.'**
+  String get privacyBackupBody;
+
+  /// No description provided for @privacyDeletionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Control and deletion'**
+  String get privacyDeletionTitle;
+
+  /// No description provided for @privacyDeletionBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You can delete subscriptions and groups in the app. Uninstalling Renvoy removes its local database; exported files must be deleted separately from wherever you saved them.'**
+  String get privacyDeletionBody;
+
+  /// No description provided for @privacyUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Last updated: {date}'**
+  String privacyUpdated(String date);
 
   /// No description provided for @settingsVersion.
   ///

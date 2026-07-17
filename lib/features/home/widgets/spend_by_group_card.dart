@@ -7,7 +7,6 @@ import '../../../app/theme/app_typography.dart';
 import '../../../core/color_utils.dart';
 import '../../../core/formatters.dart';
 import '../../../data/db/database.dart';
-import '../../../domain/billing/billing_math.dart';
 import '../../../domain/models/group_node.dart';
 
 class SpendByGroupCard extends StatelessWidget {
@@ -15,6 +14,7 @@ class SpendByGroupCard extends StatelessWidget {
     required this.subscriptions,
     required this.groups,
     required this.totalMonthlyMinor,
+    required this.monthlyBySubscriptionId,
     required this.currencyCode,
     super.key,
   });
@@ -22,6 +22,7 @@ class SpendByGroupCard extends StatelessWidget {
   final List<Subscription> subscriptions;
   final List<GroupNode> groups;
   final double totalMonthlyMinor;
+  final Map<String, double> monthlyBySubscriptionId;
   final String currencyCode;
 
   @override
@@ -90,11 +91,7 @@ class SpendByGroupCard extends StatelessWidget {
     final detailTotals = <String, Map<String, double>>{};
 
     for (final subscription in subscriptions) {
-      final monthly = monthlyEquivalentMinor(
-        subscription.priceMinor,
-        subscription.cycleUnit,
-        subscription.cycleCount,
-      );
+      final monthly = monthlyBySubscriptionId[subscription.id] ?? 0;
       final path = paths[subscription.groupId];
       final key = path?.root.id ?? _otherKey;
       totals[key] = (totals[key] ?? 0) + monthly;

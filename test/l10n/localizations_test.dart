@@ -14,5 +14,6 @@ void main() {
     expect(spanish.navSettings, 'Ajustes');
     expect(spanish.activeCount(1), '1 suscripción activa');
     expect(spanish.activeCount(3), '3 suscripciones activas');
+    expect(lookupAppLocalizations(const Locale('pt')).relativeToday, 'hoje');
   });
 }

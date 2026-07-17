@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_icons/simple_icons.dart';
 
@@ -25,8 +24,7 @@ class SubscriptionAvatar extends StatelessWidget {
       if (icon != null) return _iconAvatar(icon);
     }
     if (value.startsWith('fav:')) {
-      final domain = value.substring(4).trim();
-      if (domain.isNotEmpty) return _faviconAvatar(domain);
+      return _letterAvatar(context);
     }
     return _letterAvatar(context);
   }
@@ -41,19 +39,6 @@ class SubscriptionAvatar extends StatelessWidget {
       ),
       alignment: Alignment.center,
       child: Icon(icon, color: color, size: size * 0.5),
-    );
-  }
-
-  Widget _faviconAvatar(String domain) {
-    return ClipOval(
-      child: CachedNetworkImage(
-        imageUrl: 'https://www.google.com/s2/favicons?domain=$domain&sz=128',
-        width: size,
-        height: size,
-        fit: BoxFit.cover,
-        placeholder: (context, _) => _letterAvatar(context),
-        errorWidget: (context, _, _) => _letterAvatar(context),
-      ),
     );
   }
 

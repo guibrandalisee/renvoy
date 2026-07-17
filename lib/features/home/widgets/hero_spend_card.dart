@@ -15,6 +15,7 @@ class HeroSpendCard extends StatelessWidget {
     required this.monthlyView,
     required this.currencyCode,
     required this.onToggle,
+    this.exchangeRateLabel,
     super.key,
   });
 
@@ -23,6 +24,7 @@ class HeroSpendCard extends StatelessWidget {
   final bool monthlyView;
   final String currencyCode;
   final VoidCallback onToggle;
+  final String? exchangeRateLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -152,6 +154,13 @@ class HeroSpendCard extends StatelessWidget {
                 ),
               ],
             ),
+            if (exchangeRateLabel != null) ...[
+              const SizedBox(height: 8),
+              Text(
+                exchangeRateLabel!,
+                style: textTheme.bodySmall?.copyWith(color: colors.onHeroMuted),
+              ),
+            ],
           ],
         ),
       ),

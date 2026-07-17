@@ -21,6 +21,24 @@
       }
     }
   },
+  "exchangeRatesAsOf": "Rates as of {date}",
+  "@exchangeRatesAsOf": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "exchangeRatesStale": "Offline rates from {date}",
+  "@exchangeRatesStale": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "exchangeRatesError": "Exchange rates are unavailable. Your subscriptions are safe; totals will return when you reconnect.",
+  "retry": "Try again",
   "upcomingRenewals": "Upcoming renewals",
   "spendByGroup": "Spend by group",
   "groupOther": "Other",
@@ -254,6 +272,21 @@
   "settingsImportBackup": "Import backup",
   "settingsExportCsv": "Export CSV",
   "settingsAbout": "About",
+  "settingsPrivacy": "Privacy",
+  "privacyTitle": "Privacy Policy",
+  "privacyIntro": "Renvoy is designed as a private, local-first subscription tracker. It does not require an account and does not sell personal data.",
+  "privacyLocalTitle": "Data stored on your device",
+  "privacyLocalBody": "Subscription names, prices, dates, groups, notes, payment labels, and settings stay in the app's local database, protected by your device's security and backup settings. Renvoy does not upload this information for currency conversion.",
+  "privacyNetworkTitle": "Network services",
+  "privacyNetworkBody": "Renvoy requests a public service catalog from renvoy.g22.dev and daily reference exchange rates from Frankfurter. Currency requests contain currency codes only, never subscription names or prices. These services and their infrastructure may process basic network metadata such as your IP address.",
+  "privacyNotificationsTitle": "Notifications",
+  "privacyNotificationsBody": "Renewal reminders are created and scheduled on your device. Notification permission is optional and can be changed in system settings.",
+  "privacyBackupTitle": "Backups and exports",
+  "privacyBackupBody": "Backups and CSV files leave the app only when you explicitly export and share them. You control the destination and are responsible for copies stored outside Renvoy.",
+  "privacyDeletionTitle": "Control and deletion",
+  "privacyDeletionBody": "You can delete subscriptions and groups in the app. Uninstalling Renvoy removes its local database; exported files must be deleted separately from wherever you saved them.",
+  "privacyUpdated": "Last updated: {date}",
+  "@privacyUpdated": {"placeholders": {"date": {"type": "String"}}},
   "settingsVersion": "Version",
   "importConfirm": "Import {subscriptions} subscriptions, {groups} groups? This merges with existing data.",
   "@importConfirm": {

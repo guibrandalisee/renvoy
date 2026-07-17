@@ -9,6 +9,10 @@ abstract final class SettingsKeys {
   static const catalogCache = 'catalogCache';
   static const catalogFetchedAt = 'catalogFetchedAt';
 
+  static String exchangeRatesCache(String baseCurrency) {
+    return 'exchangeRatesCache:${baseCurrency.toUpperCase()}';
+  }
+
   static String subscriptionReminderMode(String subscriptionId) {
     return 'subscriptionReminderMode:$subscriptionId';
   }

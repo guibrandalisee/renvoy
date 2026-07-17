@@ -50,6 +50,10 @@ void main() {
               ],
               groups: groups,
               totalMonthlyMinor: 7989,
+              monthlyBySubscriptionId: const {
+                'Netflix': 2999,
+                'Xbox Game Pass': 4990,
+              },
               currencyCode: 'USD',
             ),
           ),

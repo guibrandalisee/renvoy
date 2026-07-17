@@ -16,7 +16,7 @@ import '../../core/widgets/pressable.dart';
 import '../../core/widgets/primary_button.dart';
 import '../../data/db/database.dart';
 import '../../data/db/database_provider.dart';
-import '../../domain/billing/billing_math.dart';
+import '../../domain/models/enums.dart';
 import '../../domain/models/group_node.dart';
 import '../home/home_providers.dart';
 
@@ -45,6 +45,10 @@ class GroupsScreen extends ConsumerWidget {
         ref.watch(subscriptionsListForGroupsProvider).valueOrNull ??
         const <Subscription>[];
     final currency = ref.watch(defaultCurrencyProvider).valueOrNull ?? 'USD';
+    final convertedSpending = ref
+        .watch(convertedMonthlySpendingProvider)
+        .valueOrNull;
+    final displayCurrency = convertedSpending?.currencyCode ?? currency;
 
     return Scaffold(
       backgroundColor: colors.background,
@@ -120,7 +124,9 @@ class GroupsScreen extends ConsumerWidget {
                               node: node,
                               depth: 0,
                               subscriptions: subscriptions,
-                              currencyCode: currency,
+                              currencyCode: displayCurrency,
+                              monthlyBySubscriptionId:
+                                  convertedSpending?.bySubscriptionId,
                               onTap: () => _showGroupSheet(
                                 context,
                                 ref,
@@ -133,7 +139,9 @@ class GroupsScreen extends ConsumerWidget {
                                 node: child,
                                 depth: 1,
                                 subscriptions: subscriptions,
-                                currencyCode: currency,
+                                currencyCode: displayCurrency,
+                                monthlyBySubscriptionId:
+                                    convertedSpending?.bySubscriptionId,
                                 parent: node,
                                 onTap: () => _showGroupSheet(
                                   context,
@@ -186,6 +194,7 @@ class _GroupRow extends ConsumerWidget {
     required this.depth,
     required this.subscriptions,
     required this.currencyCode,
+    required this.monthlyBySubscriptionId,
     required this.onTap,
     this.parent,
   });
@@ -194,6 +203,7 @@ class _GroupRow extends ConsumerWidget {
   final int depth;
   final List<Subscription> subscriptions;
   final String currencyCode;
+  final Map<String, double>? monthlyBySubscriptionId;
   final VoidCallback onTap;
   final GroupNode? parent;
 
@@ -206,16 +216,24 @@ class _GroupRow extends ConsumerWidget {
     final groupSubscriptions = subscriptions
         .where((subscription) => ids.contains(subscription.groupId))
         .toList();
-    final monthly = groupSubscriptions.fold<double>(
-      0,
-      (sum, subscription) =>
-          sum +
-          monthlyEquivalentMinor(
-            subscription.priceMinor,
-            subscription.cycleUnit,
-            subscription.cycleCount,
-          ),
-    );
+    final activeGroupSubscriptions = groupSubscriptions
+        .where(
+          (subscription) => subscription.status == SubscriptionStatus.active,
+        )
+        .toList();
+    final hasAllConvertedAmounts =
+        monthlyBySubscriptionId != null &&
+        activeGroupSubscriptions.every(
+          (subscription) =>
+              monthlyBySubscriptionId!.containsKey(subscription.id),
+        );
+    final monthly = hasAllConvertedAmounts
+        ? activeGroupSubscriptions.fold<double>(
+            0,
+            (sum, subscription) =>
+                sum + monthlyBySubscriptionId![subscription.id]!,
+          )
+        : null;
     final leftMargin = 20.0 + depth * 20;
 
     return Dismissible(
@@ -278,11 +296,15 @@ class _GroupRow extends ConsumerWidget {
                       Text(
                         AppLocalizations.of(context)!.groupSummary(
                           node.subscriptionCount,
-                          Money.format(
-                            monthly.round(),
-                            currencyCode,
-                            locale: AppLocalizations.of(context)!.localeName,
-                          ),
+                          monthly == null
+                              ? '—'
+                              : Money.format(
+                                  monthly.round(),
+                                  currencyCode,
+                                  locale: AppLocalizations.of(
+                                    context,
+                                  )!.localeName,
+                                ),
                         ),
                         style: moneyStyle(
                           Theme.of(context).textTheme.bodySmall ??

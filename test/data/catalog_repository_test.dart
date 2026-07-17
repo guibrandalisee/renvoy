@@ -7,33 +7,13 @@ import 'package:renvoy/data/db/settings_keys.dart';
 void main() {
   final now = DateTime.utc(2026, 7, 9, 12);
 
-  test('cache is fresh only before seven full days', () {
-    expect(
-      isCatalogCacheFresh(
-        now.subtract(const Duration(days: 7, seconds: 1)),
-        now,
-      ),
-      isFalse,
-    );
-    expect(
-      isCatalogCacheFresh(now.subtract(const Duration(days: 7)), now),
-      isFalse,
-    );
-    expect(
-      isCatalogCacheFresh(
-        now.subtract(const Duration(days: 6, hours: 23)),
-        now,
-      ),
-      isTrue,
-    );
-  });
-
-  test('uses valid cache without making a network request', () async {
+  test('refreshes from network even when a valid cache exists', () async {
     final api = _FakeApi(response: _response('network'));
     final cache = _FakeCache({
       SettingsKeys.catalogCache: _raw('cached'),
-      SettingsKeys.catalogFetchedAt:
-          now.subtract(const Duration(days: 6)).toIso8601String(),
+      SettingsKeys.catalogFetchedAt: now
+          .subtract(const Duration(days: 6))
+          .toIso8601String(),
     });
     final repository = CatalogRepository(
       api: api,
@@ -43,16 +23,18 @@ void main() {
 
     final services = await repository.getServices();
 
-    expect(services.single.slug, 'cached');
-    expect(api.calls, 0);
+    expect(services.single.slug, 'network');
+    expect(api.calls, 1);
+    expect(cache.values[SettingsKeys.catalogCache], _raw('network'));
   });
 
   test('uses stale cache when the refreshed request fails', () async {
     final api = _FakeApi(error: const CatalogApiException('offline'));
     final cache = _FakeCache({
       SettingsKeys.catalogCache: _raw('stale'),
-      SettingsKeys.catalogFetchedAt:
-          now.subtract(const Duration(days: 7)).toIso8601String(),
+      SettingsKeys.catalogFetchedAt: now
+          .subtract(const Duration(days: 7))
+          .toIso8601String(),
     });
     final repository = CatalogRepository(
       api: api,
@@ -64,6 +46,43 @@ void main() {
 
     expect(services.single.slug, 'stale');
     expect(api.calls, 1);
+  });
+
+  test('ignores an empty cache and replaces it from network', () async {
+    final api = _FakeApi(response: _response('network'));
+    final cache = _FakeCache({
+      SettingsKeys.catalogCache: '{"data":[]}',
+      SettingsKeys.catalogFetchedAt: now.toIso8601String(),
+    });
+    final repository = CatalogRepository(
+      api: api,
+      cacheStore: cache,
+      now: () => now,
+    );
+
+    final services = await repository.getServices();
+
+    expect(services.single.slug, 'network');
+    expect(api.calls, 1);
+    expect(cache.values[SettingsKeys.catalogCache], _raw('network'));
+  });
+
+  test('does not accept or cache an empty network response', () async {
+    final api = _FakeApi(
+      response: const CatalogApiResponse(rawJson: '{"data":[]}', services: []),
+    );
+    final cache = _FakeCache({});
+    final repository = CatalogRepository(
+      api: api,
+      cacheStore: cache,
+      now: () => now,
+    );
+
+    await expectLater(
+      repository.getServices(),
+      throwsA(isA<CatalogApiException>()),
+    );
+    expect(cache.values, isEmpty);
   });
 }
 

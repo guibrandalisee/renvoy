@@ -60,6 +60,23 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String exchangeRatesAsOf(String date) {
+    return 'Cotações de $date';
+  }
+
+  @override
+  String exchangeRatesStale(String date) {
+    return 'Cotações offline de $date';
+  }
+
+  @override
+  String get exchangeRatesError =>
+      'As cotações estão indisponíveis. Suas assinaturas estão seguras; os totais voltarão ao reconectar.';
+
+  @override
+  String get retry => 'Tentar novamente';
+
+  @override
   String get upcomingRenewals => 'Próximas renovações';
 
   @override
@@ -518,6 +535,56 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get settingsAbout => 'Sobre';
+
+  @override
+  String get settingsPrivacy => 'Privacidade';
+
+  @override
+  String get privacyTitle => 'Política de Privacidade';
+
+  @override
+  String get privacyIntro =>
+      'O Renvoy foi projetado como um gerenciador de assinaturas privado e local. Ele não exige conta e não vende dados pessoais.';
+
+  @override
+  String get privacyLocalTitle => 'Dados armazenados no aparelho';
+
+  @override
+  String get privacyLocalBody =>
+      'Nomes de assinaturas, preços, datas, grupos, notas, formas de pagamento e ajustes permanecem no banco local do app, protegido pela segurança e pelos backups do seu aparelho. O Renvoy não envia essas informações para converter moedas.';
+
+  @override
+  String get privacyNetworkTitle => 'Serviços de rede';
+
+  @override
+  String get privacyNetworkBody =>
+      'O Renvoy consulta o catálogo público em renvoy.g22.dev e as cotações diárias de referência da Frankfurter. As consultas cambiais contêm somente códigos de moeda, nunca nomes ou preços de assinaturas. Esses serviços e sua infraestrutura podem processar metadados básicos de rede, como seu endereço IP.';
+
+  @override
+  String get privacyNotificationsTitle => 'Notificações';
+
+  @override
+  String get privacyNotificationsBody =>
+      'Os lembretes de renovação são criados e agendados no aparelho. A permissão de notificações é opcional e pode ser alterada nos ajustes do sistema.';
+
+  @override
+  String get privacyBackupTitle => 'Backups e exportações';
+
+  @override
+  String get privacyBackupBody =>
+      'Backups e arquivos CSV só saem do app quando você decide exportá-los e compartilhá-los. Você controla o destino e é responsável pelas cópias salvas fora do Renvoy.';
+
+  @override
+  String get privacyDeletionTitle => 'Controle e exclusão';
+
+  @override
+  String get privacyDeletionBody =>
+      'Você pode excluir assinaturas e grupos no app. Desinstalar o Renvoy remove o banco local; arquivos exportados precisam ser apagados separadamente de onde foram salvos.';
+
+  @override
+  String privacyUpdated(String date) {
+    return 'Última atualização: $date';
+  }
 
   @override
   String get settingsVersion => 'Versão';

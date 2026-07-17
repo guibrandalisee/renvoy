@@ -58,8 +58,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final groupsAsync = ref.watch(groupsTreeProvider);
     final monthlyView =
         ref.watch(monthlyEquivalentViewProvider).valueOrNull ?? true;
-    final monthlyTotal = ref.watch(monthlyTotalMinorProvider);
-    final defaultCurrency = ref.watch(defaultCurrencyProvider);
+    final spendingAsync = ref.watch(convertedMonthlySpendingProvider);
 
     return Scaffold(
       backgroundColor: colors.background,
@@ -79,38 +78,65 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               final upcoming = upcomingAsync.valueOrNull ?? const [];
               final groups = groupsAsync.valueOrNull ?? const [];
               final groupPaths = buildGroupPathIndex(groups);
+              final spending = spendingAsync.valueOrNull;
 
               return CustomScrollView(
                 controller: _scrollController,
                 slivers: [
                   SliverToBoxAdapter(child: _Header(now: DateTime.now())),
                   SliverToBoxAdapter(
-                    child: HeroSpendCard(
-                      monthlyTotalMinor: monthlyTotal,
-                      activeCount: subscriptions.length,
-                      monthlyView: monthlyView,
-                      currencyCode: defaultCurrency.valueOrNull ?? 'USD',
-                      onToggle: () async {
-                        await ref
-                            .read(settingsDaoProvider)
-                            .setValue(
-                              SettingsKeys.monthlyEquivalentView,
-                              monthlyView ? 'yearly' : 'monthly',
-                            );
-                      },
+                    child: spending == null
+                        ? _ExchangeRateStatusCard(
+                            isLoading: spendingAsync.isLoading,
+                            onRetry: () {
+                              ref.invalidate(exchangeRatesProvider);
+                              ref.invalidate(convertedMonthlySpendingProvider);
+                            },
+                          )
+                        : HeroSpendCard(
+                            monthlyTotalMinor: spending.totalMinor,
+                            activeCount: subscriptions.length,
+                            monthlyView: monthlyView,
+                            currencyCode: spending.currencyCode,
+                            exchangeRateLabel: spending.usesExchangeRates
+                                ? (spending.isStale
+                                      ? l10n.exchangeRatesStale(
+                                          Dates.short(
+                                            spending.rateDate,
+                                            l10n.localeName,
+                                          ),
+                                        )
+                                      : l10n.exchangeRatesAsOf(
+                                          Dates.short(
+                                            spending.rateDate,
+                                            l10n.localeName,
+                                          ),
+                                        ))
+                                : null,
+                            onToggle: () async {
+                              await ref
+                                  .read(settingsDaoProvider)
+                                  .setValue(
+                                    SettingsKeys.monthlyEquivalentView,
+                                    monthlyView ? 'yearly' : 'monthly',
+                                  );
+                            },
+                          ),
+                  ),
+                  if (spending != null) ...[
+                    SliverToBoxAdapter(
+                      child: _SectionHeader(title: l10n.spendByGroup),
                     ),
-                  ),
-                  SliverToBoxAdapter(
-                    child: _SectionHeader(title: l10n.spendByGroup),
-                  ),
-                  SliverToBoxAdapter(
-                    child: SpendByGroupCard(
-                      subscriptions: subscriptions,
-                      groups: groups,
-                      totalMonthlyMinor: monthlyTotal,
-                      currencyCode: defaultCurrency.valueOrNull ?? 'USD',
+                    SliverToBoxAdapter(
+                      child: SpendByGroupCard(
+                        subscriptions: subscriptions,
+                        groups: groups,
+                        totalMonthlyMinor: spending.totalMinor,
+                        monthlyBySubscriptionId: spending.bySubscriptionId,
+                        currencyCode: spending.currencyCode,
+                      ),
                     ),
-                  ),
+                  ],
                   SliverToBoxAdapter(
                     child: _SectionHeader(title: l10n.upcomingRenewals),
                   ),
@@ -139,6 +165,71 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             },
           ),
           const StatusBarFade(),
+        ],
+      ),
+    );
+  }
+}
+
+class _ExchangeRateStatusCard extends StatelessWidget {
+  const _ExchangeRateStatusCard({
+    required this.isLoading,
+    required this.onRetry,
+  });
+
+  final bool isLoading;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    final metrics = context.metrics;
+    if (isLoading) {
+      return Padding(
+        padding: EdgeInsets.fromLTRB(
+          metrics.screenGutter,
+          metrics.spaceGroup,
+          metrics.screenGutter,
+          0,
+        ),
+        child: ShimmerBox(
+          width: double.infinity,
+          height: 170,
+          radius: metrics.radiusHero,
+        ),
+      );
+    }
+
+    final colors = context.colors;
+    final l10n = AppLocalizations.of(context)!;
+    return Container(
+      margin: EdgeInsets.fromLTRB(
+        metrics.screenGutter,
+        metrics.spaceGroup,
+        metrics.screenGutter,
+        0,
+      ),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: colors.warningSoft,
+        borderRadius: BorderRadius.circular(metrics.radiusContainer),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(Icons.cloud_off_rounded, color: colors.warning),
+          const SizedBox(height: 12),
+          Text(
+            l10n.exchangeRatesError,
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: colors.textPrimary),
+          ),
+          const SizedBox(height: 14),
+          TextButton.icon(
+            onPressed: onRetry,
+            icon: const Icon(Icons.refresh_rounded, size: 18),
+            label: Text(l10n.retry),
+          ),
         ],
       ),
     );
