@@ -12,6 +12,7 @@ import '../../core/formatters.dart';
 import '../../core/haptics.dart';
 import '../../core/widgets/pressable.dart';
 import '../../core/widgets/status_bar_fade.dart';
+import '../../core/widgets/subscription_avatar.dart';
 import '../../data/db/database.dart';
 import '../../domain/billing/billing_math.dart';
 import '../../domain/models/group_node.dart';
@@ -300,17 +301,20 @@ class _CalendarGrid extends ConsumerWidget {
           ),
           const SizedBox(height: 8),
           for (var row = 0; row < 6; row++)
-            Row(
-              children: days
-                  .skip(row * 7)
-                  .take(7)
-                  .map(
-                    (day) => Expanded(
-                      child: AspectRatio(
-                        aspectRatio: 1,
+            SizedBox(
+              height: 60,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: days
+                    .skip(row * 7)
+                    .take(7)
+                    .map(
+                      (day) => Expanded(
                         child: _DayCell(
                           day: day,
-                          currentMonth: day.month == month.month,
+                          currentMonth:
+                              day.year == month.year &&
+                              day.month == month.month,
                           renewals: renewalMap[dateOnlyUtc(day)] ?? const [],
                           selected: _sameDay(selected, day),
                           onPressed: () {
@@ -334,9 +338,9 @@ class _CalendarGrid extends ConsumerWidget {
                           },
                         ),
                       ),
-                    ),
-                  )
-                  .toList(),
+                    )
+                    .toList(),
+              ),
             ),
         ],
       ),
@@ -379,44 +383,54 @@ class _DayCell extends StatelessWidget {
         child: Pressable(
           onPressed: onPressed,
           haptic: renewals.isEmpty ? HapticType.light : HapticType.selection,
-          borderRadius: BorderRadius.circular(999),
-          child: Center(
-            child: Container(
-              width: 44,
-              height: 44,
+          borderRadius: BorderRadius.circular(14),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 1),
+            child: DecoratedBox(
               decoration: BoxDecoration(
-                shape: BoxShape.circle,
+                color: selected ? colors.surface : Colors.transparent,
+                borderRadius: BorderRadius.circular(14),
                 border: selected
-                    ? Border.all(color: colors.accent, width: 1.5)
+                    ? Border.all(color: colors.accent, width: 1.25)
                     : null,
               ),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    width: 32,
-                    height: 32,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: today
-                          ? colors.accentSoft
-                          : colors.surface.withValues(alpha: 0),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Text(
-                      '${day.day}',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: dayColor,
-                        fontWeight: today ? FontWeight.w700 : FontWeight.w400,
+                  Expanded(
+                    child: Center(
+                      child: Container(
+                        width: 28,
+                        height: 28,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: today ? colors.accentSoft : Colors.transparent,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Text(
+                          '${day.day}',
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
+                                color: dayColor,
+                                fontWeight: today
+                                    ? FontWeight.w700
+                                    : FontWeight.w400,
+                              ),
+                        ),
                       ),
                     ),
                   ),
                   SizedBox(
-                    height: 8,
+                    height: 22,
                     child: renewals.isEmpty
                         ? const SizedBox.shrink()
-                        : _Markers(renewals: renewals),
+                        : _RenewalIcons(
+                            renewals: renewals,
+                            separatorColor: selected
+                                ? colors.surface
+                                : colors.background,
+                          ),
                   ),
+                  const SizedBox(height: 3),
                 ],
               ),
             ),
@@ -427,37 +441,101 @@ class _DayCell extends StatelessWidget {
   }
 }
 
-class _Markers extends StatelessWidget {
-  const _Markers({required this.renewals});
+class _RenewalIcons extends StatelessWidget {
+  const _RenewalIcons({required this.renewals, required this.separatorColor});
 
   final List<Subscription> renewals;
+  final Color separatorColor;
+
+  static const _avatarSize = 18.0;
+  static const _itemSize = 20.0;
+  static const _itemStep = 12.0;
 
   @override
   Widget build(BuildContext context) {
-    final dots = renewals.take(renewals.length > 3 ? 2 : 3).toList();
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        for (final renewal in dots)
-          Container(
-            width: 4,
-            height: 4,
-            margin: const EdgeInsets.symmetric(horizontal: 1),
-            decoration: BoxDecoration(
-              color: colorFromHex(renewal.colorHex) ?? context.colors.accent,
-              shape: BoxShape.circle,
-            ),
-          ),
-        if (renewals.length > 3)
-          Text(
-            '+${renewals.length - 2}',
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: context.colors.textMuted,
-              fontSize: 9,
-            ),
-          ),
-      ],
+    final visibleRenewals = renewals.take(renewals.length > 3 ? 2 : 3).toList();
+    final hasOverflow = renewals.length > 3;
+    final itemCount = visibleRenewals.length + (hasOverflow ? 1 : 0);
+    final width = _itemSize + ((itemCount - 1) * _itemStep);
+
+    return Center(
+      child: SizedBox(
+        width: width,
+        height: _itemSize,
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            for (var index = 0; index < visibleRenewals.length; index++)
+              Positioned(
+                left: index * _itemStep,
+                child: _CalendarAvatar(
+                  subscription: visibleRenewals[index],
+                  separatorColor: separatorColor,
+                ),
+              ),
+            if (hasOverflow)
+              Positioned(
+                left: visibleRenewals.length * _itemStep,
+                child: Container(
+                  width: _itemSize,
+                  height: _itemSize,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: context.colors.surfaceElevated,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: separatorColor, width: 1),
+                  ),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 2),
+                      child: Text(
+                        '+${renewals.length - visibleRenewals.length}',
+                        maxLines: 1,
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: context.colors.textSecondary,
+                          fontSize: 8,
+                          fontWeight: FontWeight.w700,
+                          height: 1,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CalendarAvatar extends StatelessWidget {
+  const _CalendarAvatar({
+    required this.subscription,
+    required this.separatorColor,
+  });
+
+  final Subscription subscription;
+  final Color separatorColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: _RenewalIcons._itemSize,
+      height: _RenewalIcons._itemSize,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: separatorColor,
+        shape: BoxShape.circle,
+        border: Border.all(color: separatorColor, width: 1),
+      ),
+      child: SubscriptionAvatar(
+        name: subscription.name,
+        iconName: subscription.iconName,
+        color: colorFromHex(subscription.colorHex) ?? context.colors.accent,
+        size: _RenewalIcons._avatarSize,
+      ),
     );
   }
 }

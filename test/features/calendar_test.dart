@@ -45,6 +45,15 @@ void main() {
     expect(map[DateTime.utc(2026, 2, 28)], [subscription]);
   });
 
+  test('buildRenewalMap keeps every renewal that falls on the same day', () {
+    final first = _subscription(id: 'sub_1', firstBillDate: '2026-01-10');
+    final second = _subscription(id: 'sub_2', firstBillDate: '2026-04-10');
+
+    final map = buildRenewalMap([first, second], DateTime.utc(2026, 7));
+
+    expect(map[DateTime.utc(2026, 7, 10)], [first, second]);
+  });
+
   test('free trial appears on its first charge date, not its start date', () {
     final subscription = Subscription(
       id: 'sub_1',
@@ -71,11 +80,12 @@ void main() {
 }
 
 Subscription _subscription({
+  String id = 'sub_1',
   required String firstBillDate,
   CycleUnit cycleUnit = CycleUnit.month,
 }) {
   return Subscription(
-    id: 'sub_1',
+    id: id,
     createdAt: 0,
     updatedAt: 0,
     dirty: true,
